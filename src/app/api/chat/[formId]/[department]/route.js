@@ -125,9 +125,8 @@ export async function GET(request, { params }) {
             .eq('department_name', department)
             .single();
 
-        // Get unread count for authenticated user
+        // Get unread count for authenticated user (reuse authHeader from line 35)
         let unreadCount = 0;
-        const authHeader = request.headers.get('Authorization');
         if (authHeader) {
             try {
                 const token = authHeader.replace('Bearer ', '');
