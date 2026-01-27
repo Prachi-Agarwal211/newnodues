@@ -200,7 +200,8 @@ body {
   --shadow-elevated: var(--light-shadow-elevated);
   --shadow-dramatic: var(--light-shadow-dramatic);
 
-  background-color: var(--light-bg-secondary);
+  background: linear-gradient(145deg,
+      #FFFFFF 0%, #F8F8F8 25%, #F5F5F5 50%, #F8F8F8 75%, #FFFFFF 100%);
   color: var(--text-primary);
 }
 
@@ -217,7 +218,8 @@ body.dark {
   --shadow-elevated: var(--dark-shadow-elevated);
   --shadow-dramatic: var(--dark-shadow-dramatic);
 
-  background-color: var(--dark-bg-secondary);
+  background: linear-gradient(145deg,
+      #0A0A0A 0%, #111111 25%, #0A0A0A 50%, #111111 75%, #0A0A0A 100%);
   color: var(--text-primary);
 }
 
