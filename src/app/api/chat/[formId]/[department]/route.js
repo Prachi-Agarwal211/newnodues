@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+import { verifyDepartmentStaff } from '@/lib/authUtils';
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 

@@ -188,14 +188,8 @@ export default function ReapplyModal({
     setLoading(true);
 
     try {
-      // Prepare updated data (only send changed fields)
+      // Prepare updated data (empty since we're not editing fields)
       const updatedFields = {};
-      Object.keys(editedData).forEach(key => {
-        const originalValue = formData[`${key}_id`] || formData[key];
-        if (editedData[key] !== originalValue && editedData[key] !== '') {
-          updatedFields[key] = editedData[key];
-        }
-      });
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000);
@@ -436,7 +430,6 @@ export default function ReapplyModal({
               </div>
             </div>
 
-            {/* Reply Message */}
             <div className="mb-6">
               <label className={`block font-medium mb-2 transition-colors duration-700 ${isDark ? 'text-white' : 'text-ink-black'
                 }`}>
@@ -461,135 +454,6 @@ export default function ReapplyModal({
                 }`}>
                 {replyMessage.length} characters
               </p>
-            </div>
-
-            {/* Editable Form Fields */}
-            <div className="mb-6">
-              <h3 className={`font-bold mb-4 transition-colors duration-700 ${isDark ? 'text-white' : 'text-ink-black'
-                }`}>
-                Review and Edit Your Information:
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  label="Student Name"
-                  name="student_name"
-                  value={editedData.student_name}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading || configLoading}
-                />
-
-                <Input
-                  label="Parent Name"
-                  name="parent_name"
-                  value={editedData.parent_name}
-                  onChange={handleInputChange}
-                  disabled={loading || configLoading}
-                />
-
-                <Input
-                  label="Admission Year"
-                  name="admission_year"
-                  value={editedData.admission_year}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 2020"
-                  maxLength={4}
-                  pattern="\d{4}"
-                  disabled={loading || configLoading}
-                />
-
-                <Input
-                  label="Passing Year"
-                  name="passing_year"
-                  value={editedData.passing_year}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 2024"
-                  maxLength={4}
-                  pattern="\d{4}"
-                  disabled={loading || configLoading}
-                />
-
-                <Input
-                  label="School"
-                  name="school"
-                  type="select"
-                  value={editedData.school}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading || configLoading}
-                  options={schools.map(s => ({ value: s.id, label: s.name }))}
-                />
-
-                <Input
-                  label="Course"
-                  name="course"
-                  type="select"
-                  value={editedData.course}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading || configLoading || !editedData.school}
-                  options={availableCourses.map(c => ({ value: c.id, label: c.name }))}
-                />
-
-                <Input
-                  label="Branch"
-                  name="branch"
-                  type="select"
-                  value={editedData.branch}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading || configLoading || !editedData.course}
-                  options={availableBranches.map(b => ({ value: b.id, label: b.name }))}
-                />
-
-                <Input
-                  label="Country Code"
-                  name="country_code"
-                  type="select"
-                  value={editedData.country_code}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading || configLoading}
-                  options={countryCodes.map(c => ({
-                    value: c.dial_code,
-                    label: `${c.country_name} (${c.dial_code})`
-                  }))}
-                />
-
-                <Input
-                  label="Contact Number"
-                  name="contact_no"
-                  type="tel"
-                  value={editedData.contact_no}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="6-15 digits (without country code)"
-                  disabled={loading || configLoading}
-                />
-
-                <Input
-                  label="Personal Email"
-                  name="personal_email"
-                  type="email"
-                  value={editedData.personal_email}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="your.email@example.com"
-                  disabled={loading || configLoading}
-                />
-
-                <Input
-                  label={`College Email (${collegeDomain})`}
-                  name="college_email"
-                  type="email"
-                  value={editedData.college_email}
-                  onChange={handleInputChange}
-                  required
-                  placeholder={`yourname${collegeDomain}`}
-                  disabled={loading || configLoading}
-                />
-              </div>
             </div>
           </div>
 
