@@ -3,6 +3,7 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { verifyDepartmentStaff } from '@/lib/authUtils';
 
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -41,21 +42,11 @@ export async function POST(request) {
                 return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
             }
 
-            // Verify staff is assigned to this department
-            const { data: profile } = await supabaseAdmin
-                .from('profiles')
-                .select('assigned_department_ids')
-                .eq('id', user.id)
-                .single();
+            // Use auth utility to verify department staff authorization
+            const { valid, error: verifyError } = await verifyDepartmentStaff(departmentName, user.id);
 
-            const { data: dept } = await supabaseAdmin
-                .from('departments')
-                .select('id')
-                .eq('name', departmentName)
-                .single();
-
-            if (!profile?.assigned_department_ids?.includes(dept?.id)) {
-                return NextResponse.json({ error: 'Not authorized for this department' }, { status: 403 });
+            if (!valid) {
+                return NextResponse.json({ error: verifyError || 'Not authorized for this department' }, { status: 403 });
             }
 
             // Mark student messages as read (department is reading)
@@ -78,7 +69,35 @@ export async function POST(request) {
                 data: { marked_read: updated?.length || 0 }
             });
         } else if (readerType === 'student') {
-            // For students, mark department messages as read (no auth required)
+            // For students, verify they own the form via session cookie
+            const cookieStore = await import('next/headers').then(m => m.cookies());
+            const sessionCookie = cookieStore.get('student_session')?.value;
+            
+            if (!sessionCookie) {
+                return NextResponse.json({ error: 'Student session required' }, { status: 401 });
+            }
+
+            const { verify } = await import('jsonwebtoken');
+            const JWT_SECRET = process.env.SUPABASE_JWT_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-change-me';
+            
+            try {
+                const decoded = verify(sessionCookie, JWT_SECRET);
+                
+                // Verify that the student owns this form
+                const { data: form, error: formError } = await supabaseAdmin
+                    .from('no_dues_forms')
+                    .select('id, registration_no')
+                    .eq('id', formId)
+                    .single();
+                    
+                if (formError || !form || decoded.regNo !== form.registration_no) {
+                    return NextResponse.json({ error: 'Not authorized to access this form' }, { status: 403 });
+                }
+            } catch (err) {
+                return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
+            }
+
+            // Mark department messages as read (student is reading)
             const { data: updated, error: updateError } = await supabaseAdmin
                 .from('no_dues_messages')
                 .update({ is_read: true, read_at: new Date().toISOString() })

@@ -4,6 +4,7 @@ import { studentFormSchema, validateWithZod } from '@/lib/zodSchemas';
 import { ApiResponse } from '@/lib/apiResponse';
 import applicationService from '@/lib/services/ApplicationService';
 import { supabase } from '@/lib/supabaseClient';
+import { verifyStudentCanAccessForm, verifyStudentCanReapplyToDepartment } from '@/lib/authUtils';
 
 // Force dynamic rendering - this route uses request.url
 export const dynamic = 'force-dynamic';
@@ -46,39 +47,30 @@ export async function POST(request) {
 
 async function handleReapplication(request, body) {
   try {
-    const { formId, reason, department } = body;
+    const { formId, reason, department, registration_no } = body;
 
     if (!formId) {
       return ApiResponse.error('Form ID required for reapplication', 400);
     }
 
-    // Verify form exists
-    const { data: form, error: formError } = await supabase
-      .from('no_dues_forms')
-      .select('id, registration_no, status')
-      .eq('id', formId)
-      .single();
+    if (!registration_no) {
+      return ApiResponse.error('Registration number required for authentication', 400);
+    }
 
-    if (formError || !form) {
-      return ApiResponse.error('Form not found', 404);
+    // Verify student session and authorization to access this form
+    const { valid, error: authError } = await verifyStudentCanAccessForm(formId, registration_no);
+    
+    if (!valid) {
+      return ApiResponse.error(authError || 'Unauthorized access', 403);
     }
 
     // Check if department is specified - for per-department reapplication
     if (department) {
-      // Verify the specific department has rejected this form
-      const { data: deptStatus, error: deptError } = await supabase
-        .from('no_dues_status')
-        .select('status, rejection_reason')
-        .eq('form_id', formId)
-        .eq('department_name', department)
-        .single();
-
-      if (deptError || !deptStatus) {
-        return ApiResponse.error('Department status not found', 404);
-      }
-
-      if (deptStatus.status !== 'rejected') {
-        return ApiResponse.error(`This department has not rejected your form. Current status: ${deptStatus.status}`, 400);
+      // Verify the specific department has rejected this form and student can reapply
+      const { valid: canReapply, error: deptError } = await verifyStudentCanReapplyToDepartment(formId, department);
+      
+      if (!canReapply) {
+        return ApiResponse.error(deptError || 'Cannot reapply to this department', 400);
       }
     } else {
       // No department specified - check if ANY department has rejected

@@ -252,7 +252,7 @@ class ApplicationService {
    */
   async handleReapplication(formId, data) {
     try {
-      console.log(`♻️ Handling reapplication for ${formId}`);
+      console.log(`♻️ Handling reapplication for ${formId}, department: ${data.department}`);
 
       // 1. Fetch current form and statuses for history backup
       const [formResult, statusesResult] = await Promise.all([
@@ -291,12 +291,16 @@ class ApplicationService {
       // 3. RESET DEPARTMENT STATUS
       // Logic: If a specific department is provided, only reset THAT one.
       // If it's a global reapply (no department), reset ALL rejected departments.
-      let statusQuery = supabase.from('no_dues_status').update({
-        status: 'pending',
-        rejection_reason: null,
-        action_at: null,
-        action_by_user_id: null
-      }).eq('form_id', formId);
+      let statusQuery = supabase
+        .from('no_dues_status')
+        .update({
+          status: 'pending',
+          rejection_reason: null,
+          student_reply_message: data.reason, // Store the student's reply message
+          action_at: null,
+          action_by_user_id: null
+        })
+        .eq('form_id', formId);
 
       if (data.department) {
         statusQuery = statusQuery.eq('department_name', data.department);
@@ -329,6 +333,7 @@ class ApplicationService {
           reapplication_count: newReapplicationCount,
           last_reapplied_at: new Date().toISOString(),
           is_reapplication: true,
+          student_reply_message: data.reason, // Store the latest reply message
           rejection_reason: hasRejected ? form.rejection_reason : null, // Clear only if no rejected depts
           rejection_context: hasRejected ? form.rejection_context : null
         })
@@ -337,7 +342,12 @@ class ApplicationService {
       if (formUpdateError) throw formUpdateError;
 
       // 6. TRIGGER REALTIME
-      await this.triggerRealtimeUpdate('department_rejection', { formId, type: 'reapply', department: data.department });
+      await this.triggerRealtimeUpdate('reapplication_submitted', { 
+        formId, 
+        type: 'reapply', 
+        department: data.department,
+        newStatus: newFormStatus
+      });
 
       return {
         success: true,
@@ -454,7 +464,8 @@ class ApplicationService {
 
       const { error: insertError } = await supabase
         .from('no_dues_status')
-        .insert(statusRecords);
+        .insert(statusRecords)
+        .then();
 
       if (insertError) {
         console.error('Error creating department statuses:', insertError);
@@ -488,7 +499,8 @@ class ApplicationService {
     // Try to upsert into StudentData table
     const { error } = await supabase
       .from('student_data')
-      .upsert(studentData, { onConflict: 'form_id' });
+      .upsert(studentData, { onConflict: 'form_id' })
+      .then();
 
     if (error) {
       console.error('Error syncing student data:', error);

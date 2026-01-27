@@ -67,6 +67,8 @@ export default function ReapplyModal({
   const [availableBranches, setAvailableBranches] = useState([]);
   const [replyMessage, setReplyMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -214,25 +216,59 @@ export default function ReapplyModal({
           signal: controller.signal
         });
       } else {
-        // All-departments reapplication (original behavior)
-        response = await fetch('/api/student/reapply', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            registration_no: formData.registration_no,
-            student_reply_message: replyMessage.trim(),
-            updated_form_data: updatedFields
-          }),
-          signal: controller.signal
-        });
+        // All-departments reapplication - Submit to each rejected department individually
+        // Loop through all rejected departments and reapply to each one
+        const responses = [];
+        for (const dept of rejectedDepartments) {
+          const deptResponse = await fetch('/api/student/reapply/department', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              registration_no: formData.registration_no,
+              department_name: dept.department_name,
+              student_reply_message: replyMessage.trim(),
+              updated_form_data: updatedFields
+            }),
+            signal: controller.signal
+          });
+          
+          responses.push(deptResponse);
+          
+          // Wait briefly between requests to avoid rate limiting
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
+        
+        // Check if any department reapplication failed
+        const hasErrors = responses.some(res => !res.ok);
+        if (hasErrors) {
+          // Get error from first failed response
+          const failedResponse = responses.find(res => !res.ok);
+          const result = await failedResponse.json();
+          throw new Error(result.error || 'Failed to submit reapplication to one or more departments');
+        }
+        
+        // Use the last response for success case
+        response = responses[responses.length - 1];
       }
 
       clearTimeout(timeoutId);
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || 'Failed to submit reapplication');
+      let result;
+      if (isPerDeptMode) {
+        result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Failed to submit reapplication');
+        }
+      } else {
+        // For all departments, we already handled errors in the loop
+        // Just create a success response
+        result = {
+          success: true,
+          message: `Reapplication submitted to all ${rejectedDepartments.length} departments`,
+          data: {
+            departmentsUpdated: rejectedDepartments.length
+          }
+        };
       }
 
       setSuccess(true);

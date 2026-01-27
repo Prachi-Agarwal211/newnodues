@@ -60,6 +60,39 @@ export async function POST(request) {
             }, { status: 400 });
         }
 
+        // ==================== VERIFY AUTHENTICATION FIRST ====================
+        // Check student session authentication
+        const cookieStore = await import('next/headers').then(m => m.cookies());
+        const sessionCookie = cookieStore.get('student_session')?.value;
+        
+        if (!sessionCookie) {
+            return NextResponse.json({
+                success: false,
+                error: 'Student session required'
+            }, { status: 401 });
+        }
+
+        const { verify } = await import('jsonwebtoken');
+        const JWT_SECRET = process.env.SUPABASE_JWT_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-change-me';
+        
+        let decoded;
+        try {
+            decoded = verify(sessionCookie, JWT_SECRET);
+        } catch (err) {
+            return NextResponse.json({
+                success: false,
+                error: 'Invalid session'
+            }, { status: 401 });
+        }
+
+        // Verify that the session registration number matches the request
+        if (decoded.regNo !== registration_no.trim().toUpperCase()) {
+            return NextResponse.json({
+                success: false,
+                error: 'Unauthorized access'
+            }, { status: 403 });
+        }
+
         // ==================== GET CURRENT FORM ====================
         const { data: form, error: formError } = await supabaseAdmin
             .from('no_dues_forms')

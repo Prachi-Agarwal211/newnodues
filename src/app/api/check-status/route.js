@@ -68,7 +68,8 @@ export async function GET(request) {
 
     // 🛡️ 3. AUTHORIZATION CHECK
     // Ensure the student is only accessing THEIR OWN data
-    if (decoded.regNo !== cleanRegNo) {
+    // For the SESSION_CHECK special case, allow access without regNo comparison
+    if (cleanRegNo !== 'SESSION_CHECK' && decoded.regNo !== cleanRegNo) {
       // Log the potential breach attempt
       console.warn(`🛑 [Unauthorized Access Attempt] Session RegNo (${decoded.regNo}) tried to access (${cleanRegNo})`);
       return NextResponse.json({ success: false, error: 'Unauthorized access' }, { status: 403 });

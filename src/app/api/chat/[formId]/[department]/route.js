@@ -30,21 +30,56 @@ export async function GET(request, { params }) {
             return NextResponse.json({ error: 'Form ID and department are required' }, { status: 400 });
         }
 
-        // Optional: Add authentication check for stricter security
-        // Uncomment below if you want to require authentication for chat access
-        /*
+        // Authentication check for chat access
+        // Check if it's a department staff or a student accessing their own form
         const authHeader = request.headers.get('Authorization');
-        if (!authHeader) {
-            return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+        let isDepartmentStaff = false;
+        let isStudentOwner = false;
+        
+        if (authHeader) {
+            // Check if it's a department staff
+            const token = authHeader.replace('Bearer ', '');
+            const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+            
+            if (!authError && user) {
+                const { valid } = await verifyDepartmentStaff(department, user.id);
+                isDepartmentStaff = valid;
+            }
         }
         
-        const token = authHeader.replace('Bearer ', '');
-        const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
-        
-        if (authError || !user) {
-            return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
+        // Even if department staff is authenticated, we also allow student access via session cookie
+        if (!isDepartmentStaff) {
+            // Check student session authentication
+            const cookieStore = await import('next/headers').then(m => m.cookies());
+            const sessionCookie = cookieStore.get('student_session')?.value;
+            
+            if (sessionCookie) {
+                const { verify } = await import('jsonwebtoken');
+                const JWT_SECRET = process.env.SUPABASE_JWT_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-change-me';
+                
+                try {
+                    const decoded = verify(sessionCookie, JWT_SECRET);
+                    
+                    // Verify that the student owns this form
+                    const { data: form, error: formError } = await supabaseAdmin
+                        .from('no_dues_forms')
+                        .select('id, registration_no')
+                        .eq('id', formId)
+                        .single();
+                        
+                    if (!formError && form && decoded.regNo === form.registration_no) {
+                        isStudentOwner = true;
+                    }
+                } catch (err) {
+                    // Session verification failed
+                }
+            }
         }
-        */
+        
+        // If neither department staff nor student owner, deny access
+        if (!isDepartmentStaff && !isStudentOwner) {
+            return NextResponse.json({ error: 'Unauthorized access to chat' }, { status: 403 });
+        }
 
         // Get total count first for pagination
         const { count: totalCount } = await supabaseAdmin
@@ -200,60 +235,59 @@ export async function POST(request, { params }) {
                 }, { status: 401 });
             }
 
-            // Verify staff is assigned to this department (or has department_name matching)
-            const { data: profile } = await supabaseAdmin
-                .from('profiles')
-                .select('id, assigned_department_ids, department_name, full_name, email')
-                .eq('id', user.id)
-                .single();
-
-            // If profile doesn't exist, create one or use the user id directly
-            const effectiveProfile = profile || { id: user.id, department_name: null, assigned_department_ids: [] };
-
-            // Check if user's department_name matches OR assigned_department_ids includes the department
-            const { data: dept } = await supabaseAdmin
-                .from('departments')
-                .select('id, name')
-                .eq('name', department)
-                .single();
-
-            const isAuthorized =
-                effectiveProfile?.department_name === department ||
-                (dept && effectiveProfile?.assigned_department_ids?.includes(dept.id));
-
-            if (!isAuthorized) {
+            // Use the auth utility to verify department staff authorization
+            const { valid, error: verifyError } = await verifyDepartmentStaff(department, user.id);
+            
+            if (!valid) {
                 return NextResponse.json({
-                    error: 'Not authorized for this department'
+                    error: verifyError || 'Not authorized for this department'
                 }, { status: 403 });
             }
 
             finalSenderId = user.id;
         } else if (senderType === 'student') {
-            // STUDENTS: Verify they own this form
-            const authHeader = request.headers.get('Authorization');
-            if (authHeader) {
-                // If authenticated, verify ownership
-                const token = authHeader.replace('Bearer ', '');
-                const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+            // STUDENTS: Verify they own this form using session authentication
+            // First, verify the form exists
+            const { data: form, error: formError } = await supabaseAdmin
+                .from('no_dues_forms')
+                .select('id, registration_no')
+                .eq('id', formId)
+                .single();
 
-                if (!authError && user) {
-                    // Verify the student owns this form
-                    const { data: studentForm } = await supabaseAdmin
-                        .from('no_dues_forms')
-                        .select('id')
-                        .eq('id', formId)
-                        .eq('student_email', user.email)
-                        .single();
-
-                    if (!studentForm) {
-                        return NextResponse.json({
-                            error: 'Not authorized to message on this form'
-                        }, { status: 403 });
-                    }
-                    finalSenderId = user.id;
-                }
+            if (formError || !form) {
+                return NextResponse.json({
+                    error: 'Form not found'
+                }, { status: 404 });
             }
-            // If not authenticated, allow anonymous student messages (legacy support)
+
+            // Check session authentication for the student
+            const cookieStore = await import('next/headers').then(m => m.cookies());
+            const sessionCookie = cookieStore.get('student_session')?.value;
+            
+            if (!sessionCookie) {
+                return NextResponse.json({
+                    error: 'Student session required'
+                }, { status: 401 });
+            }
+
+            const { verify } = await import('jsonwebtoken');
+            const JWT_SECRET = process.env.SUPABASE_JWT_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-change-me';
+            
+            try {
+                const decoded = verify(sessionCookie, JWT_SECRET);
+                // Verify that the session registration number matches the form
+                if (decoded.regNo !== form.registration_no) {
+                    return NextResponse.json({
+                        error: 'Not authorized to message on this form'
+                    }, { status: 403 });
+                }
+                // Since we don't have the user ID from Supabase auth for students, we'll use a derived ID
+                finalSenderId = `student_${form.registration_no}`;
+            } catch (err) {
+                return NextResponse.json({
+                    error: 'Invalid session'
+                }, { status: 401 });
+            }
         }
 
         // Create message - ensure sender_id is never null for the database
@@ -263,7 +297,7 @@ export async function POST(request, { params }) {
             message: message.trim(),
             sender_type: senderType,
             sender_name: senderName.trim(),
-            sender_id: finalSenderId || senderId || `student-${senderName}`,
+            sender_id: finalSenderId || `system-${Date.now()}`,
             is_read: false
         };
 
@@ -335,7 +369,8 @@ async function updateDepartmentUnreadCount(departmentName, formId) {
             .update({
                 updated_at: new Date().toISOString()
             })
-            .eq('name', departmentName);
+            .eq('name', departmentName)
+            .then();
 
     } catch (error) {
         console.error('Failed to update unread count:', error);

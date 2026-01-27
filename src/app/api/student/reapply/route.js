@@ -49,6 +49,18 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Unauthorized access' }, { status: 403 });
     }
 
+    // Verify form exists and belongs to the student
+    const { data: form, error: formError } = await supabase
+      .from('no_dues_forms')
+      .select('id, registration_no, status')
+      .eq('id', validatedData.form_id)
+      .eq('registration_no', validatedData.registration_no.toUpperCase().trim())
+      .single();
+
+    if (formError || !form) {
+      return NextResponse.json({ success: false, error: 'Form not found or unauthorized' }, { status: 404 });
+    }
+
     // Apply rate limiting
     const rateLimitResult = await rateLimit(request, RATE_LIMITS.STUDENT_REAPPLY);
 
