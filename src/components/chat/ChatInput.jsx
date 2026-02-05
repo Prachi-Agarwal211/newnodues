@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function ChatInput({
     onSend,
@@ -14,6 +15,8 @@ export default function ChatInput({
 }) {
     const [message, setMessage] = useState('');
     const typingTimeoutRef = useRef(null);
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
 
     // Handle typing detection
     const handleChange = (e) => {
@@ -76,11 +79,11 @@ export default function ChatInput({
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-white/10">
+        <form onSubmit={handleSubmit} className={`p-3 border-t ${isDark ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'}`}>
             {selectedFile && (
-                <div className="mb-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <div className={`mb-2 p-2 border rounded-lg ${isDark ? 'bg-blue-900/20 border-blue-800' : 'bg-blue-50 border-blue-200'}`}>
                     <div className="flex items-center justify-between">
-                        <span className="text-sm text-blue-700 dark:text-blue-300">
+                        <span className={`text-sm ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
                             📎 {selectedFile.name}
                         </span>
                     </div>
@@ -94,7 +97,11 @@ export default function ChatInput({
                     onBlur={handleBlur}
                     placeholder={placeholder || 'Type a message...'}
                     rows={1}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all"
+                    className={`flex-1 px-4 py-2.5 rounded-xl border resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all
+                        ${isDark
+                            ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400'
+                            : 'bg-gray-100 border-gray-200 text-gray-900 placeholder-gray-500'
+                        }`}
                     style={{ minHeight: '44px', maxHeight: '120px' }}
                     disabled={sending || disabled}
                 />
@@ -111,7 +118,7 @@ export default function ChatInput({
                     )}
                 </button>
             </div>
-            <p className="text-[10px] text-gray-400 mt-1.5 text-center">
+            <p className={`text-[10px] mt-1.5 text-center ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                 Press Enter to send, Shift+Enter for new line
             </p>
         </form>

@@ -235,9 +235,9 @@ export async function POST(request) {
 
         // ==================== HANDLE REAPPLICATION VIA SERVICE ====================
         // Centralized logic handles: history logging, form status update, dept status reset, and realtime triggers
-        const { handleReapplication } = (await import('@/lib/services/ApplicationService')).default;
+        const applicationService = (await import('@/lib/services/ApplicationService')).default;
 
-        await handleReapplication(form.id, {
+        await applicationService.handleReapplication(form.id, {
             reason: student_reply_message.trim(),
             department: department_name,
             editedFields: sanitizedData || {}

@@ -64,7 +64,6 @@ export async function GET(request, { params }) {
       .from('no_dues_forms')
       .select(`
         id,
-        user_id,
         student_name,
         registration_no,
         admission_year,
@@ -74,6 +73,8 @@ export async function GET(request, { params }) {
         course,
         branch,
         contact_no,
+        personal_email,
+        college_email,
         alumni_profile_link,
         certificate_url,
         status,
@@ -81,11 +82,7 @@ export async function GET(request, { params }) {
         updated_at,
         reapplication_count,
         student_reply_message,
-        last_reapplied_at,
-        profiles!no_dues_forms_user_id_fkey (
-          full_name,
-          email
-        )
+        last_reapplied_at
       `)
       .eq('id', id);
 
@@ -217,7 +214,7 @@ export async function GET(request, { params }) {
         status: formData.status,
         created_at: formData.created_at,
         updated_at: formData.updated_at,
-        user_email: formData.profiles?.email,
+        user_email: formData.college_email || formData.personal_email || null,
         reapplication_count: formData.reapplication_count || 0,
         student_reply_message: formData.student_reply_message || null,
         last_reapplied_at: formData.last_reapplied_at || null

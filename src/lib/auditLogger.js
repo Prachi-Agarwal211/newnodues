@@ -33,6 +33,16 @@ export const AuditLogger = {
      */
     log: async (action, actorId, details = {}, resourceId = null, ipAddress = null) => {
         try {
+            const actorName =
+                details.actor_name ||
+                details.actorName ||
+                details.staffName ||
+                details.userName ||
+                details.full_name ||
+                details.department ||
+                details.departmentName ||
+                'System';
+
             // Fire and forget - don't block the main request
             // We manually catch errors here to prevent unhandled rejections
             supabaseAdmin
@@ -40,6 +50,7 @@ export const AuditLogger = {
                 .insert({
                     action,
                     actor_id: actorId,
+                    actor_name: actorName,
                     details,
                     resource_id: resourceId,
                     ip_address: ipAddress,

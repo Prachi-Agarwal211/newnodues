@@ -8,11 +8,14 @@ import PageWrapper from '@/components/landing/PageWrapper';
 import GlassCard from '@/components/ui/GlassCard';
 import ChatBox from '@/components/chat/ChatBox';
 import { ArrowLeft } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function StudentChatPage() {
     const { formId, department } = useParams();
     const router = useRouter();
     const decodedDepartment = decodeURIComponent(department);
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
 
     const [studentName, setStudentName] = useState('Student');
     const [pageLoading, setPageLoading] = useState(true);
@@ -67,7 +70,11 @@ export default function StudentChatPage() {
                     {/* Back Button */}
                     <button
                         onClick={() => router.push('/student/check-status')}
-                        className="mb-4 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                        className={`mb-4 flex items-center gap-2 transition-colors
+                            ${status?.status === 'rejected'
+                                ? 'text-jecrc-red hover:text-jecrc-red-dark'
+                                : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+                            }`}
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Back to Status
@@ -81,14 +88,14 @@ export default function StudentChatPage() {
                                     <h2 className="font-bold text-gray-900 dark:text-white">
                                         {form.student_name}
                                     </h2>
-                                    <p className="text-sm text-gray-500 font-mono">
+                                    <p className={`text-sm font-mono ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                                         {form.registration_no}
                                     </p>
                                 </div>
                                 <div className="text-right">
                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${status?.status === 'rejected'
-                                        ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
-                                        : 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400'
+                                        ? (isDark ? 'bg-red-900/30 text-red-400' : 'bg-red-200 text-red-900')
+                                        : (isDark ? 'bg-yellow-900/30 text-yellow-400' : 'bg-yellow-200 text-yellow-900')
                                         }`}>
                                         {status?.status || 'Pending'}
                                     </span>

@@ -301,12 +301,12 @@ export default function DepartmentDashboard() {
 
   const StatusBadge = ({ status }) => {
     const colors = {
-      pending: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
-      approved: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
-      rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
-      in_progress: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
-      completed: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300',
-      reapplied: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300'
+      pending: 'bg-amber-200 text-amber-900 dark:bg-amber-900/30 dark:text-amber-200',
+      approved: 'bg-emerald-200 text-emerald-900 dark:bg-emerald-900/30 dark:text-emerald-200',
+      rejected: 'bg-red-200 text-red-900 dark:bg-red-900/30 dark:text-red-200',
+      in_progress: 'bg-blue-200 text-blue-900 dark:bg-blue-900/30 dark:text-blue-200',
+      completed: 'bg-purple-200 text-purple-900 dark:bg-purple-900/30 dark:text-purple-200',
+      reapplied: 'bg-orange-200 text-orange-900 dark:bg-orange-900/30 dark:text-orange-200'
     };
 
     return (
@@ -829,10 +829,10 @@ function MobileApplicationCard({ application, selected, onSelect, onApprove, onR
           </div>
         </div>
         <span className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize
-          ${status === 'pending' ? 'bg-amber-100 text-amber-700' :
-            status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
-              status === 'rejected' ? 'bg-red-100 text-red-700' :
-                'bg-gray-100 text-gray-700'
+          ${status === 'pending' ? 'bg-amber-200 text-amber-900' :
+            status === 'approved' ? 'bg-emerald-200 text-emerald-900' :
+              status === 'rejected' ? 'bg-red-200 text-red-900' :
+                'bg-gray-200 text-gray-900'
           }`}>
           {status}
         </span>

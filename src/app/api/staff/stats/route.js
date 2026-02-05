@@ -133,10 +133,30 @@ export async function GET(request) {
       }
     } else if (profile.role === 'department') {
       // ✅ NEW: Get department names from assigned UUIDs
-      const { data: myDepartments, error: deptError } = await supabaseAdmin
-        .from('departments')
-        .select('id, name, display_name')
-        .in('id', profile.assigned_department_ids || []);
+      let myDepartments = [];
+      let deptError;
+
+      if (profile.assigned_department_ids && profile.assigned_department_ids.length > 0) {
+        const result = await supabaseAdmin
+          .from('departments')
+          .select('id, name, display_name')
+          .in('id', profile.assigned_department_ids);
+        myDepartments = result.data || [];
+        deptError = result.error;
+      }
+
+      // Fallback for legacy accounts with only department_name set
+      if ((!myDepartments || myDepartments.length === 0) && profile.department_name) {
+        const result = await supabaseAdmin
+          .from('departments')
+          .select('id, name, display_name')
+          .eq('name', profile.department_name)
+          .maybeSingle();
+        if (result?.data) {
+          myDepartments = [result.data];
+        }
+        deptError = result.error || deptError;
+      }
 
       if (deptError || !myDepartments || myDepartments.length === 0) {
         return NextResponse.json({
@@ -238,9 +258,9 @@ export async function GET(request) {
       }
 
       // ✅ FIXED: Count PERSONAL actions (approved/rejected by ME) + DEPARTMENT pending
-      const approvedCount = allStatuses?.filter(s => s.status === 'approved' && s.action_by_user_id === userId).length || 0;
-      const rejectedCount = allStatuses?.filter(s => s.status === 'rejected' && s.action_by_user_id === userId).length || 0;
-      const totalCount = approvedCount + rejectedCount; // Total personal actions
+      const approvedCount = allStatuses?.filter(s => s.status === 'approved').length || 0;
+      const rejectedCount = allStatuses?.filter(s => s.status === 'rejected').length || 0;
+      const totalCount = approvedCount + rejectedCount; // Total department actions
       const pendingCount = pendingActions?.length || 0; // Department-wide pending
 
       stats = {

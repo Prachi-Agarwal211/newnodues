@@ -152,11 +152,6 @@ export default function ReapplyModal({
       return;
     }
 
-    if (!editedData.school || !editedData.course || !editedData.branch) {
-      setError('School, Course, and Branch are required');
-      return;
-    }
-
     if (!editedData.personal_email?.trim() || !editedData.college_email?.trim()) {
       setError('Both email addresses are required');
       return;

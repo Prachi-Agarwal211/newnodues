@@ -128,12 +128,12 @@ export default function ApplicationsTable({ applications: initialApplications, c
     <div className={`
       rounded-xl overflow-hidden transition-all duration-200 border
       ${isDark
-        ? 'bg-gray-900 border-white/10'
-        : 'bg-white border-gray-200'
+        ? 'bg-black/40 border-red-900/40'
+        : 'bg-white border-red-100'
       }
     `}>
       {/* Header */}
-      <div className="px-4 py-3 bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
+      <div className={`px-4 py-3 border-b ${isDark ? 'bg-red-950/40 border-red-900/40' : 'bg-red-50/80 border-red-100'}`}>
         <h3 className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-gray-700'}`}>
           Recent Applications
         </h3>
@@ -147,27 +147,27 @@ export default function ApplicationsTable({ applications: initialApplications, c
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+          <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-red-200 dark:scrollbar-thumb-red-900 scrollbar-track-transparent">
             <table className="min-w-[1000px] w-full">
-              <thead className="bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
+              <thead className={`${isDark ? 'bg-red-950/40 border-red-900/40' : 'bg-red-50/80 border-red-100'} border-b`}>
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 w-12">Expand</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">Student Name</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">Reg. No</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">Course</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">Dept. Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">Certificate</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">Submitted</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 w-24">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200 w-12">Expand</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200">Student Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200">Reg. No</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200">Course</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200">Dept. Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200">Certificate</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200">Submitted</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-200 w-24">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-white/5 text-gray-600 dark:text-gray-300">
+              <tbody className="divide-y divide-red-100 dark:divide-red-900/30 text-gray-600 dark:text-gray-300">
                 {applications.map((app) => {
                   const isExpanded = expandedRows.has(app.id);
                   return (
                     <React.Fragment key={app.id}>
-                      <tr className={`group transition-colors duration-200 gpu-accelerated ${updatingRows.has(app.id) ? 'bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-gray-50 dark:hover:bg-white/5'}`}>
+                      <tr className={`group transition-colors duration-200 gpu-accelerated ${updatingRows.has(app.id) ? 'bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-red-50/70 dark:hover:bg-red-950/30'}`}>
                         <td className="px-4 py-4">
                           <button
                             onClick={() => toggleRowExpansion(app.id)}
@@ -275,7 +275,7 @@ export default function ApplicationsTable({ applications: initialApplications, c
                       </tr>
                       {isExpanded && (
                         <tr>
-                          <td colSpan="9" className="px-4 py-4 bg-gray-50 dark:bg-white/5 border-b border-gray-100 dark:border-white/5">
+                          <td colSpan="9" className="px-4 py-4 bg-red-50/70 dark:bg-red-950/30 border-b border-red-100 dark:border-red-900/30">
                             <div className="animate-fade-in">
                               <ExpandedDepartmentDetails departments={app.no_dues_status} />
                             </div>
@@ -290,7 +290,7 @@ export default function ApplicationsTable({ applications: initialApplications, c
           </div>
 
           {/* Pagination */}
-          <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-gray-200 dark:border-white/10 gap-3 bg-gray-50 dark:bg-white/5">
+          <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-red-100 dark:border-red-900/30 gap-3 bg-red-50/70 dark:bg-red-950/30">
             <div className="text-sm text-gray-600 dark:text-gray-400 order-2 sm:order-1">
               Page <span className="font-semibold text-gray-900 dark:text-white">{currentPage}</span> of <span className="font-semibold text-gray-900 dark:text-white">{totalPages}</span>
               <span className="mx-2 opacity-50">•</span>

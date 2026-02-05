@@ -92,15 +92,7 @@ export async function GET(request, { params }) {
         // Get messages with pagination
         const { data: messages, error } = await supabaseAdmin
             .from('no_dues_messages')
-            .select(`
-                *,
-                sender:sender_id(
-                    id,
-                    full_name,
-                    email,
-                    role
-                )
-            `)
+            .select('*')
             .eq('form_id', formId)
             .eq('department_name', department)
             .order('created_at', { ascending: true })
@@ -307,15 +299,7 @@ export async function POST(request, { params }) {
         const { data: newMessage, error: insertError } = await supabaseAdmin
             .from('no_dues_messages')
             .insert([messageData])
-            .select(`
-                *,
-                sender:sender_id(
-                    id,
-                    full_name,
-                    email,
-                    role
-                )
-            `)
+            .select('*')
             .single();
 
         if (insertError) {

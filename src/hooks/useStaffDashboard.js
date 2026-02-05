@@ -102,7 +102,9 @@ export function useStaffDashboard() {
         const { data: { session } } = await supabase.auth.getSession();
 
         if (!session?.user?.id) {
-          throw new Error('Session expired. Please login again.');
+          // Session ended (e.g., logout). Redirect without surfacing an error.
+          router.push('/staff/login');
+          return;
         }
 
         // Build query params with search term
@@ -158,7 +160,10 @@ export function useStaffDashboard() {
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
-        setError(error.message);
+        // Avoid flashing errors during logout or session expiry
+        if (error?.message !== 'Session expired. Please login again.') {
+          setError(error.message);
+        }
       } finally {
         if (loadingTimeoutRef.current) clearTimeout(loadingTimeoutRef.current);
         setLoading(false);
@@ -196,7 +201,8 @@ export function useStaffDashboard() {
         const { data: { session } } = await supabase.auth.getSession();
 
         if (!session?.user?.id) {
-          throw new Error('Session expired. Please login again.');
+          router.push('/staff/login');
+          return;
         }
 
         const response = await fetch(`/api/staff/stats?_t=${Date.now()}`, {
@@ -253,8 +259,7 @@ export function useStaffDashboard() {
   useEffect(() => {
     if (!userId || !user?.department_name) return;
 
-    let unsubscribeRealtime;
-    let unsubscribeDeptAction;
+    let unsubscribeDepartment;
     let unsubscribeGlobal;
     let retryTimeout;
     let debounceTimer = null;
@@ -273,7 +278,7 @@ export function useStaffDashboard() {
       };
 
       // SIMPLIFIED: Use unified subscription method
-      const unsubscribeDepartment = import('@/lib/supabaseRealtime').then(({ realtimeService }) => {
+      unsubscribeDepartment = import('@/lib/supabaseRealtime').then(({ realtimeService }) => {
         return realtimeService.subscribeToDepartment(user.department_name, {
           onStatusUpdate: (event) => {
             console.log('⚡ Performing SILENT update for department actions');

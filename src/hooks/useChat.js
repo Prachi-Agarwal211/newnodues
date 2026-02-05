@@ -43,8 +43,17 @@ export function useChat(formId, department, readerType = 'student') {
 
             const offset = loadMore ? pagination.offset + pagination.limit : 0;
 
+            const headers = {};
+            if (readerTypeRef.current === 'department') {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.access_token) {
+                    headers['Authorization'] = `Bearer ${session.access_token}`;
+                }
+            }
+
             const response = await fetch(
-                `/api/chat/${currentFormId}/${encodeURIComponent(currentDepartment)}?limit=50&offset=${offset}`
+                `/api/chat/${currentFormId}/${encodeURIComponent(currentDepartment)}?limit=50&offset=${offset}`,
+                { headers }
             );
 
             const result = await response.json();

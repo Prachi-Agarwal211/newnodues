@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Eye, EyeOff, AlertCircle, ChevronDown } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function Input({
     label,
@@ -23,6 +24,8 @@ export default function Input({
     ...props
 }) {
     const [showPassword, setShowPassword] = useState(false);
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const inputType = type === 'password' && showPassword ? 'text' : type;
     const isSelect = type === 'select';
     const isTextarea = type === 'textarea';
@@ -34,14 +37,18 @@ export default function Input({
         "border-2",
         isTextarea ? "min-h-[140px]" : "min-h-[62px]",
         error
-            ? "border-red-500 bg-red-50/50 dark:bg-red-900/20"
-            : "bg-white dark:bg-gray-800 border-jecrc-red/50 hover:border-jecrc-red/70 focus-within:border-jecrc-red focus-within:shadow-lg focus-within:shadow-jecrc-red/15",
+            ? (isDark ? "border-red-500 bg-red-900/20" : "border-red-500 bg-red-50/50")
+            : (isDark
+                ? "bg-black border-jecrc-red/50 hover:border-jecrc-red/70 focus-within:border-jecrc-red focus-within:shadow-lg focus-within:shadow-jecrc-red/15"
+                : "bg-white border-jecrc-red/50 hover:border-jecrc-red/70 focus-within:border-jecrc-red focus-within:shadow-lg focus-within:shadow-jecrc-red/15"),
         disabled && "opacity-60 cursor-not-allowed"
     );
 
     const inputBaseClasses = cn(
         "peer w-full pt-6 pb-2 bg-transparent outline-none border-none shadow-none ring-0",
-        "text-gray-900 dark:text-white placeholder:text-transparent focus:placeholder:text-gray-400 dark:focus:placeholder:text-gray-500",
+        isDark
+            ? "text-white placeholder:text-transparent focus:placeholder:text-gray-500"
+            : "text-gray-900 placeholder:text-transparent focus:placeholder:text-gray-400",
         "text-base font-medium",
         startIcon ? "pl-11" : "pl-4",
         (endIcon || type === 'password' || isSelect) ? "pr-11" : "pr-4",
@@ -49,12 +56,16 @@ export default function Input({
         isSelect && "appearance-none cursor-pointer" // Hide default arrow for select
     );
 
+    const shouldFloatLabel = isSelect || (value || value === 0);
+
     const labelClasses = cn(
-        "absolute top-4 text-gray-400 dark:text-gray-500 text-base transition-all duration-200 pointer-events-none origin-[0]",
+        "absolute top-4 text-base transition-all duration-200 pointer-events-none origin-[0]",
+        isDark ? "text-gray-500" : "text-gray-400",
         startIcon ? "left-11" : "left-4",
         "peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0",
-        "peer-focus:scale-75 peer-focus:-translate-y-5 peer-focus:text-jecrc-red dark:peer-focus:text-jecrc-red-bright",
-        (value || value === 0) ? "scale-75 -translate-y-5" : "",
+        "peer-focus:scale-75 peer-focus:-translate-y-5 peer-focus:text-jecrc-red",
+        isDark && "peer-focus:text-jecrc-red-bright",
+        shouldFloatLabel ? "scale-75 -translate-y-5" : "",
         error && "text-red-500 peer-focus:text-red-500"
     );
 
@@ -64,7 +75,11 @@ export default function Input({
 
                 {/* Start Icon */}
                 {startIcon && (
-                    <div className="absolute left-3 top-6 -translate-y-[2px] text-gray-400 peer-focus:text-jecrc-red dark:peer-focus:text-jecrc-red transition-colors pointer-events-none">
+                    <div className={cn(
+                        "absolute left-3 top-6 -translate-y-[2px] transition-colors pointer-events-none",
+                        isDark ? "text-gray-500" : "text-gray-400",
+                        "peer-focus:text-jecrc-red"
+                    )}>
                         {startIcon}
                     </div>
                 )}
@@ -83,21 +98,31 @@ export default function Input({
                             id={name}
                             {...props}
                         >
-                            <option value="" disabled className="bg-gray-50 dark:bg-gray-900 text-gray-500">
+                            <option value="" disabled className={cn(
+                                "text-gray-500",
+                                isDark ? "bg-black" : "bg-gray-50"
+                            )}>
                                 {placeholder}
                             </option>
                             {options.map((option) => (
                                 <option
                                     key={option.value}
                                     value={option.value}
-                                    className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white py-2"
+                                    className={cn(
+                                        "py-2",
+                                        isDark ? "bg-black text-white" : "bg-white text-gray-900"
+                                    )}
                                 >
                                     {option.label}
                                 </option>
                             ))}
                         </select>
                         {/* Custom Arrow */}
-                        <div className="absolute right-3 top-1/2 translate-y-1 pointer-events-none text-gray-400 peer-focus:text-jecrc-red transition-colors">
+                        <div className={cn(
+                            "absolute right-3 top-1/2 translate-y-1 pointer-events-none transition-colors",
+                            isDark ? "text-gray-500" : "text-gray-400",
+                            "peer-focus:text-jecrc-red"
+                        )}>
                             <ChevronDown size={18} />
                         </div>
                     </>
@@ -141,13 +166,20 @@ export default function Input({
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 translate-y-1 p-1 bg-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                        className={cn(
+                            "absolute right-3 top-1/2 translate-y-1 p-1 bg-transparent transition-colors",
+                            isDark ? "text-gray-500 hover:text-gray-300" : "text-gray-400 hover:text-gray-600"
+                        )}
                         disabled={disabled}
                     >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                 ) : endIcon ? (
-                    <div className="absolute right-3 top-1/2 translate-y-1 text-gray-400 peer-focus:text-jecrc-red dark:peer-focus:text-jecrc-red transition-colors pointer-events-none">
+                    <div className={cn(
+                        "absolute right-3 top-1/2 translate-y-1 transition-colors pointer-events-none",
+                        isDark ? "text-gray-500" : "text-gray-400",
+                        "peer-focus:text-jecrc-red"
+                    )}>
                         {endIcon}
                     </div>
                 ) : null}

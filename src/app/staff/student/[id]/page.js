@@ -542,21 +542,21 @@ export default function StudentDetailView() {
                 }`}>
                 Department Status
               </h2>
-              <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-white/10">
+              <div className="rounded-xl overflow-hidden border border-red-100 dark:border-red-900/40">
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200 dark:divide-white/10">
-                    <thead className={`transition-colors duration-700 ${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
+                  <table className="min-w-full divide-y divide-red-100 dark:divide-red-900/30">
+                    <thead className={`transition-colors duration-700 ${isDark ? 'bg-red-950/40' : 'bg-red-50/80'}`}>
                       <tr>
-                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Department</th>
-                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Status</th>
-                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Updated</th>
-                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Action By</th>
-                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Notes</th>
+                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-red-200' : 'text-red-700'}`}>Department</th>
+                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-red-200' : 'text-red-700'}`}>Status</th>
+                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-red-200' : 'text-red-700'}`}>Updated</th>
+                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-red-200' : 'text-red-700'}`}>Action By</th>
+                        <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-red-200' : 'text-red-700'}`}>Notes</th>
                       </tr>
                     </thead>
-                    <tbody className={`divide-y divide-gray-200 dark:divide-white/5 ${isDark ? 'bg-transparent' : 'bg-white'}`}>
+                    <tbody className={`divide-y divide-red-100 dark:divide-red-900/30 ${isDark ? 'bg-transparent' : 'bg-white'}`}>
                       {statusData.map((status, index) => (
-                        <tr key={index} className="transition-colors hover:bg-gray-50 dark:hover:bg-white/5">
+                        <tr key={index} className="transition-colors hover:bg-red-50/70 dark:hover:bg-red-950/30">
                           <td className={`px-4 py-4 whitespace-nowrap text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
                             {status.display_name}
                           </td>

@@ -202,15 +202,13 @@ export default function AdminDashboard() {
       {/* Standalone Header */}
       <GlassCard className="p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-jecrc-red to-jecrc-red-dark flex items-center justify-center text-white shadow-lg shadow-jecrc-red/20">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg
+            ${isDark ? 'bg-red-700/80 shadow-red-900/30' : 'bg-jecrc-red shadow-jecrc-red/20'}`}>
             <Shield className="w-6 h-6" />
           </div>
           <div>
             <h1 className={`text-xl font-bold transition-all duration-700
-              ${isDark
-                ? 'bg-gradient-to-r from-white via-pink-200 to-jecrc-red bg-clip-text text-transparent'
-                : 'bg-gradient-to-r from-[#8B0000] to-jecrc-red bg-clip-text text-transparent'
-              }`}>
+              ${isDark ? 'text-red-200' : 'text-jecrc-red'}`}>
               JECRC Admin
             </h1>
             <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -282,10 +280,7 @@ export default function AdminDashboard() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className={`text-2xl font-bold transition-all duration-700
-            ${isDark
-              ? 'bg-gradient-to-r from-white via-gray-100 via-pink-200 to-jecrc-red bg-clip-text text-transparent [text-shadow:0_0_20px_rgba(255,255,255,0.2)]'
-              : 'bg-gradient-to-r from-[#8B0000] via-jecrc-red to-gray-800 bg-clip-text text-transparent'
-            }`}>
+            ${isDark ? 'text-red-200' : 'text-jecrc-red'}`}>
             Overview
           </h2>
           <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -414,7 +409,8 @@ export default function AdminDashboard() {
           />
 
           {/* Filter & Actions Bar */}
-          <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white/5 p-4 rounded-xl border border-white/10">
+          <div className={`flex flex-col md:flex-row gap-4 justify-between items-center p-4 rounded-xl border
+            ${isDark ? 'bg-red-950/30 border-red-900/30' : 'bg-red-50/70 border-red-100'}`}>
             <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4 flex-1">
               <div className="flex-1 max-w-md">
                 <SearchBar
@@ -457,7 +453,7 @@ export default function AdminDashboard() {
                   exportStatsToCSV(stats);
                   toast.success("Stats exported successfully");
                 }}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all duration-200 active:scale-95"
+                className="px-4 py-2 bg-jecrc-red hover:bg-jecrc-red-dark text-white rounded-lg text-sm font-medium transition-all duration-200 active:scale-95"
               >
                 Export Stats
               </button>
@@ -466,7 +462,7 @@ export default function AdminDashboard() {
                   exportApplicationsToCSV(applications);
                   toast.success("Data exported successfully");
                 }}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-all duration-200 active:scale-95"
+                className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-lg text-sm font-medium transition-all duration-200 active:scale-95"
               >
                 Export Data
               </button>

@@ -11,8 +11,8 @@ import { useTheme } from '@/contexts/ThemeContext';
 export default function PageWrapper({ children, showThemeToggle = true, showSupportButton = true }) {
   const { theme } = useTheme();
 
-  // Provide default theme during SSR/initial render
-  const currentTheme = theme || 'dark';
+  // Provide default theme during SSR/initial render (match ThemeProvider default)
+  const currentTheme = theme || 'light';
   const isDark = currentTheme === 'dark';
 
   return (

@@ -46,6 +46,8 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const requesterType = searchParams.get('requester_type'); // 'student' or 'department'
   const status = searchParams.get('status');
+  const priority = searchParams.get('priority');
+  const search = searchParams.get('search');
   const page = parseInt(searchParams.get('page')) || 1;
   const limit = parseInt(searchParams.get('limit')) || 50;
   const offset = (page - 1) * limit;
@@ -64,6 +66,19 @@ export async function GET(request) {
     // Apply status filter if provided
     if (status) {
       query = query.eq('status', status);
+    }
+
+    // Apply priority filter if provided
+    if (priority) {
+      query = query.eq('priority', priority);
+    }
+
+    // Apply search (ticket_number, email, subject, roll_number, registration_no)
+    if (search) {
+      const term = `%${search}%`;
+      query = query.or(
+        `ticket_number.ilike.${term},email.ilike.${term},subject.ilike.${term},roll_number.ilike.${term},registration_no.ilike.${term}`
+      );
     }
 
     // Apply pagination and ordering
@@ -87,6 +102,11 @@ export async function GET(request) {
       student_open: allTickets?.filter(t => t.requester_type === 'student' && t.status === 'open').length || 0,
       department_total: allTickets?.filter(t => t.requester_type === 'department').length || 0,
       department_open: allTickets?.filter(t => t.requester_type === 'department' && t.status === 'open').length || 0,
+      open_tickets: allTickets?.filter(t => t.status === 'open').length || 0,
+      in_progress_tickets: allTickets?.filter(t => t.status === 'in_progress').length || 0,
+      resolved_tickets: allTickets?.filter(t => t.status === 'resolved').length || 0,
+      closed_tickets: allTickets?.filter(t => t.status === 'closed').length || 0,
+      total_tickets: allTickets?.length || 0
     };
 
     return NextResponse.json({
@@ -139,7 +159,7 @@ export async function PATCH(request) {
 
   try {
     const body = await request.json();
-    const { ticketId, status, adminResponse } = body;
+    const { ticketId, status, adminResponse, priority, adminNotes } = body;
 
     if (!ticketId || !status) {
       return NextResponse.json(
@@ -168,6 +188,16 @@ export async function PATCH(request) {
       updateData.admin_response = adminResponse;
       updateData.responded_at = new Date().toISOString();
       updateData.responded_by = user.id;
+    }
+
+    // Update priority if provided
+    if (priority) {
+      updateData.priority = priority;
+    }
+
+    // Update admin notes if provided
+    if (adminNotes !== undefined) {
+      updateData.admin_notes = adminNotes;
     }
 
     // Add resolved info if resolving or closing

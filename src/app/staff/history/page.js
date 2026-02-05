@@ -18,11 +18,11 @@ export default function StaffHistory() {
       if (!session) return router.push('/staff/login');
 
       try {
-        const res = await fetch('/api/staff/history', {
-            headers: { 'Authorization': `Bearer ${session.access_token}` }
+        const res = await fetch('/api/staff/history?limit=300', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` }
         });
         const json = await res.json();
-        if (json.success) setHistory(json.data);
+        if (json.success) setHistory(json.data.history || []);
       } catch (e) {
         console.error("Fetch error:", e);
       } finally {
@@ -57,19 +57,19 @@ export default function StaffHistory() {
                 <input 
                     type="text" 
                     placeholder="Search history..." 
-                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-black/40 border border-red-100 dark:border-red-900/40 rounded-xl text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-red-500"
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
         </div>
 
-        <GlassCard className="min-h-[500px]">
+        <GlassCard className="min-h-[500px] bg-white dark:bg-black/40 border border-red-100 dark:border-red-900/40">
             {loading ? (
                 <div className="p-8 text-center text-gray-400">Loading history...</div>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-gray-600 dark:text-gray-300">
-                        <thead className="bg-gray-50 dark:bg-white/5 text-xs uppercase font-semibold text-gray-500 dark:text-gray-400">
+                        <thead className="bg-red-50/80 dark:bg-red-950/40 text-xs uppercase font-semibold text-red-700 dark:text-red-200">
                             <tr>
                                 <th className="p-4">Action</th>
                                 <th className="p-4">Student</th>
@@ -78,17 +78,28 @@ export default function StaffHistory() {
                                 <th className="p-4">Reason</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                        <tbody className="divide-y divide-red-100 dark:divide-red-900/30">
                             {filtered.length === 0 ? (
                                 <tr><td colSpan="5" className="p-8 text-center text-gray-500">No records found.</td></tr>
                             ) : (
                                 filtered.map(item => (
-                                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <tr key={item.id} className="hover:bg-red-50/70 dark:hover:bg-red-950/30 transition-colors">
                                         <td className="p-4">
-                                            {item.status === 'approved' 
-                                                ? <span className="flex items-center gap-2 text-green-600 font-medium"><CheckCircle className="w-4 h-4"/> Approved</span> 
-                                                : <span className="flex items-center gap-2 text-red-600 font-medium"><XCircle className="w-4 h-4"/> Rejected</span>
-                                            }
+                                            {item.status === 'approved' && (
+                                                <span className="flex items-center gap-2 text-green-600 font-medium">
+                                                  <CheckCircle className="w-4 h-4" /> Approved
+                                                </span>
+                                            )}
+                                            {item.status === 'rejected' && (
+                                                <span className="flex items-center gap-2 text-red-600 font-medium">
+                                                  <XCircle className="w-4 h-4" /> Rejected
+                                                </span>
+                                            )}
+                                            {item.status === 'pending' && (
+                                                <span className="flex items-center gap-2 text-amber-600 font-medium">
+                                                  <Clock className="w-4 h-4" /> Pending
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="p-4 font-medium text-gray-900 dark:text-white">{item.no_dues_forms.student_name}</td>
                                         <td className="p-4 font-mono text-sm">{item.no_dues_forms.registration_no}</td>

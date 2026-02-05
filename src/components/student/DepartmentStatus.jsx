@@ -24,13 +24,13 @@ function DepartmentStatus({ departmentName, status, actionAt, rejectionReason })
   const getStatusBadge = (status) => {
     switch (status) {
       case 'approved':
-        return "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-green-500/20 text-green-500";
+        return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-green-900/30 text-green-300' : 'bg-green-200 text-green-900'}`;
       case 'rejected':
-        return "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-500/20 text-red-500";
+        return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-red-900/30 text-red-300' : 'bg-red-200 text-red-900'}`;
       case 'in_progress':
-        return "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-500";
+        return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-200 text-blue-900'}`;
       default:
-        return "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-yellow-500/20 text-yellow-500";
+        return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-yellow-900/30 text-yellow-300' : 'bg-yellow-200 text-yellow-900'}`;
     }
   };
 
@@ -59,7 +59,7 @@ function DepartmentStatus({ departmentName, status, actionAt, rejectionReason })
             {departmentName}
           </h4>
           {status === 'rejected' && rejectionReason && (
-            <p className="text-xs text-red-500 mt-1 line-clamp-2">
+            <p className={`text-xs mt-1 line-clamp-2 ${isDark ? 'text-red-400' : 'text-red-600'}`}>
               {rejectionReason}
             </p>
           )}
@@ -71,7 +71,7 @@ function DepartmentStatus({ departmentName, status, actionAt, rejectionReason })
           {status || 'pending'}
         </span>
         <span className={`text-xs whitespace-nowrap transition-colors duration-700 ease-smooth
-          ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+          ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>
           {formatDate(actionAt)}
         </span>
       </div>

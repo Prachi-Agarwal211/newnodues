@@ -178,7 +178,7 @@ export default function StaffDashboard() {
     setRejectedLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/staff/history?status=rejected&limit=100&t=${Date.now()}`, {
+      const res = await fetch(`/api/staff/history?status=rejected&limit=300&t=${Date.now()}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` }
       });
       const json = await res.json();
@@ -193,7 +193,7 @@ export default function StaffDashboard() {
     setHistoryLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/staff/history?limit=100&t=${Date.now()}`, {
+      const res = await fetch(`/api/staff/history?limit=300&t=${Date.now()}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` }
       });
       const json = await res.json();
@@ -533,10 +533,10 @@ export default function StaffDashboard() {
 
         {/* Stats Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-          <StatusCard label="Pending" value={stats?.pending || 0} sub="Awaiting action" icon={Clock} color="yellow" onClick={() => setActiveTab('pending')} />
-          <StatusCard label="My Approved" value={stats?.approved || 0} sub="By you" icon={CheckCircle} color="green" onClick={() => setActiveTab('history')} />
-          <StatusCard label="My Rejected" value={stats?.rejected || 0} sub="By you" icon={XCircle} color="red" onClick={() => setActiveTab('rejected')} />
-          <StatusCard label="Total Processed" value={stats?.total || 0} sub={`${stats?.approvalRate || 0}% approval rate`} icon={TrendingUp} color="gray" onClick={() => setActiveTab('history')} />
+          <StatusCard label="Pending" value={stats?.pending || 0} sub="Awaiting action" icon={Clock} color="yellow" onClick={() => setActiveTab('pending')} isDark={isDark} />
+          <StatusCard label="Approved" value={stats?.approved || 0} sub="By department" icon={CheckCircle} color="green" onClick={() => setActiveTab('history')} isDark={isDark} />
+          <StatusCard label="Rejected" value={stats?.rejected || 0} sub="By department" icon={XCircle} color="red" onClick={() => setActiveTab('rejected')} isDark={isDark} />
+          <StatusCard label="Total Processed" value={stats?.total || 0} sub={`${stats?.approvalRate || 0}% approval rate`} icon={TrendingUp} color="gray" onClick={() => setActiveTab('history')} isDark={isDark} />
         </div>
 
         {/* Filters & Search Toolbar */}
@@ -634,7 +634,7 @@ export default function StaffDashboard() {
               {/* DESKTOP VIEW */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left min-w-[700px]">
-                  <thead className={`border-b ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                  <thead className={`border-b ${isDark ? 'bg-red-950/40 border-red-900/40' : 'bg-red-50/80 border-red-100'}`}>
                     <tr>
                       {activeTab === 'pending' && (
                         <th className="w-12 px-4 py-3">
@@ -656,14 +656,14 @@ export default function StaffDashboard() {
                       {(activeTab === 'pending' || activeTab === 'rejected') && <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-right">Actions</th>}
                     </tr>
                   </thead>
-                  <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-100'} text-sm`}>
+                  <tbody className={`divide-y ${isDark ? 'divide-red-900/30' : 'divide-red-100'} text-sm`}>
                     {currentData.length === 0 ? (
                       <tr><td colSpan="6" className="p-12 text-center text-gray-400">No records found</td></tr>
                     ) : (
                       currentData.map(item => (
                         <tr
                           key={item.id}
-                          className={`hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer ${selectedItems.has(item.no_dues_forms.id) ? 'bg-jecrc-red/5' : ''}`}
+                          className={`hover:bg-red-50/70 dark:hover:bg-red-950/30 transition-colors cursor-pointer ${selectedItems.has(item.no_dues_forms.id) ? 'bg-jecrc-red/5' : ''}`}
                           onClick={() => router.push(`/staff/student/${item.no_dues_forms.id}`)}
                         >
                           {activeTab === 'pending' && (
@@ -855,18 +855,42 @@ export default function StaffDashboard() {
 }
 
 // Status Card Component
-function StatusCard({ label, value, sub, icon: Icon, color, onClick }) {
+function StatusCard({ label, value, sub, icon: Icon, color, onClick, isDark }) {
   const colors = {
-    yellow: { bg: 'bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400', icon: 'text-amber-500 dark:text-amber-400' },
-    green: { bg: 'bg-green-100 text-green-600 dark:bg-green-500/20 dark:text-green-400', icon: 'text-green-500 dark:text-green-400' },
-    red: { bg: 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400', icon: 'text-red-500 dark:text-red-400' },
-    gray: { bg: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400', icon: 'text-gray-500 dark:text-gray-400' }
+    yellow: {
+      bg: 'bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
+      icon: 'text-amber-500 dark:text-amber-400',
+      card: isDark
+        ? 'bg-red-950/30 border border-red-900/30'
+        : 'bg-red-50/70 border border-red-100'
+    },
+    green: {
+      bg: 'bg-green-100 text-green-600 dark:bg-green-500/20 dark:text-green-400',
+      icon: 'text-green-500 dark:text-green-400',
+      card: isDark
+        ? 'bg-red-950/30 border border-red-900/30'
+        : 'bg-red-50/70 border border-red-100'
+    },
+    red: {
+      bg: 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400',
+      icon: 'text-red-500 dark:text-red-400',
+      card: isDark
+        ? 'bg-red-950/30 border border-red-900/30'
+        : 'bg-red-50/70 border border-red-100'
+    },
+    gray: {
+      bg: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+      icon: 'text-gray-500 dark:text-gray-400',
+      card: isDark
+        ? 'bg-red-950/30 border border-red-900/30'
+        : 'bg-red-50/70 border border-red-100'
+    }
   };
   const colorScheme = colors[color] || colors.gray;
 
   return (
     <button onClick={onClick} className="text-left transform transition-all hover:scale-[1.02] active:scale-95 w-full">
-      <GlassCard className="p-4 sm:p-5 h-full">
+      <GlassCard className={`p-4 sm:p-5 h-full ${colorScheme.card}`} variant="default">
         <div className="flex justify-between items-start">
           <div>
             <p className={`text-xs sm:text-sm ${colorScheme.icon}`}>{label}</p>

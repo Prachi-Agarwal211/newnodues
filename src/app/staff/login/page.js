@@ -56,7 +56,14 @@ function LoginForm() {
       <div className="min-h-screen w-full flex items-center justify-center p-4 relative z-10">
 
         {/* Back Button */}
-        <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-jecrc-red dark:hover:text-jecrc-red-bright transition-colors z-10 px-4 py-2 rounded-full bg-white/50 dark:bg-black/20 backdrop-blur-sm border border-black/5 dark:border-white/5">
+        <Link
+          href="/"
+          className={`absolute top-6 left-6 flex items-center gap-2 transition-colors z-10 px-4 py-2 rounded-full backdrop-blur-sm border
+            ${isDark
+              ? 'bg-black/40 text-white border-jecrc-red/40 hover:text-jecrc-red-bright hover:bg-black/60'
+              : 'bg-white text-jecrc-red border-jecrc-red/40 hover:bg-jecrc-rose/40'
+            }`}
+        >
           <ArrowLeft className="w-5 h-5" />
           <span className="font-medium">Back to Home</span>
         </Link>

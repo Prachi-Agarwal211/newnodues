@@ -123,16 +123,24 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
   const updateTicketStatus = async (ticketId, newStatus, priority, adminNotes) => {
     setUpdating(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('Unauthorized: Please log in again');
+        return;
+      }
+
       const response = await fetch('/api/support', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
         },
         body: JSON.stringify({
           ticketId,
           status: newStatus,
           priority,
-          adminNotes
+          adminNotes,
+          adminResponse: adminNotes
         })
       });
 
@@ -206,7 +214,7 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className={`w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl
-            ${isDark ? 'bg-gray-900 border border-white/10' : 'bg-white border border-gray-200'}`}
+            ${isDark ? 'bg-black/70 border border-red-900/40' : 'bg-white border border-red-100'}`}
         >
           <div className="p-6">
             {/* Header */}
@@ -278,7 +286,7 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
 
               <div>
                 <p className={`text-xs mb-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Message</p>
-                <div className={`p-4 rounded-lg ${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
+                <div className={`p-4 rounded-lg ${isDark ? 'bg-red-950/30' : 'bg-red-50/70'}`}>
                   <p className={`whitespace-pre-wrap ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                     {selectedTicket.message}
                   </p>
@@ -385,48 +393,48 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
       {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <GlassCard className="p-4">
+          <GlassCard className="p-4 bg-red-50/70 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Open Tickets</p>
                 <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {stats.open_tickets}
+                  {stats.open_tickets ?? stats.student_open ?? 0}
                 </p>
               </div>
               <AlertCircle className="w-8 h-8 text-blue-500" />
             </div>
           </GlassCard>
 
-          <GlassCard className="p-4">
+          <GlassCard className="p-4 bg-red-50/70 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>In Progress</p>
                 <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {stats.in_progress_tickets}
+                  {stats.in_progress_tickets ?? 0}
                 </p>
               </div>
               <Clock className="w-8 h-8 text-yellow-500" />
             </div>
           </GlassCard>
 
-          <GlassCard className="p-4">
+          <GlassCard className="p-4 bg-red-50/70 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Resolved</p>
                 <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {stats.resolved_tickets}
+                  {stats.resolved_tickets ?? 0}
                 </p>
               </div>
               <CheckCircle2 className="w-8 h-8 text-green-500" />
             </div>
           </GlassCard>
 
-          <GlassCard className="p-4">
+          <GlassCard className="p-4 bg-red-50/70 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total</p>
                 <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {stats.total_tickets}
+                  {stats.total_tickets ?? stats.student_total ?? 0}
                 </p>
               </div>
               <MessageSquare className="w-8 h-8 text-purple-500" />
@@ -436,7 +444,7 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
       )}
 
       {/* Filters */}
-      <GlassCard className="p-4">
+      <GlassCard className="p-4 bg-red-50/70 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
@@ -507,42 +515,42 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
       </GlassCard>
 
       {/* Tickets Table */}
-      <GlassCard className="overflow-hidden">
+      <GlassCard className="overflow-hidden bg-white dark:bg-black/40 border border-red-100 dark:border-red-900/40">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className={`${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
+            <thead className={`${isDark ? 'bg-red-950/40' : 'bg-red-50/80'}`}>
               <tr>
-                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-red-200' : 'text-red-700'}`}>
                   Ticket #
                 </th>
-                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-red-200' : 'text-red-700'}`}>
                   Type
                 </th>
-                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-red-200' : 'text-red-700'}`}>
                   Contact
                 </th>
-                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-red-200' : 'text-red-700'}`}>
                   Subject
                 </th>
-                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-red-200' : 'text-red-700'}`}>
                   Status
                 </th>
-                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-red-200' : 'text-red-700'}`}>
                   Priority
                 </th>
-                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-red-200' : 'text-red-700'}`}>
                   Created
                 </th>
-                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-red-200' : 'text-red-700'}`}>
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/10">
+            <tbody className="divide-y divide-red-100 dark:divide-red-900/30">
               {tickets.map((ticket) => (
                 <tr
                   key={ticket.id}
-                  className={`${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'} transition-colors`}
+                  className={`${isDark ? 'hover:bg-red-950/30' : 'hover:bg-red-50/70'} transition-colors`}
                 >
                   <td className={`px-4 py-3 text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
                     {ticket.ticket_number}
@@ -604,7 +612,7 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className={`flex items-center justify-between px-4 py-3 border-t ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
+          <div className={`flex items-center justify-between px-4 py-3 border-t ${isDark ? 'border-red-900/30 bg-red-950/30' : 'border-red-100 bg-red-50/70'}`}>
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}

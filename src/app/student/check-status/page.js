@@ -22,14 +22,18 @@ const StudentInfoCard = memo(({ formData, isDark, onReset }) => (
   <GlassCard className="mb-6 p-6">
     <div className="flex justify-between items-start mb-4">
       <div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Registration Number</p>
+        <p className={`text-sm mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Registration Number</p>
         <p className="font-mono text-2xl font-bold text-jecrc-red">{formData.registration_no}</p>
       </div>
       <motion.button
         onClick={onReset}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-manrope font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-700 active:scale-95"
+        className={`px-4 py-2 rounded-lg font-manrope font-medium transition-all duration-700 active:scale-95
+          ${isDark
+            ? 'bg-black text-white border border-jecrc-red/40 hover:bg-gray-900'
+            : 'bg-white text-jecrc-red border border-jecrc-red/50 hover:bg-jecrc-rose/40'
+          }`}
       >
         Check Another
       </motion.button>
@@ -38,87 +42,87 @@ const StudentInfoCard = memo(({ formData, isDark, onReset }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-sm">
       {/* Student Name */}
       <div>
-        <p className="text-gray-500 dark:text-gray-400 mb-1">Student Name</p>
-        <p className="font-medium text-gray-900 dark:text-white">{formData.student_name}</p>
+        <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Student Name</p>
+        <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.student_name}</p>
       </div>
 
       {/* Parent Name */}
       {formData.parent_name && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Parent Name</p>
-          <p className="font-medium text-gray-900 dark:text-white">{formData.parent_name}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Parent Name</p>
+          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.parent_name}</p>
         </div>
       )}
 
       {/* Contact Number */}
       {formData.contact_no && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Contact Number</p>
-          <p className="font-medium text-gray-900 dark:text-white font-mono">{formData.contact_no}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Contact Number</p>
+          <p className={`font-medium font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.contact_no}</p>
         </div>
       )}
 
       {/* Personal Email */}
       {formData.personal_email && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Personal Email</p>
-          <p className="font-medium text-gray-900 dark:text-white text-xs break-all">{formData.personal_email}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Personal Email</p>
+          <p className={`font-medium text-xs break-all ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.personal_email}</p>
         </div>
       )}
 
       {/* College Email */}
       {formData.college_email && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">College Email</p>
-          <p className="font-medium text-gray-900 dark:text-white text-xs break-all">{formData.college_email}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>College Email</p>
+          <p className={`font-medium text-xs break-all ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.college_email}</p>
         </div>
       )}
 
       {/* School */}
       {formData.school && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">School</p>
-          <p className="font-medium text-gray-900 dark:text-white">{formData.school}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>School</p>
+          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.school}</p>
         </div>
       )}
 
       {/* Course */}
       {formData.course && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Course</p>
-          <p className="font-medium text-gray-900 dark:text-white">{formData.course}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Course</p>
+          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.course}</p>
         </div>
       )}
 
       {/* Branch */}
       {formData.branch && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Branch</p>
-          <p className="font-medium text-gray-900 dark:text-white">{formData.branch}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Branch</p>
+          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.branch}</p>
         </div>
       )}
 
       {/* Admission Year */}
       {formData.admission_year && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Admission Year</p>
-          <p className="font-medium text-gray-900 dark:text-white">{formData.admission_year}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Admission Year</p>
+          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.admission_year}</p>
         </div>
       )}
 
       {/* Passing Year */}
       {formData.passing_year && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Passing Year</p>
-          <p className="font-medium text-gray-900 dark:text-white">{formData.passing_year}</p>
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Passing Year</p>
+          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{formData.passing_year}</p>
         </div>
       )}
 
       {/* Submitted Date */}
       {formData.submitted_at && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Submitted On</p>
-          <p className="font-medium text-gray-900 dark:text-white">
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Submitted On</p>
+          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
             {new Date(formData.submitted_at).toLocaleDateString('en-IN', {
               day: 'numeric',
               month: 'short',
@@ -131,13 +135,16 @@ const StudentInfoCard = memo(({ formData, isDark, onReset }) => (
       {/* Application Status */}
       {formData.status && (
         <div>
-          <p className="text-gray-500 dark:text-gray-400 mb-1">Application Status</p>
-          <p className="font-medium text-gray-900 dark:text-white">
+          <p className={`mb-1 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>Application Status</p>
+          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
-              ${formData.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' :
-                formData.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' :
-                  formData.status === 'rejected' ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' :
-                    'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+              ${formData.status === 'completed'
+                ? (isDark ? 'bg-green-900/20 text-green-400' : 'bg-green-200 text-green-900')
+                : formData.status === 'pending'
+                  ? (isDark ? 'bg-yellow-900/20 text-yellow-400' : 'bg-yellow-200 text-yellow-900')
+                  : formData.status === 'rejected'
+                    ? (isDark ? 'bg-red-900/20 text-red-400' : 'bg-red-200 text-red-900')
+                    : (isDark ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-200 text-blue-900')
               }`}>
               {formData.status}
             </span>
@@ -153,7 +160,7 @@ function CheckStatusContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { theme } = useTheme();
-  const isDark = theme === 'dark' || theme === null;
+  const isDark = theme === 'dark';
   const [registrationNumber, setRegistrationNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -252,10 +259,10 @@ function CheckStatusContent() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             onClick={() => router.push('/')}
-            className={`interactive mb-8 flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-md active:scale-95
+            className={`interactive mb-8 flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-md active:scale-95 border
               ${isDark
-                ? 'text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
-                : 'text-gray-600 hover:text-black bg-white hover:bg-gray-50 border border-black/10'
+                ? 'bg-black/40 text-white border-jecrc-red/40 hover:text-jecrc-red-bright hover:bg-black/60'
+                : 'bg-white text-jecrc-red border-jecrc-red/40 hover:bg-jecrc-rose/40'
               }`}
           >
             <ArrowLeft size={18} />
@@ -321,7 +328,7 @@ function CheckStatusContent() {
                         <li key={idx} className="flex items-start gap-2">
                           <CheckCircle2 className={`w-4 h-4 mt-0.5 flex-shrink-0 ${isDark ? 'text-green-400' : 'text-green-600'
                             }`} />
-                          <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'
+                          <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-800'
                             }`}>
                             {instruction}
                           </span>

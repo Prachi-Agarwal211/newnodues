@@ -270,6 +270,7 @@ export async function PUT(request) {
       action === 'approve' ? AuditLogger.ACTIONS.APPROVE_FORM : AuditLogger.ACTIONS.REJECT_FORM,
       userId,
       {
+        actorName: profile.full_name || profile.department_name || departmentName,
         department: departmentName,
         reason: reason || null,
         studentName: form.student_name,
@@ -289,7 +290,7 @@ export async function PUT(request) {
       AuditLogger.log(
         AuditLogger.ACTIONS.GENERATE_CERTIFICATE,
         userId, // Triggered by this user's action
-        { registrationNo: form.registration_no },
+        { actorName: profile.full_name || profile.department_name || departmentName, registrationNo: form.registration_no },
         formId
       );
 

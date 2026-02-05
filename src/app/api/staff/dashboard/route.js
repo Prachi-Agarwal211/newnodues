@@ -52,7 +52,7 @@ export async function GET(request) {
     // 🚀 QUERY 1: Get Profile with all needed fields
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
-      .select('role, assigned_department_ids, school_ids, course_ids, branch_ids')
+      .select('role, assigned_department_ids, department_name, school_ids, course_ids, branch_ids')
       .eq('id', user.id)
       .single();
 
@@ -182,14 +182,13 @@ export async function GET(request) {
         return query;
       })(),
 
-      // Count MY approved (with HOD scoping)
+      // Count department-wide approved (with HOD scoping)
       (async () => {
         let query = supabaseAdmin
           .from('no_dues_status')
           .select('id, no_dues_forms!inner(school_id)', { count: 'exact', head: true })
           .in('department_name', myDeptNames)
-          .eq('status', 'approved')
-          .eq('action_by_user_id', user.id);
+          .eq('status', 'approved');
 
         // Apply scope filtering (schools, courses, branches)
         if (profile.school_ids && profile.school_ids.length > 0) {
@@ -205,14 +204,13 @@ export async function GET(request) {
         return query;
       })(),
 
-      // Count MY rejected (with HOD scoping)
+      // Count department-wide rejected (with HOD scoping)
       (async () => {
         let query = supabaseAdmin
           .from('no_dues_status')
           .select('id, no_dues_forms!inner(school_id)', { count: 'exact', head: true })
           .in('department_name', myDeptNames)
-          .eq('status', 'rejected')
-          .eq('action_by_user_id', user.id);
+          .eq('status', 'rejected');
 
         // Apply scope filtering (schools, courses, branches)
         if (profile.school_ids && profile.school_ids.length > 0) {
@@ -255,7 +253,10 @@ export async function GET(request) {
           pending: pendingCount || 0,
           approved: approvedCount || 0,
           rejected: rejectedCount || 0,
-          total: (approvedCount || 0) + (rejectedCount || 0)
+          total: (approvedCount || 0) + (rejectedCount || 0),
+          approvalRate: (approvedCount || 0) + (rejectedCount || 0) > 0
+            ? Math.round(((approvedCount || 0) / ((approvedCount || 0) + (rejectedCount || 0))) * 100)
+            : 0
         },
         applications: applications || [],
         departments: deptInfo,

@@ -393,7 +393,7 @@ export default function AdminSettings() {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) router.push('/staff/login');
+      if (!session) router.push('/admin/login');
     };
     checkAuth();
     fetchDepartments();

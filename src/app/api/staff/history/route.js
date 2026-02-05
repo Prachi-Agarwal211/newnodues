@@ -62,13 +62,16 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // ✅ FIXED: Resolve department names from UUID array
+    // ✅ FIXED: Resolve department names from UUID array (fallback to profile.department_name)
     const { data: depts } = await supabaseAdmin
       .from('departments')
       .select('name, display_name')
       .in('id', profile.assigned_department_ids || []);
-    
-    const myDeptNames = depts?.map(d => d.name) || [];
+
+    let myDeptNames = depts?.map(d => d.name) || [];
+    if (myDeptNames.length === 0 && profile.department_name) {
+      myDeptNames = [profile.department_name];
+    }
 
     // Build query for action history (Online forms only)
     let query = supabaseAdmin
@@ -114,16 +117,15 @@ export async function GET(request) {
         query = query.in('no_dues_forms.branch_id', profile.branch_ids);
       }
 
-      // Filter by action taken by this user
-      query = query.eq('action_by_user_id', userId);
+      // Show all department actions (not just this user's)
     }
 
     // Filter by status if provided
     if (statusFilter && statusFilter !== 'all') {
       query = query.eq('status', statusFilter);
     } else {
-      // Show only approved and rejected (exclude pending)
-      query = query.in('status', ['approved', 'rejected']);
+      // Show all statuses (includes pending) to match full department history
+      query = query.in('status', ['approved', 'rejected', 'pending']);
     }
 
     // Apply pagination and ordering
@@ -145,14 +147,13 @@ export async function GET(request) {
 
     if (profile.role === 'department') {
       countQuery = countQuery
-        .in('department_name', myDeptNames) // ✅ FIXED: Use UUID-resolved names
-        .eq('action_by_user_id', userId);
+        .in('department_name', myDeptNames); // ✅ FIXED: Use UUID-resolved names
     }
 
     if (statusFilter && statusFilter !== 'all') {
       countQuery = countQuery.eq('status', statusFilter);
     } else {
-      countQuery = countQuery.in('status', ['approved', 'rejected']);
+      countQuery = countQuery.in('status', ['approved', 'rejected', 'pending']);
     }
 
     const { count: totalCount, error: countError } = await countQuery;
