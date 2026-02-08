@@ -63,9 +63,28 @@ class ApplicationService {
       // 4. Sync student data to master table
       await this.syncStudentData(form.id, formData);
 
-      // 5. Real-time updates are handled by PostgreSQL triggers and Supabase realtime
-      // No need for manual triggers here - the database will notify all subscribers automatically
-      console.log('🚀 Real-time updates will be handled by database triggers');
+      // 5. ✅ EXPLICIT REALTIME BROADCAST - Ensures staff dashboards get notified
+      // This is critical because postgres_changes INSERT may not always trigger
+      try {
+        const broadcastChannel = supabase.channel('form-submissions-broadcast');
+        await broadcastChannel.send({
+          type: 'broadcast',
+          event: 'new-form-submission',
+          payload: {
+            formId: form.id,
+            registrationNo: form.registration_no,
+            studentName: form.student_name,
+            course: form.course,
+            branch: form.branch,
+            school: form.school,
+            timestamp: Date.now()
+          }
+        });
+        await supabase.removeChannel(broadcastChannel);
+        console.log('📡 Broadcast sent for new form submission:', form.registration_no);
+      } catch (broadcastError) {
+        console.warn('⚠️ Broadcast failed (non-blocking):', broadcastError.message);
+      }
 
       // 6. Send Email Notifications (Non-blocking)
       this.sendInitialNotifications(form).catch(err =>
@@ -202,7 +221,7 @@ class ApplicationService {
       // 4. Cascade reject pending departments if any exist
       if (pendingDepartments.length > 0) {
         console.log(`🔄 Auto-rejecting ${pendingDepartments.length} pending departments:`, pendingDepartments);
-        
+
         rejectionContext.cascade_count = pendingDepartments.length;
         rejectionContext.cascade_departments = pendingDepartments;
 
@@ -239,7 +258,7 @@ class ApplicationService {
 
       // Notifications
       this.sendRejectionNotifications(result.updatedForm, departmentName, reason);
-      
+
       // IMMEDIATE REAL-TIME TRIGGER FOR DEPARTMENT DASHBOARDS
       try {
         // Trigger custom event for immediate UI updates
@@ -262,7 +281,7 @@ class ApplicationService {
         if (typeof global !== 'undefined' && global.realtimeManager) {
           global.realtimeManager.broadcast('globalUpdate', {
             formIds: [formId],
-            eventTypes: ['department_action', 'cascade_rejection'],
+            eventTypes: ['departmentAction', 'cascadeRejection'],
             hasDepartmentAction: true,
             hasCascadeRejection: rejectionContext.cascade_count > 0,
             timestamp: Date.now()
@@ -426,9 +445,9 @@ class ApplicationService {
       if (formUpdateError) throw formUpdateError;
 
       // 6. TRIGGER REALTIME
-      await this.triggerRealtimeUpdate('reapplication_submitted', { 
-        formId, 
-        type: 'reapply', 
+      await this.triggerRealtimeUpdate('reapplication_submitted', {
+        formId,
+        type: 'reapply',
         department: data.department,
         newStatus: newFormStatus
       });

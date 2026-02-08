@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { realtimeManager } from '@/lib/realtimeManager';
-import { subscribeToRealtime } from '@/lib/supabaseRealtime';
+import { realtimeService } from '@/lib/supabaseRealtime';
 
 export function useStaffDashboard() {
   const router = useRouter();
@@ -240,7 +240,7 @@ export function useStaffDashboard() {
   // ENHANCED Manual refresh function with real-time sync
   const refreshData = useCallback(async (force = false) => {
     console.log('🔄 Manual refresh triggered - force:', force);
-    
+
     const promises = [];
 
     if (fetchDashboardDataRef.current) {
@@ -288,7 +288,7 @@ export function useStaffDashboard() {
       // IMMEDIATE UPDATES - No debounce for critical changes
       const immediateUpdate = (updateType, data) => {
         console.log(`⚡ IMMEDIATE UPDATE: ${updateType}`, data);
-        
+
         if (updateType === 'status_change') {
           // Update local state instantly for status changes
           setRequests(prevRequests => {
@@ -332,28 +332,26 @@ export function useStaffDashboard() {
       };
 
       // ENHANCED REALTIME SUBSCRIPTION
-      unsubscribeRealtime = import('@/lib/supabaseRealtime').then(({ realtimeService }) => {
-        return realtimeService.subscribeToDepartment(user.department_name, {
-          onStatusUpdate: (event) => {
-            console.log('⚡ Department status update received - AUTOMATIC UI UPDATE');
-            immediateUpdate('status_change', {
-              formId: event.data.new?.form_id || event.data.form_id,
-              status: event.data.new?.status || event.data.status,
-              action_at: event.data.new?.action_at
-            });
-          },
-          onNewApplication: (event) => {
-            console.log('🚀 New application received - AUTOMATIC REFRESH');
-            immediateUpdate('new_application', event.data);
-          },
-          onMessage: (event) => {
-            console.log('💬 New message received - update unread counts');
-            // Trigger unread message count refresh
-            setTimeout(() => {
-              window.dispatchEvent(new CustomEvent('refresh-unread-counts'));
-            }, 100);
-          }
-        });
+      unsubscribeRealtime = realtimeService.subscribeToDepartment(user.department_name, {
+        onStatusUpdate: (event) => {
+          console.log('⚡ Department status update received - AUTOMATIC UI UPDATE');
+          immediateUpdate('status_change', {
+            formId: event.data.new?.form_id || event.data.form_id,
+            status: event.data.new?.status || event.data.status,
+            action_at: event.data.new?.action_at
+          });
+        },
+        onNewApplication: (event) => {
+          console.log('🚀 New application received - AUTOMATIC REFRESH');
+          immediateUpdate('new_application', event.data);
+        },
+        onMessage: (event) => {
+          console.log('💬 New message received - update unread counts');
+          // Trigger unread message count refresh
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('refresh-unread-counts'));
+          }, 100);
+        }
       });
 
       // Also subscribe to global updates for form completions
@@ -389,14 +387,26 @@ export function useStaffDashboard() {
         });
       });
 
+      // ✅ CRITICAL: Listen for force refresh events from broadcast handler
+      // This is the most reliable path for new form submission updates
+      const handleForceRefresh = (e) => {
+        console.log('🔄 Force dashboard refresh received:', e.detail);
+        if (fetchDashboardDataRef.current) {
+          console.log('🚀 Executing immediate dashboard data fetch');
+          fetchDashboardDataRef.current(currentSearchRef.current, true);
+        }
+      };
+      window.addEventListener('force-dashboard-refresh', handleForceRefresh);
+
       return () => {
         if (unsubscribeRealtime) {
-          unsubscribeRealtime.then(unsub => unsub && unsub());
+          unsubscribeRealtime();
         }
         unsubscribeGlobal();
         window.removeEventListener('bulk-action-completed', immediateUpdate);
         window.removeEventListener('individual-action-completed', immediateUpdate);
         window.removeEventListener('department-action-completed', immediateUpdate);
+        window.removeEventListener('force-dashboard-refresh', handleForceRefresh);
       };
     };
 
@@ -406,8 +416,11 @@ export function useStaffDashboard() {
       console.log('🧹 Staff dashboard cleaning up AUTOMATIC realtime subscriptions');
       if (retryTimeout) clearTimeout(retryTimeout);
       if (debounceTimer) clearTimeout(debounceTimer);
-      cleanup.then(cleanupFn => cleanupFn && cleanupFn());
-
+      if (unsubscribeRealtime) unsubscribeRealtime();
+      if (unsubscribeGlobal) unsubscribeGlobal();
+      window.removeEventListener('bulk-action-completed', immediateUpdate);
+      window.removeEventListener('individual-action-completed', immediateUpdate);
+      window.removeEventListener('department-action-completed', immediateUpdate);
       if (loadingTimeoutRef.current) clearTimeout(loadingTimeoutRef.current);
       if (statsTimeoutRef.current) clearTimeout(statsTimeoutRef.current);
     };

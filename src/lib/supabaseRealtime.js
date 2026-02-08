@@ -68,6 +68,44 @@ class SupabaseRealtimeService {
       console.log('📡 This listens to ALL database events for instant updates');
       console.log('🔓 Public mode: Events from anon AND authenticated users');
 
+      // ==================== BROADCAST CHANNEL FOR FORM SUBMISSIONS ====================
+      // This is a FALLBACK for when postgres_changes INSERT doesn't trigger
+      // The server sends broadcasts explicitly after form creation
+      this.broadcastChannel = supabase
+        .channel('form-submissions-broadcast')
+        .on('broadcast', { event: 'new-form-submission' }, (payload) => {
+          console.log('📡 Received broadcast for new form submission:', payload.payload?.registrationNo);
+
+          // Queue event for batched processing (same as postgres_changes would do)
+          realtimeManager.queueEvent('formSubmission', { new: payload.payload });
+
+          // Dispatch browser events for notifications AND data refresh
+          if (typeof window !== 'undefined') {
+            // Show toast notification
+            window.dispatchEvent(new CustomEvent('new-submission', {
+              detail: {
+                registrationNo: payload.payload?.registrationNo,
+                studentName: payload.payload?.studentName,
+                formId: payload.payload?.formId
+              }
+            }));
+
+            // ✅ CRITICAL: Trigger direct dashboard refresh
+            // This bypasses the subscription chain which may be failing
+            console.log('🔄 Triggering direct dashboard refresh for new submission');
+            window.dispatchEvent(new CustomEvent('force-dashboard-refresh', {
+              detail: {
+                reason: 'new-form-submission',
+                formId: payload.payload?.formId,
+                timestamp: Date.now()
+              }
+            }));
+          }
+        })
+        .subscribe((status) => {
+          console.log('📡 Broadcast channel status:', status);
+        });
+
       // Create a single PUBLIC channel for ALL realtime events
       // This ensures events from students (anon) are visible to staff/admin (authenticated)
       this.channel = supabase
@@ -358,11 +396,21 @@ class SupabaseRealtimeService {
     if (callbacks.onStatusUpdate) {
       unsubscribeCallbacks.push(
         realtimeManager.subscribe('departmentAction', (analysis) => {
+          // ✅ FIX: Include all department-related events using normalizedType
           const updates = Object.values(analysis.latestEvents)
             .filter(e => {
-              const dept = e.data.department_name || e.data.new?.department_name;
-              return dept === departmentName;
+              // Check if this is a department event (via normalizedType or original type)
+              const isDeptEvent = e.normalizedType === 'departmentAction' ||
+                ['departmentStatusUpdate', 'departmentStatusCreated', 'departmentAction', 'cascadeRejection'].includes(e.type);
+
+              // Get department from payload
+              const dept = e.data?.new?.department_name || e.data?.department_name;
+
+              // Include if it's a department event AND (no dept specified OR matches our department)
+              return isDeptEvent && (!dept || dept === departmentName);
             });
+
+          console.log(`📢 Department ${departmentName} received ${updates.length} status updates`);
           updates.forEach(update => callbacks.onStatusUpdate(update));
         })
       );
@@ -371,16 +419,26 @@ class SupabaseRealtimeService {
     if (callbacks.onNewApplication) {
       unsubscribeCallbacks.push(
         realtimeManager.subscribe('formSubmission', (analysis) => {
-          const newForms = Object.values(analysis.latestEvents)
-            .filter(e => e.type === 'formSubmission');
+          // ✅ DEBUG: Log what we receive
+          console.log('📋 formSubmission callback received analysis:', {
+            hasNewSubmission: analysis.hasNewSubmission,
+            eventCount: analysis.eventCount,
+            latestEventsKeys: Object.keys(analysis.latestEvents),
+            latestEvents: analysis.latestEvents
+          });
 
-          newForms.forEach(event => {
+          // Get all events - don't filter by type since we're already subscribed to 'formSubmission'
+          const allEvents = Object.values(analysis.latestEvents);
+          console.log(`📋 Processing ${allEvents.length} events for new application check`);
+
+          allEvents.forEach(event => {
             console.log('🔍 Checking if department should handle application:', {
               departmentName,
+              eventType: event.type,
               formData: event.data,
               shouldHandle: this.shouldDepartmentHandleApplication(event.data, departmentName)
             });
-            
+
             if (this.shouldDepartmentHandleApplication(event.data, departmentName)) {
               console.log('✅ Department should handle application - calling onNewApplication');
               callbacks.onNewApplication(event);
@@ -410,7 +468,7 @@ class SupabaseRealtimeService {
 
     // The form data is nested under form.new when coming from PostgreSQL changes
     const formData = form.new || form;
-    
+
     const formDepartment = formData.department_name || formData.school;
     console.log('🔍 shouldDepartmentHandleApplication:', {
       departmentName,
@@ -508,7 +566,13 @@ class SupabaseRealtimeService {
       this.reconnectTimeout = null;
     }
 
-    // Remove channel
+    // Remove broadcast channel
+    if (this.broadcastChannel) {
+      await supabase.removeChannel(this.broadcastChannel);
+      this.broadcastChannel = null;
+    }
+
+    // Remove main channel
     if (this.channel) {
       await supabase.removeChannel(this.channel);
       this.channel = null;

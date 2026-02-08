@@ -39,18 +39,28 @@ class RealtimeManager {
     // Deduplication tracking
     this.pendingRefreshes = new Set();
     this.lastRefreshTime = {};
-    this.MIN_REFRESH_INTERVAL = 2000; // ✅ OPTIMIZED: 2s prevents refresh spam and race conditions (was 300ms)
+    this.MIN_REFRESH_INTERVAL = 100; // ⚡ OPTIMIZED: 100ms for instant UI updates while preventing duplicate calls
   }
 
   /**
    * Queue an event for batched processing
    */
   queueEvent(eventType, eventData) {
+    // ✅ FIX: Handle both camelCase (from broadcasts) and snake_case (from postgres_changes)
+    const extractFormId = (data) => {
+      return data?.form_id ||
+        data?.formId ||
+        data?.new?.id ||
+        data?.new?.form_id ||
+        data?.new?.formId ||
+        data?.id;
+    };
+
     const event = {
       type: eventType,
       data: eventData,
       timestamp: Date.now(),
-      formId: eventData.form_id || eventData.new?.id || eventData.new?.form_id
+      formId: extractFormId(eventData)
     };
 
     this.eventQueue.push(event);
@@ -96,7 +106,8 @@ class RealtimeManager {
           'formSubmission': 9,
           'formStatusUpdate': 5,
           'departmentStatusUpdate': 3,
-          'departmentStatusCreated': 2
+          'departmentStatusCreated': 2,
+          'cascadeRejection': 8
         };
         const pCurrent = priority[current.type] || 1;
         const pPrev = priority[prev.type] || 1;
@@ -124,6 +135,9 @@ class RealtimeManager {
     const eventTypes = new Set();
     const departmentActions = new Map(); // department -> action count
 
+    // ✅ FIX: Normalize event types for consistent subscriber lookup
+    const DEPARTMENT_EVENT_TYPES = ['departmentStatusUpdate', 'departmentStatusCreated', 'departmentAction', 'cascadeRejection'];
+
     events.forEach(event => {
       if (event.formId) {
         uniqueFormIds.add(event.formId);
@@ -132,24 +146,23 @@ class RealtimeManager {
       console.log('📥 Event batch contains type:', event.type);
 
       // Track department actions - handle all department-related event types
-      if (event.type === 'departmentStatusUpdate' ||
-        event.type === 'departmentStatusCreated' ||
-        event.type === 'departmentAction' ||
-        event.type === 'cascadeRejection') {
+      if (DEPARTMENT_EVENT_TYPES.includes(event.type)) {
         const dept = event.data.new?.department_name || event.data.department_name;
         if (dept) {
           departmentActions.set(dept, (departmentActions.get(dept) || 0) + 1);
         }
+        // ✅ FIX: Normalize type to 'departmentAction' for consistent subscriber matching
+        event.normalizedType = 'departmentAction';
       }
     });
 
     // Create a map of formId -> latestEvent for payload
     // This allows subscribers to optimistically update their local state
+    // ✅ FIX: Include ALL events, use fallback key if formId is undefined
     const latestEvents = {};
-    events.forEach(event => {
-      if (event.formId) {
-        latestEvents[event.formId] = event;
-      }
+    events.forEach((event, index) => {
+      const key = event.formId || `${event.type}_${index}_${event.timestamp}`;
+      latestEvents[key] = event;
     });
 
     const result = {
@@ -249,6 +262,26 @@ class RealtimeManager {
         this.pendingRefreshes.delete(callbackId);
       }
     });
+  }
+
+  /**
+   * Broadcast event immediately (bypass batching)
+   * Used for critical updates that need instant delivery
+   */
+  broadcast(eventType, data) {
+    console.log(`📡 Immediate broadcast: ${eventType}`, data);
+
+    // Create event object
+    const event = {
+      type: eventType,
+      data: data,
+      timestamp: Date.now(),
+      formId: data.formId || data.form_ids?.[0]
+    };
+
+    // Process immediately without batching
+    this.eventQueue.push(event);
+    this.processBatchedEvents();
   }
 
   /**
