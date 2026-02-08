@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { realtimeManager } from '@/lib/realtimeManager';
@@ -176,6 +176,35 @@ export function useStaffDashboard() {
     return fetchPromise;
   }, []);
 
+  // ENHANCED Manual refresh function with real-time sync
+  const refreshData = useCallback(async (force = false) => {
+    console.log('🔄 Manual refresh triggered - force:', force);
+    
+    const promises = [];
+
+    if (fetchDashboardDataRef.current) {
+      promises.push(fetchDashboardDataRef.current(currentSearchRef.current, true));
+    }
+
+    if (force && fetchStatsRef.current) {
+      promises.push(fetchStatsRef.current());
+    }
+
+    // Trigger real-time sync event
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('dashboard-refresh', {
+        detail: { timestamp: Date.now(), force }
+      }));
+    }
+
+    try {
+      await Promise.all(promises);
+      console.log('✅ Dashboard refresh completed successfully');
+    } catch (error) {
+      console.error('❌ Dashboard refresh failed:', error);
+    }
+  }, []);
+
   // Store latest function in ref
   fetchDashboardDataRef.current = fetchDashboardData;
 
@@ -237,36 +266,16 @@ export function useStaffDashboard() {
   // Store latest function in ref
   fetchStatsRef.current = fetchStats;
 
-  // ENHANCED Manual refresh function with real-time sync
-  const refreshData = useCallback(async (force = false) => {
-    console.log('🔄 Manual refresh triggered - force:', force);
-    
-    const promises = [];
-
-    if (fetchDashboardDataRef.current) {
-      promises.push(fetchDashboardDataRef.current(currentSearchRef.current, true));
-    }
-
-    if (force && fetchStatsRef.current) {
-      promises.push(fetchStatsRef.current());
-    }
-
-    // Trigger real-time sync event
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('dashboard-refresh', {
-        detail: { timestamp: Date.now(), force }
-      }));
-    }
-
-    try {
-      await Promise.all(promises);
-      console.log('✅ Dashboard refresh completed successfully');
-    } catch (error) {
-      console.error('❌ Dashboard refresh failed:', error);
-    }
-  }, []);
-
   // PERFORMANCE: Combined initial load
+  useEffect(() => {
+    }
+  })();
+
+  pendingStatsRequest.current = fetchPromise;
+  return fetchPromise;
+}, [userId, stats]);
+
+// PERFORMANCE: Combined initial load
   useEffect(() => {
     if (userId) {
       fetchDashboardData();
@@ -369,34 +378,12 @@ export function useStaffDashboard() {
         immediateUpdate('bulk_action', e.detail);
       });
 
-      // Listen for individual action completions
-      window.addEventListener('individual-action-completed', (e) => {
-        console.log('🎯 Individual action completed - AUTOMATIC REFRESH');
-        immediateUpdate('status_change', {
-          formId: e.detail.formId,
-          status: e.detail.action === 'approve' ? 'approved' : 'rejected',
-          action_at: e.detail.timestamp
-        });
-      });
-
-      // Listen for department action completions (NEW)
-      window.addEventListener('department-action-completed', (e) => {
-        console.log('🏢 Department action completed - IMMEDIATE REFRESH');
-        immediateUpdate('status_change', {
-          formId: e.detail.formId,
-          status: e.detail.status,
-          action_at: e.detail.timestamp
-        });
-      });
-
       return () => {
         if (unsubscribeRealtime) {
           unsubscribeRealtime.then(unsub => unsub && unsub());
         }
         unsubscribeGlobal();
         window.removeEventListener('bulk-action-completed', immediateUpdate);
-        window.removeEventListener('individual-action-completed', immediateUpdate);
-        window.removeEventListener('department-action-completed', immediateUpdate);
       };
     };
 

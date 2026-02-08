@@ -65,59 +65,35 @@ function DepartmentActionContent() {
         .eq('id', session.user.id)
         .single();
 
-      if (profileError || !profile || profile.role !== 'department') {  // FIXED: Changed from 'staff' to 'department'
+      if (profileError || !profile || profile.role !== 'department') {
         setError('Unauthorized: Only department staff can perform this action');
         setLoading(false);
         return;
       }
 
-      // Get the form to verify it exists and get department info
-      const { data: formData, error: formError } = await supabase
-        .from('no_dues_forms')
-        .select('*')
-        .eq('id', formId)
-        .single();
-
-      if (formError || !formData) {
-        setError('Form not found');
-        setLoading(false);
-        return;
-      }
-
-      // Verify that the user's department matches the action required
-      // In a real implementation, you would check if this is the department that needs to act
-      // For now, we'll assume the user can act if they're in the right department
-
-      // Update the status
-      const { error: statusError } = await supabase
-        .from('no_dues_status')
-        .upsert({
+      // Use the unified API endpoint for department actions
+      const response = await fetch('/api/department-action', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
           form_id: formId,
-          department_name: profile.department_name,
-          status: action === 'approve' ? 'approved' : 'rejected',
-          action_by_user_id: session.user.id,
-          action_at: new Date().toISOString()
-        });
+          status: action,
+          reason: action === 'reject' ? 'Department action via link' : null,
+          remarks: null
+        })
+      });
 
-      if (statusError) throw statusError;
+      const result = await response.json();
 
-      // Update the main form status if needed
-      let newFormStatus = formData.status;
-      if (formData.status === 'pending' && action === 'approve') {
-        newFormStatus = 'in_progress';
-      } else if (action === 'reject') {
-        newFormStatus = 'rejected';
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Failed to process action');
       }
-
-      await supabase
-        .from('no_dues_forms')
-        .update({ status: newFormStatus })
-        .eq('id', formId);
 
       setStatus('success');
-      setMessage(action === 'approve'
-        ? 'Request approved successfully'
-        : 'Request rejected successfully');
+      setMessage(result.message || `Request ${action}d successfully`);
     } catch (err) {
       console.error('Action error:', err);
       setError(`Error processing action: ${err.message}`);

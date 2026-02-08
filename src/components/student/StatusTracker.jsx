@@ -11,12 +11,21 @@ import DepartmentStatus from './DepartmentStatus';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ReapplyModal from './ReapplyModal';
 import ReapplicationHistory from './ReapplicationHistory';
+import ErrorBoundary, { StatusTrackerErrorBoundary } from '@/components/ErrorBoundary';
 import SupportButton from '@/components/support/SupportButton';
 import { realtimeManager } from '@/lib/realtimeManager';
 import { subscribeToRealtime } from '@/lib/supabaseRealtime';
 import { useUnread } from '@/hooks/useUnread';
 
 export default function StatusTracker({ registrationNo, formId }) {
+  return (
+    <StatusTrackerErrorBoundary>
+      <StatusTrackerContent registrationNo={registrationNo} formId={formId} />
+    </StatusTrackerErrorBoundary>
+  );
+}
+
+function StatusTrackerContent({ registrationNo, formId }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 

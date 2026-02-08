@@ -7,6 +7,7 @@ import { exportAllStaffDataToCSV } from '@/lib/csvExport';
 import PageWrapper from '@/components/landing/PageWrapper';
 import GlassCard from '@/components/ui/GlassCard';
 import StatusBadge from '@/components/ui/StatusBadge';
+import { RealtimeStatusIndicator } from '@/components/RealtimeStatusIndicator';
 import { RefreshCcw, Search, CheckCircle, XCircle, Clock, TrendingUp, Download, ChevronDown, LogOut, Info, AlertTriangle, HelpCircle, MessageCircle } from 'lucide-react';
 import { getSLAStatus, getSLABadgeClasses } from '@/lib/slaHelper';
 import { DEPARTMENT_GUIDELINES } from '@/lib/departmentGuidelines';
@@ -133,6 +134,27 @@ export default function StaffDashboard() {
   useEffect(() => {
     fetchUnreadMessages();
   }, [fetchUnreadMessages, lastUpdate]);
+
+  useEffect(() => {
+    const handleDashboardRefresh = (e) => {
+      console.log('🔄 Dashboard refresh event received:', e.detail);
+      // Refresh unread counts when dashboard refreshes
+      fetchUnreadMessages();
+    };
+
+    const handleRefreshUnreadCounts = () => {
+      console.log('📊 Refreshing unread message counts');
+      fetchUnreadMessages();
+    };
+
+    window.addEventListener('dashboard-refresh', handleDashboardRefresh);
+    window.addEventListener('refresh-unread-counts', handleRefreshUnreadCounts);
+
+    return () => {
+      window.removeEventListener('dashboard-refresh', handleDashboardRefresh);
+      window.removeEventListener('refresh-unread-counts', handleRefreshUnreadCounts);
+    };
+  }, [fetchUnreadMessages]);
 
   useEffect(() => {
     if (!user?.department_name) return;
@@ -285,6 +307,17 @@ export default function StaffDashboard() {
       if (!res.ok) throw new Error(json.error);
 
       toast.success(json.message || 'Bulk action successful', { id: 'bulk-toast' });
+      
+      // TRIGGER AUTOMATIC REAL-TIME UPDATE
+      window.dispatchEvent(new CustomEvent('bulk-action-completed', {
+        detail: {
+          action,
+          formIds: Array.from(selectedItems),
+          departmentName: user?.department_name,
+          timestamp: Date.now()
+        }
+      }));
+      
       refreshData();
       setSelectedItems(new Set());
     } catch (err) {
@@ -323,7 +356,19 @@ export default function StaffDashboard() {
         refreshData();
         throw new Error('Failed');
       }
+      
       toast.success('Approved ✓', { id: 'action-toast' });
+      
+      // TRIGGER AUTOMATIC REAL-TIME UPDATE
+      window.dispatchEvent(new CustomEvent('individual-action-completed', {
+        detail: {
+          action,
+          formId,
+          departmentName,
+          timestamp: Date.now()
+        }
+      }));
+      
       refreshData();
     } catch (err) {
       toast.error('Action failed', { id: 'action-toast' });
@@ -411,12 +456,9 @@ export default function StaffDashboard() {
               {user?.department_name || 'Department'} Dashboard
             </h1>
             <div className="flex items-center gap-2 mt-2">
-              <div className={`flex items-center gap-2 px-2.5 py-1 rounded-full ${isDark ? 'bg-green-500/10 border border-green-500/20' : 'bg-green-50 border border-green-100'}`}>
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                <span className={`text-xs font-semibold ${isDark ? 'text-green-400' : 'text-green-700'}`}>Live Updates</span>
-              </div>
+              <RealtimeStatusIndicator />
               <span className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                Real-time synchronization enabled
+                Automatic real-time updates enabled
               </span>
             </div>
           </div>
@@ -434,10 +476,10 @@ export default function StaffDashboard() {
               <Download className="w-4 h-4" /> Export
             </button>
             <button
-              onClick={refreshData}
+              onClick={() => refreshData(true)}
               className={`p-2.5 rounded-xl border transition-all
                 ${isDark ? 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
-              title="Refresh"
+              title="Force Refresh Data"
             >
               <RefreshCcw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
             </button>
@@ -897,7 +939,7 @@ function StatusCard({ label, value, sub, icon: Icon, color, onClick, isDark }) {
             <p className={`text-2xl sm:text-3xl font-bold mt-1 ${colorScheme.icon.replace('text-', 'text-').replace('dark:', 'dark:text-')}`}>{value || 0}</p>
             <p className={`text-xs mt-1 ${colors[color]?.bg.includes('dark') ? 'text-gray-400' : 'text-gray-500'}`}>{sub}</p>
           </div>
-          <div className={`p-3 rounded-xl ${colorScheme.bg}`}>
+          <div>
             <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${colorScheme.icon}`} />
           </div>
         </div>
@@ -935,7 +977,7 @@ function MobileCard({ item, activeTab, selected, onSelect, onAction, onNavigate,
             <h3 className={`font-bold text-base ${isDark ? 'text-white' : 'text-gray-900'}`}>
               {item.no_dues_forms.student_name}
             </h3>
-            <span className={`inline-block px-2 py-0.5 rounded text-xs font-mono mt-1 ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-600'}`}>
+            <span className={`inline-block px-2 py-0.5 rounded text-xs font-mono ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-600'}`}>
               {item.no_dues_forms.registration_no}
             </span>
           </div>
@@ -955,28 +997,35 @@ function MobileCard({ item, activeTab, selected, onSelect, onAction, onNavigate,
       </div>
 
       {activeTab === 'pending' && sla && (
-        <div className={`flex items-center gap-2 mb-4 p-2 rounded-lg ${isDark ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-          <span className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>SLA:</span>
-          <span className={`text-xs font-bold ${getSLABadgeClasses(sla).split(' ').filter(c => c.startsWith('text-')).join(' ')}`}>
-            {sla.text}
-          </span>
+        <div className={`flex items-center gap-3 mb-4 p-2 rounded-lg ${isDark ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
+          <StatusBadge status={item.status} className="scale-90 origin-top-right" />
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction(e, item.no_dues_forms.id, item.department_name, 'approve');
+            }}
+            className="px-3 py-1.5 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+          >
+            Approve
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction(e, item.no_dues_forms.id, item.department_name, 'reject');
+            }}
+            className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
+          >
+            Reject
+          </button>
         </div>
       )}
 
-      {activeTab === 'pending' && (
-        <div className="flex gap-2 pt-2 border-t border-gray-200 dark:border-gray-700" onClick={e => e.stopPropagation()}>
-          <button
-            onClick={(e) => onAction(e, item.no_dues_forms.id, item.department_name, 'approve')}
-            className="flex-1 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-1.5 transition-all"
-          >
-            <CheckCircle className="w-4 h-4" /> Approve
-          </button>
-          <button
-            onClick={(e) => onAction(e, item.no_dues_forms.id, item.department_name, 'reject')}
-            className="flex-1 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-1.5 transition-all"
-          >
-            <XCircle className="w-4 h-4" /> Reject
-          </button>
+      {sla && (
+        <div className="mt-2 text-center">
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${isDark ? 'bg-yellow-500/20 text-yellow-400' : 'bg-yellow-100 text-yellow-600'}`}>
+            <Clock className="w-3 h-3.5 mr-1" />
+            SLA: {sla.text}
+          </span>
         </div>
       )}
     </div>

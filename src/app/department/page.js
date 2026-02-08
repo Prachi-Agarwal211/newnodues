@@ -105,29 +105,37 @@ export default function DepartmentDashboard() {
   };
 
   useEffect(() => {
+    if (!departmentName) return;
+
     console.log(`🔌 Setting up unified department real-time connection for ${departmentName}`);
 
     const unsubscribe = realtimeService.subscribeToDepartment(departmentName, {
-      onStatusUpdate: (payload) => {
-        console.log(`🏢 Department ${departmentName}: Status update`, payload);
-        if (payload.new && payload.new.form_id) {
+      onStatusUpdate: (event) => {
+        console.log(`🏢 Department ${departmentName}: Status update event`, event);
+        const data = event.data?.new || event.data;
+        if (data && data.form_id) {
           setApplications(prev => prev.map(app =>
-            app.id === payload.new.form_id
-              ? { ...app, no_dues_status: [{ ...app.no_dues_status[0], status: payload.new.status }] }
+            app.id === data.form_id
+              ? { ...app, no_dues_status: [{ ...app.no_dues_status[0], status: data.status }] }
               : app
           ));
         } else {
           loadApplications();
         }
       },
-      onNewApplication: (payload) => {
-        console.log(`📝 Department ${departmentName}: New application`, payload);
-        if (payload.new) {
-          fetch(`/api/student/application?id=${payload.new.id}`)
+      onNewApplication: (event) => {
+        console.log(`📝 Department ${departmentName}: New application event`, event);
+        const data = event.data?.new || event.data;
+        if (data && data.id) {
+          fetch(`/api/student/application?id=${data.id}`)
             .then(res => res.json())
             .then(json => {
               if (json.success && json.data) {
-                setApplications(prev => [json.data, ...prev]);
+                setApplications(prev => {
+                  // Avoid duplicates
+                  if (prev.some(app => app.id === json.data.id)) return prev;
+                  return [json.data, ...prev];
+                });
               }
             }).catch(() => loadApplications());
         } else {
@@ -137,7 +145,10 @@ export default function DepartmentDashboard() {
     });
 
     setIsConnected(true);
-    return () => { unsubscribe(); };
+    return () => {
+      console.log(`🔌 Cleaning up department connection for ${departmentName}`);
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, [departmentName]);
 
   useEffect(() => {

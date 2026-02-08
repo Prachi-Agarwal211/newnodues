@@ -90,7 +90,7 @@ class SupabaseRealtimeService {
             console.log('🆕 New form submission:', payload.new?.registration_no);
 
             // Queue event for batched processing
-            realtimeManager.queueEvent('form_submission', payload);
+            realtimeManager.queueEvent('formSubmission', payload);
 
             // Dispatch browser event for notifications
             if (typeof window !== 'undefined') {
@@ -124,8 +124,8 @@ class SupabaseRealtimeService {
 
               // Queue appropriate event type
               const eventType = payload.new?.status === 'completed'
-                ? 'form_completion'
-                : 'form_status_update';
+                ? 'formCompletion'
+                : 'formStatusUpdate';
 
               realtimeManager.queueEvent(eventType, payload);
 
@@ -182,7 +182,7 @@ class SupabaseRealtimeService {
                 `${payload.old?.status} → ${payload.new?.status}`
               );
 
-              realtimeManager.queueEvent('department_status_update', payload);
+              realtimeManager.queueEvent('departmentStatusUpdate', payload);
             }
           }
         )
@@ -201,7 +201,7 @@ class SupabaseRealtimeService {
             console.log('📝 Department status created:', payload.new?.department_name);
 
             // Queue for batching - multiple INSERTs will be processed together
-            realtimeManager.queueEvent('department_status_created', payload);
+            realtimeManager.queueEvent('departmentStatusCreated', payload);
           }
         )
 
@@ -217,7 +217,7 @@ class SupabaseRealtimeService {
             console.log('🎫 New support ticket:', payload.new?.ticket_number);
 
             // Queue event
-            realtimeManager.queueEvent('support_ticket_insert', payload);
+            realtimeManager.queueEvent('supportTicketInsert', payload);
 
             // Dispatch browser event for notifications
             if (typeof window !== 'undefined') {
@@ -249,7 +249,7 @@ class SupabaseRealtimeService {
                 `${payload.old?.status} → ${payload.new?.status}`
               );
 
-              realtimeManager.queueEvent('support_ticket_update', payload);
+              realtimeManager.queueEvent('supportTicketUpdate', payload);
 
               if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('support-ticket-updated', {
@@ -276,7 +276,7 @@ class SupabaseRealtimeService {
           (payload) => {
             console.log('💬 New chat message:', payload.new?.sender_name);
 
-            realtimeManager.queueEvent('chat_message', payload);
+            realtimeManager.queueEvent('chatMessage', payload);
 
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new CustomEvent('new-chat-message', {
@@ -349,7 +349,7 @@ class SupabaseRealtimeService {
       unsubscribeCallbacks.push(
         realtimeManager.subscribe('chatMessage', (analysis) => {
           const msgs = Object.values(analysis.latestEvents)
-            .filter(e => e.type === 'chat_message' && e.data.department_name === departmentName);
+            .filter(e => e.type === 'chatMessage' && e.data.department_name === departmentName);
           msgs.forEach(msg => callbacks.onMessage(msg));
         })
       );
@@ -372,10 +372,17 @@ class SupabaseRealtimeService {
       unsubscribeCallbacks.push(
         realtimeManager.subscribe('formSubmission', (analysis) => {
           const newForms = Object.values(analysis.latestEvents)
-            .filter(e => e.type === 'form_submission');
+            .filter(e => e.type === 'formSubmission');
 
           newForms.forEach(event => {
+            console.log('🔍 Checking if department should handle application:', {
+              departmentName,
+              formData: event.data,
+              shouldHandle: this.shouldDepartmentHandleApplication(event.data, departmentName)
+            });
+            
             if (this.shouldDepartmentHandleApplication(event.data, departmentName)) {
+              console.log('✅ Department should handle application - calling onNewApplication');
               callbacks.onNewApplication(event);
             }
           });
@@ -390,17 +397,37 @@ class SupabaseRealtimeService {
 
   /**
    * Check if department should handle application
+   * FIXED: All departments should be notified of new applications for instant dashboard updates
    */
   shouldDepartmentHandleApplication(form, departmentName) {
-    if (!form || !departmentName) return false;
-    const formDepartment = form.department_name || form.school;
+    if (!form || !departmentName) {
+      console.log('❌ shouldDepartmentHandleApplication missing required params:', {
+        form: !!form,
+        departmentName: !!departmentName
+      });
+      return false;
+    }
 
-    if (formDepartment && formDepartment === departmentName) return true;
+    // The form data is nested under form.new when coming from PostgreSQL changes
+    const formData = form.new || form;
+    
+    const formDepartment = formData.department_name || formData.school;
+    console.log('🔍 shouldDepartmentHandleApplication:', {
+      departmentName,
+      formDepartment,
+      formData
+    });
 
-    const globalDepts = ['Library', 'Accounts', 'Registrar', 'Hostel', 'Proctor Office'];
-    if (globalDepts.includes(departmentName)) return true;
+    // ✅ FIXED: Direct department match
+    if (formDepartment && formDepartment === departmentName) {
+      console.log('✅ Form department matches - should handle');
+      return true;
+    }
 
-    return false;
+    // ✅ FIXED: All departments should see new applications for awareness
+    // This ensures every department dashboard gets notified of new submissions instantly
+    console.log('✅ Department should be notified of new application - INSTANT UPDATE');
+    return true;
   }
 
   /**

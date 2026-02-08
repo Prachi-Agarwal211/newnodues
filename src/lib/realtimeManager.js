@@ -19,7 +19,7 @@ class RealtimeManager {
     // Event aggregation
     this.eventQueue = [];
     this.batchTimeout = null;
-    this.BATCH_WINDOW = 300; // ⚡ OPTIMIZED: 300ms for even faster feedback (was 500ms)
+    this.BATCH_WINDOW = 50; // ⚡ OPTIMIZED: 50ms for near-instant feedback (was 300ms)
 
     // Subscribers for different event types
     this.subscribers = {
@@ -92,11 +92,11 @@ class RealtimeManager {
       return group.reduce((prev, current) => {
         // Simple priority check based on event type
         const priority = {
-          'form_completion': 10,
-          'form_submission': 9,
-          'form_status_update': 5,
-          'department_status_update': 3,
-          'department_status_created': 2
+          'formCompletion': 10,
+          'formSubmission': 9,
+          'formStatusUpdate': 5,
+          'departmentStatusUpdate': 3,
+          'departmentStatusCreated': 2
         };
         const pCurrent = priority[current.type] || 1;
         const pPrev = priority[prev.type] || 1;
@@ -129,11 +129,13 @@ class RealtimeManager {
         uniqueFormIds.add(event.formId);
       }
       eventTypes.add(event.type);
+      console.log('📥 Event batch contains type:', event.type);
 
       // Track department actions - handle all department-related event types
-      if (event.type === 'department_status_update' ||
-        event.type === 'department_status_created' ||
-        event.type === 'departmentAction') {
+      if (event.type === 'departmentStatusUpdate' ||
+        event.type === 'departmentStatusCreated' ||
+        event.type === 'departmentAction' ||
+        event.type === 'cascadeRejection') {
         const dept = event.data.new?.department_name || event.data.department_name;
         if (dept) {
           departmentActions.set(dept, (departmentActions.get(dept) || 0) + 1);
@@ -141,7 +143,7 @@ class RealtimeManager {
       }
     });
 
-    // Create a map of formId -> latestEvent for the payload
+    // Create a map of formId -> latestEvent for payload
     // This allows subscribers to optimistically update their local state
     const latestEvents = {};
     events.forEach(event => {
@@ -150,19 +152,24 @@ class RealtimeManager {
       }
     });
 
-    return {
+    const result = {
       formIds: Array.from(uniqueFormIds),
       eventTypes: Array.from(eventTypes),
       departmentActions,
       latestEvents, // ✅ Added: The actual data for targeted updates
-      hasNewSubmission: eventTypes.has('form_submission') || eventTypes.has('formSubmission'),
-      hasCompletion: eventTypes.has('form_completion') || eventTypes.has('formCompletion'),
-      hasDepartmentAction: eventTypes.has('department_status_update') ||
-        eventTypes.has('department_status_created') ||
-        eventTypes.has('departmentAction'),
-      hasChatMessage: eventTypes.has('chat_message'),
+      hasNewSubmission: eventTypes.has('formSubmission'),
+      hasCompletion: eventTypes.has('formCompletion'),
+      hasDepartmentAction: eventTypes.has('departmentStatusUpdate') ||
+        eventTypes.has('departmentStatusCreated') ||
+        eventTypes.has('departmentAction') ||
+        eventTypes.has('cascadeRejection'),
+      hasChatMessage: eventTypes.has('chatMessage'),
+      hasCascadeRejection: eventTypes.has('cascadeRejection'),
       eventCount: events.length
     };
+
+    console.log('📊 Event batch analysis:', result);
+    return result;
   }
 
   /**
@@ -171,24 +178,31 @@ class RealtimeManager {
   notifySubscribers(analysis) {
     const now = Date.now();
 
+    console.log('📢 Notifying subscribers with analysis:', analysis);
+
     // Notify specific event type subscribers
     if (analysis.hasNewSubmission) {
+      console.log('📢 Notifying formSubmission subscribers');
       this.notifySubscriberSet(this.subscribers.formSubmission, analysis, 'formSubmission', now);
     }
 
     if (analysis.hasDepartmentAction) {
+      console.log('📢 Notifying departmentAction subscribers');
       this.notifySubscriberSet(this.subscribers.departmentAction, analysis, 'departmentAction', now);
     }
 
     if (analysis.hasCompletion) {
+      console.log('📢 Notifying formCompletion subscribers');
       this.notifySubscriberSet(this.subscribers.formCompletion, analysis, 'formCompletion', now);
     }
 
     if (analysis.hasChatMessage) {
+      console.log('📢 Notifying chatMessage subscribers');
       this.notifySubscriberSet(this.subscribers.chatMessage, analysis, 'chatMessage', now);
     }
 
     // Always notify global subscribers
+    console.log('📢 Notifying globalUpdate subscribers');
     this.notifySubscriberSet(this.subscribers.globalUpdate, analysis, 'globalUpdate', now);
   }
 
@@ -197,7 +211,7 @@ class RealtimeManager {
    */
   shouldFullRefresh(eventType) {
     // Only full refresh for major state changes that add/remove rows or change sorting significantly
-    const majorChanges = ['form_submission', 'form_completion'];
+    const majorChanges = ['formSubmission', 'formCompletion'];
     return majorChanges.includes(eventType);
   }
 

@@ -2,129 +2,261 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home, ArrowLeft } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
-/**
- * ErrorBoundary - Graceful error handling with fallback UI
- * Catches React errors and displays user-friendly message
- * Provides options to retry or return home
- */
-export class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
       hasError: false,
       error: null,
-      errorInfo: null
+      errorInfo: null,
+      errorId: null,
+      retryCount: 0
     };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { 
+      hasError: true,
+      error: error,
+      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    };
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({
+    // Enhanced error logging
+    console.error('❌ Error Boundary caught an error:', {
       error,
-      errorInfo
+      errorInfo,
+      componentStack: errorInfo.componentStack,
+      errorBoundary: this.props.name || 'Unnamed',
+      timestamp: new Date().toISOString(),
+      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'SSR',
+      url: typeof window !== 'undefined' ? window.location.href : 'SSR'
     });
-    
-    // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
-    }
-    
-    // In production, you could send to error tracking service
-    // Example: Sentry.captureException(error);
+
+    this.setState({
+      errorInfo,
+      error: error,
+      hasError: true
+    });
+
+    // Report error to monitoring
+    this.reportError(error, errorInfo);
   }
+
+  reportError = (error, errorInfo) => {
+    try {
+      // Google Analytics error tracking
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'exception', {
+          description: error.message,
+          fatal: false,
+          custom_map: {
+            component: this.props.name || 'Unknown',
+            stack: errorInfo.componentStack?.substring(0, 200) || 'No stack available'
+          }
+        });
+      }
+    } catch (reportingError) {
+      console.error('Failed to report error:', reportingError);
+    }
+  };
+
+  handleRetry = () => {
+    const { retryCount } = this.state;
+    const maxRetries = 3;
+
+    if (retryCount < maxRetries) {
+      this.setState(prevState => ({
+        hasError: false,
+        error: null,
+        errorInfo: null,
+        retryCount: prevState.retryCount + 1
+      }));
+    } else {
+      console.error('Maximum retry attempts reached');
+    }
+  };
 
   handleReset = () => {
     this.setState({ 
       hasError: false,
       error: null,
-      errorInfo: null
+      errorInfo: null,
+      retryCount: 0
     });
   };
 
-  handleGoHome = () => {
-    window.location.href = '/';
+  goHome = () => {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
+  };
+
+  goBack = () => {
+    if (typeof window !== 'undefined') {
+      window.history.back();
+    }
   };
 
   render() {
+    const { error, errorInfo, retryCount } = this.state;
+    const { fallback, showRetry = true, showHome = true, showBack = true } = this.props;
+    
+    // Simple theme detection without hook for class component
+    const isDark = typeof window !== 'undefined' && 
+      window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
     if (this.state.hasError) {
+      // Custom fallback component
+      if (fallback && typeof fallback === 'function') {
+        return fallback(error, errorInfo, this.handleReset);
+      }
+
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black">
+        <div className={`min-h-screen flex items-center justify-center p-4 ${
+          isDark ? 'bg-gray-900' : 'bg-gray-50'
+        }`}>
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-md w-full"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, type: "spring" }}
+            className={`max-w-lg w-full p-8 rounded-2xl shadow-2xl ${
+              isDark 
+                ? 'bg-gray-800 border border-red-500/20' 
+                : 'bg-white border border-red-200'
+            }`}
           >
-            {/* Error Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8">
-              {/* Icon */}
+            {/* Error Icon */}
+            <div className="flex justify-center mb-6">
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="flex justify-center mb-6"
+                initial={{ rotate: 0 }}
+                animate={{ rotate: [0, -10, 10, 0] }}
+                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
+                className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                  isDark ? 'bg-red-500/10' : 'bg-red-100'
+                }`}
               >
-                <div className="w-20 h-20 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
-                  <AlertTriangle className="w-10 h-10 text-red-600 dark:text-red-400" />
-                </div>
+                <AlertTriangle className={`w-8 h-8 ${
+                  isDark ? 'text-red-400' : 'text-red-600'
+                }`} />
               </motion.div>
-
-              {/* Title */}
-              <h1 className="text-2xl font-bold text-center mb-3 text-gray-900 dark:text-white">
-                Oops! Something went wrong
-              </h1>
-
-              {/* Description */}
-              <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
-                We encountered an unexpected error. Don't worry, your data is safe.
-              </p>
-
-              {/* Error Details (Development Only) */}
-              {process.env.NODE_ENV === 'development' && this.state.error && (
-                <details className="mb-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                  <summary className="cursor-pointer text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Error Details (Dev Mode)
-                  </summary>
-                  <pre className="text-xs text-red-600 dark:text-red-400 overflow-auto max-h-40">
-                    {this.state.error.toString()}
-                    {this.state.errorInfo?.componentStack}
-                  </pre>
-                </details>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={this.handleReset}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-jecrc-red hover:bg-jecrc-red-dark text-white rounded-lg font-semibold transition-colors duration-200"
-                >
-                  <RefreshCw size={18} />
-                  Try Again
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={this.handleGoHome}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg font-semibold transition-colors duration-200"
-                >
-                  <Home size={18} />
-                  Go Home
-                </motion.button>
-              </div>
             </div>
 
-            {/* Footer */}
-            <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
-              If this problem persists, please contact support.
-            </p>
+            {/* Error Title */}
+            <h2 className={`text-2xl font-bold text-center mb-4 ${
+              isDark ? 'text-white' : 'text-gray-900'
+            }`}>
+              Oops! Something went wrong
+            </h2>
+
+            {/* Error Message */}
+            <div className={`text-center mb-6 p-4 rounded-lg ${
+              isDark ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-100 text-gray-600'
+            }`}>
+              <p className="mb-2">
+                {error?.message || 'An unexpected error occurred'}
+              </p>
+              
+              {process.env.NODE_ENV === 'development' && error && (
+                <details className="text-left mt-4">
+                  <summary className="cursor-pointer font-mono text-sm underline">
+                    Technical Details
+                  </summary>
+                  <div className="mt-2 text-xs font-mono bg-black/5 p-2 rounded overflow-auto max-h-32">
+                    <div><strong>Error:</strong> {error.toString()}</div>
+                    {errorInfo && (
+                      <div className="mt-2">
+                        <strong>Component Stack:</strong>
+                        <pre className="whitespace-pre-wrap">
+                          {errorInfo.componentStack}
+                        </pre>
+                      </div>
+                    )}
+                    {error.stack && (
+                      <div className="mt-2">
+                        <strong>Stack Trace:</strong>
+                        <pre className="whitespace-pre-wrap">
+                          {error.stack}
+                        </pre>
+                      </div>
+                    )}
+                  </div>
+                </details>
+              )}
+            </div>
+
+            {/* Error ID for support */}
+            <div className={`text-center mb-6 text-sm ${
+              isDark ? 'text-gray-400' : 'text-gray-500'
+            }`}>
+              Error ID: <code className="font-mono bg-black/10 px-2 py-1 rounded">
+                {this.state.errorId}
+              </code>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              {showRetry && retryCount < 3 && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={this.handleRetry}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                    isDark
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                      : 'bg-blue-500 hover:bg-blue-600 text-white'
+                  }`}
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Try Again {retryCount > 0 && `(${retryCount}/3)`}
+                </motion.button>
+              )}
+
+              {showBack && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={this.goBack}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                    isDark
+                      ? 'bg-gray-600 hover:bg-gray-700 text-white'
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Go Back
+                </motion.button>
+              )}
+
+              {showHome && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={this.goHome}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                    isDark
+                      ? 'bg-green-600 hover:bg-green-700 text-white'
+                      : 'bg-green-500 hover:bg-green-600 text-white'
+                  }`}
+                >
+                  <Home className="w-4 h-4" />
+                  Home
+                </motion.button>
+              )}
+            </div>
+
+            {/* Retry Limit Message */}
+            {retryCount >= 3 && (
+              <div className={`text-center mt-4 text-sm ${
+                isDark ? 'text-yellow-400' : 'text-yellow-600'
+              }`}>
+                Maximum retry attempts reached. Please refresh page or contact support.
+              </div>
+            )}
           </motion.div>
         </div>
       );
@@ -133,6 +265,69 @@ export class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+// Specialized Error Boundaries for different contexts
+export const FormErrorBoundary = ({ children, ...props }) => (
+  <ErrorBoundary name="FormComponent" {...props}>
+    {children}
+  </ErrorBoundary>
+);
+
+export const DashboardErrorBoundary = ({ children, ...props }) => (
+  <ErrorBoundary name="DashboardComponent" {...props}>
+    {children}
+  </ErrorBoundary>
+);
+
+export const APIErrorBoundary = ({ children, ...props }) => (
+  <ErrorBoundary 
+    name="APIComponent" 
+    showRetry={false}
+    showHome={true}
+    {...props}
+  >
+    {children}
+  </ErrorBoundary>
+);
+
+export const StatusTrackerErrorBoundary = ({ children, ...props }) => (
+  <ErrorBoundary 
+    name="StatusTracker" 
+    showRetry={true}
+    showBack={true}
+    showHome={false}
+    {...props}
+  >
+    {children}
+  </ErrorBoundary>
+);
+
+// Hook for error handling outside components
+export const useErrorHandler = () => {
+  const handleError = (error, context = {}) => {
+    console.error('❌ Application Error:', { error, context });
+    
+    // Report to monitoring service
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'exception', {
+        description: error.message,
+        fatal: false,
+        custom_map: context
+      });
+    }
+  };
+
+  const handleAsyncError = async (asyncFn, context = {}) => {
+    try {
+      return await asyncFn();
+    } catch (error) {
+      handleError(error, context);
+      throw error;
+    }
+  };
+
+  return { handleError, handleAsyncError };
+};
 
 /**
  * withErrorBoundary - HOC to wrap components with error boundary
@@ -147,3 +342,6 @@ export function withErrorBoundary(Component) {
     );
   };
 }
+
+export default ErrorBoundary;
+export { ErrorBoundary };

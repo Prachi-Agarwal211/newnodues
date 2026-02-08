@@ -63,10 +63,9 @@ class ApplicationService {
       // 4. Sync student data to master table
       await this.syncStudentData(form.id, formData);
 
-      // 5. Trigger Real-time Notification (Non-blocking)
-      this.triggerRealtimeUpdate('form_submission', form).catch(err =>
-        console.error('Realtime trigger error:', err)
-      );
+      // 5. Real-time updates are handled by PostgreSQL triggers and Supabase realtime
+      // No need for manual triggers here - the database will notify all subscribers automatically
+      console.log('🚀 Real-time updates will be handled by database triggers');
 
       // 6. Send Email Notifications (Non-blocking)
       this.sendInitialNotifications(form).catch(err =>
@@ -141,6 +140,10 @@ class ApplicationService {
         this.sendCertificateReadyNotification(result.updatedForm);
       }
 
+      // Real-time updates are handled by PostgreSQL triggers and Supabase realtime
+      // No need for manual triggers here - database will notify all subscribers automatically
+      console.log('🚀 Real-time updates will be handled by database triggers');
+
       await this.triggerRealtimeUpdate('department_approval', result);
 
       return { success: true, data: result };
@@ -175,12 +178,55 @@ class ApplicationService {
 
       if (statusError) throw new Error(statusError.message);
 
-      // 2. Update Form Status
+      // 2. Get all department statuses to implement cascade rejection
+      const { data: allStatuses, error: allStatusError } = await supabase
+        .from('no_dues_status')
+        .select('department_name, status')
+        .eq('form_id', formId);
+
+      if (allStatusError) throw allStatusError;
+
+      // 3. Implement cascade rejection logic
+      const pendingDepartments = allStatuses
+        .filter(s => s.status === 'pending' && s.department_name !== departmentName)
+        .map(s => s.department_name);
+
+      let rejectionContext = {
+        primary_rejector: departmentName,
+        primary_reason: reason,
+        rejected_at: new Date().toISOString(),
+        cascade_count: 0,
+        cascade_departments: []
+      };
+
+      // 4. Cascade reject pending departments if any exist
+      if (pendingDepartments.length > 0) {
+        console.log(`🔄 Auto-rejecting ${pendingDepartments.length} pending departments:`, pendingDepartments);
+        
+        rejectionContext.cascade_count = pendingDepartments.length;
+        rejectionContext.cascade_departments = pendingDepartments;
+
+        const { error: cascadeError } = await supabase
+          .from('no_dues_status')
+          .update({
+            status: 'rejected',
+            rejection_reason: `Auto-rejected due to ${departmentName} rejection: ${reason}`,
+            action_at: new Date().toISOString(),
+            action_by: 'system_cascade'
+          })
+          .eq('form_id', formId)
+          .in('department_name', pendingDepartments);
+
+        if (cascadeError) throw cascadeError;
+      }
+
+      // 5. Update Form Status with rejection context
       const { data: updatedForm, error: formError } = await supabase
         .from('no_dues_forms')
         .update({
           status: 'rejected',
           rejection_reason: reason,
+          rejection_context: rejectionContext,
           updated_at: new Date().toISOString()
         })
         .eq('id', formId)
@@ -189,10 +235,48 @@ class ApplicationService {
 
       if (formError) throw new Error(formError.message);
 
-      const result = { updatedForm, updatedStatus };
+      const result = { updatedForm, updatedStatus, rejectionContext };
 
       // Notifications
       this.sendRejectionNotifications(result.updatedForm, departmentName, reason);
+      
+      // IMMEDIATE REAL-TIME TRIGGER FOR DEPARTMENT DASHBOARDS
+      try {
+        // Trigger custom event for immediate UI updates
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('department-action-completed', {
+            detail: {
+              formId: formId,
+              departmentName: departmentName,
+              action: 'rejected',
+              status: 'rejected',
+              reason: reason,
+              cascadeCount: rejectionContext.cascade_count,
+              cascadeDepartments: rejectionContext.cascade_departments,
+              timestamp: Date.now()
+            }
+          }));
+        }
+
+        // Also trigger global real-time event
+        if (typeof global !== 'undefined' && global.realtimeManager) {
+          global.realtimeManager.broadcast('globalUpdate', {
+            formIds: [formId],
+            eventTypes: ['department_action', 'cascade_rejection'],
+            hasDepartmentAction: true,
+            hasCascadeRejection: rejectionContext.cascade_count > 0,
+            timestamp: Date.now()
+          });
+        }
+
+        console.log('🚫 IMMEDIATE REAL-TIME TRIGGERED for department rejection:', departmentName);
+        if (rejectionContext.cascade_count > 0) {
+          console.log(`🔄 CASCADE REJECTION: Auto-rejected ${rejectionContext.cascade_count} departments`);
+        }
+      } catch (realtimeError) {
+        console.error('❌ Failed to trigger immediate real-time update:', realtimeError);
+      }
+
       await this.triggerRealtimeUpdate('department_rejection', result);
 
       return { success: true, data: result };
