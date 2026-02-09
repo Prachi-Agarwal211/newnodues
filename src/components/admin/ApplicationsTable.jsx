@@ -167,7 +167,7 @@ export default function ApplicationsTable({ applications: initialApplications, c
                   const isExpanded = expandedRows.has(app.id);
                   return (
                     <React.Fragment key={app.id}>
-                      <tr className={`group transition-colors duration-200 gpu-accelerated ${updatingRows.has(app.id) ? 'bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-red-50/70 dark:hover:bg-red-950/30'}`}>
+                      <tr className={`group transition-colors duration-200 gpu-accelerated ${updatingRows.has(app.id) ? 'bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-red-50 dark:hover:bg-red-950/30'}`}>
                         <td className="px-4 py-4">
                           <button
                             onClick={() => toggleRowExpansion(app.id)}

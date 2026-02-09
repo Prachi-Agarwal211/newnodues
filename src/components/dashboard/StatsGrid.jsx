@@ -60,7 +60,8 @@ export default function StatsGrid({ stats, loading = false, onFilterChange }) {
         >
           <GlassCard
             variant="elegant"
-            className="p-5 h-full relative overflow-hidden transition-all border border-gray-200 dark:border-gray-700"
+            hoverable={false}
+            className="p-5 h-full relative overflow-hidden transition-all border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5"
           >
             <div className="flex items-center justify-between relative z-10">
               <div>

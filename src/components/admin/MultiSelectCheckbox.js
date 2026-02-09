@@ -44,7 +44,7 @@ export default function MultiSelectCheckbox({
       size({
         apply({ availableHeight, elements }) {
           Object.assign(elements.floating.style, {
-            maxHeight: `${Math.min(availableHeight - 16, 320)}px`,
+            maxHeight: `${Math.min(availableHeight - 16, 400)}px`,
           });
         },
         padding: 8,
@@ -210,7 +210,7 @@ export default function MultiSelectCheckbox({
               zIndex: 9999,
             }}
             className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl shadow-2xl flex flex-col overflow-hidden ${
-              isMobile ? 'w-[calc(100vw-2rem)]' : 'min-w-[280px]'
+              isMobile ? 'w-[calc(100vw-2rem)]' : 'min-w-[320px] max-w-[450px]'
             }`}
             role="listbox"
             aria-label={label}
@@ -260,7 +260,7 @@ export default function MultiSelectCheckbox({
             <div 
               ref={optionsListRef}
               className="overflow-y-auto flex-1 p-2"
-              style={{ minHeight: '100px' }}
+              style={{ minHeight: '150px', maxHeight: '280px' }}
             >
               {filteredOptions.length === 0 ? (
                 <div className="p-6 text-center">

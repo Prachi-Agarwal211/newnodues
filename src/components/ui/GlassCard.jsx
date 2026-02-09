@@ -52,7 +52,7 @@ export default function GlassCard({
   const cardClasses = `
     relative overflow-hidden rounded-xl p-5
     ${getVariantClasses()}
-    ${hoverable ? 'hover:shadow-lg hover:scale-[1.002] transition-all duration-300 cursor-pointer' : ''}
+    ${hoverable ? `hover:shadow-lg hover:scale-[1.002] transition-all duration-300 cursor-pointer ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}` : ''}
     ${className}
   `;
 

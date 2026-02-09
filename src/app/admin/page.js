@@ -448,7 +448,7 @@ export default function EnhancedAdminDashboard() {
 
           {/* FORCE SHOW SUPPORT WIDGET */}
           <GlassCard
-            className="p-5 cursor-pointer group hover:shadow-lg transition-all"
+            className={`p-5 cursor-pointer group hover:shadow-lg transition-all ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}
             onClick={() => router.push('/admin/support')}
           >
             <div className="flex items-center justify-between mb-3">
@@ -467,7 +467,7 @@ export default function EnhancedAdminDashboard() {
 
           {hasEmailData && (
             <GlassCard
-              className="p-5 cursor-pointer group hover:shadow-lg transition-all"
+              className={`p-5 cursor-pointer group hover:shadow-lg transition-all ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}
               onClick={() => router.push('/admin/emails')}
             >
               <div className="flex items-center justify-between mb-3">
@@ -486,7 +486,7 @@ export default function EnhancedAdminDashboard() {
           )}
 
           <GlassCard
-            className="p-5 cursor-pointer group hover:shadow-lg transition-all"
+            className={`p-5 cursor-pointer group hover:shadow-lg transition-all ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}
             onClick={() => router.push('/admin/verify')}
           >
             <div className="flex items-center justify-between mb-3">

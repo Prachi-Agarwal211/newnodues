@@ -54,9 +54,6 @@ export default function AdminRequestDetail() {
             profiles (
               full_name
             )
-          ),
-          profiles!no_dues_forms_user_id_fkey (
-            email
           )
         `)
         .eq('id', id)
@@ -207,7 +204,7 @@ export default function AdminRequestDetail() {
                 }`}>Email:</span>
                 <p className={`font-medium transition-colors duration-700 ${
                   isDark ? 'text-white' : 'text-ink-black'
-                }`}>{request.profiles?.email || 'N/A'}</p>
+                }`}>{request.personal_email || request.college_email || 'N/A'}</p>
               </div>
               <div>
                 <span className={`text-sm transition-colors duration-700 ${
