@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import PageWrapper from '@/components/landing/PageWrapper';
@@ -431,6 +431,10 @@ export default function AdminSettings() {
   };
 
   // ==================== CASCADING SCOPING FILTERS ====================
+  // Track if we're in the middle of a selection to prevent UI jumps
+  const isSelectingRef = useRef(false);
+  const pendingUpdateRef = useRef(null);
+
   // Filter courses based on selected schools for NEW STAFF
   const filteredCoursesForNewStaff = useMemo(() => {
     if (!newStaff.school_ids || newStaff.school_ids.length === 0) {
@@ -479,90 +483,159 @@ export default function AdminSettings() {
     );
   }, [branches, editingStaff?.course_ids, editingStaff]);
 
-  // Handle school selection change for NEW STAFF - reset dependent fields
-  const handleNewStaffSchoolChange = (schoolIds) => {
-    setNewStaff(prev => {
-      const updates = { school_ids: schoolIds };
+  // Helper function to process cascading updates with delay
+  const processCascadingUpdate = useCallback((updateFn) => {
+    if (isSelectingRef.current) {
+      // If we're selecting, delay the update
+      pendingUpdateRef.current = updateFn;
+      return;
+    }
+    updateFn();
+  }, []);
 
-      // If schools changed, filter out invalid courses
-      if (schoolIds.length > 0) {
-        const validCourseIds = courses
-          .filter(c => c.is_active && schoolIds.includes(c.school_id))
-          .map(c => c.id);
+  // Process pending updates after selection completes
+  useEffect(() => {
+    if (!isSelectingRef.current && pendingUpdateRef.current) {
+      const updateFn = pendingUpdateRef.current;
+      pendingUpdateRef.current = null;
+      // Small delay to let the UI settle
+      const timer = setTimeout(() => updateFn(), 50);
+      return () => clearTimeout(timer);
+    }
+  }, [newStaff.school_ids, newStaff.course_ids, editingStaff?.school_ids, editingStaff?.course_ids]);
 
-        // Keep only courses that belong to selected schools
-        updates.course_ids = prev.course_ids.filter(id => validCourseIds.includes(id));
+  // Handle school selection change for NEW STAFF - with debounced cascade
+  const handleNewStaffSchoolChange = useCallback((schoolIds) => {
+    // Immediately update school_ids without cascading
+    setNewStaff(prev => ({
+      ...prev,
+      school_ids: schoolIds
+    }));
 
+    // Delay the cascading filter to prevent UI jump
+    setTimeout(() => {
+      setNewStaff(prev => {
+        // If schools changed, filter out invalid courses
+        if (schoolIds.length > 0) {
+          const validCourseIds = courses
+            .filter(c => c.is_active && schoolIds.includes(c.school_id))
+            .map(c => c.id);
+
+          // Keep only courses that belong to selected schools
+          const newCourseIds = prev.course_ids.filter(id => validCourseIds.includes(id));
+
+          // If courses changed, filter out invalid branches
+          const validBranchIds = branches
+            .filter(b => b.is_active && newCourseIds.includes(b.course_id))
+            .map(b => b.id);
+          const newBranchIds = prev.branch_ids.filter(id => validBranchIds.includes(id));
+
+          return {
+            ...prev,
+            school_ids: schoolIds,
+            course_ids: newCourseIds,
+            branch_ids: newBranchIds
+          };
+        }
+        return { ...prev, school_ids: schoolIds };
+      });
+    }, 100);
+  }, [courses, branches]);
+
+  // Handle course selection change for NEW STAFF - with debounced cascade
+  const handleNewStaffCourseChange = useCallback((courseIds) => {
+    // Immediately update course_ids without cascading
+    setNewStaff(prev => ({
+      ...prev,
+      course_ids: courseIds
+    }));
+
+    // Delay the cascading filter to prevent UI jump
+    setTimeout(() => {
+      setNewStaff(prev => {
         // If courses changed, filter out invalid branches
-        if (updates.course_ids.length !== prev.course_ids.length) {
+        if (courseIds.length > 0) {
           const validBranchIds = branches
-            .filter(b => b.is_active && updates.course_ids.includes(b.course_id))
+            .filter(b => b.is_active && courseIds.includes(b.course_id))
             .map(b => b.id);
-          updates.branch_ids = prev.branch_ids.filter(id => validBranchIds.includes(id));
+          const newBranchIds = prev.branch_ids.filter(id => validBranchIds.includes(id));
+
+          return {
+            ...prev,
+            course_ids: courseIds,
+            branch_ids: newBranchIds
+          };
         }
-      }
+        return { ...prev, course_ids: courseIds };
+      });
+    }, 100);
+  }, [branches]);
 
-      return { ...prev, ...updates };
-    });
-  };
-
-  // Handle course selection change for NEW STAFF - reset dependent fields
-  const handleNewStaffCourseChange = (courseIds) => {
-    setNewStaff(prev => {
-      const updates = { course_ids: courseIds };
-
-      // If courses changed, filter out invalid branches
-      if (courseIds.length > 0) {
-        const validBranchIds = branches
-          .filter(b => b.is_active && courseIds.includes(b.course_id))
-          .map(b => b.id);
-        updates.branch_ids = prev.branch_ids.filter(id => validBranchIds.includes(id));
-      }
-
-      return { ...prev, ...updates };
-    });
-  };
-
-  // Handle school selection change for EDITING STAFF
-  const handleEditStaffSchoolChange = (schoolIds) => {
+  // Handle school selection change for EDITING STAFF - with debounced cascade
+  const handleEditStaffSchoolChange = useCallback((schoolIds) => {
+    // Immediately update school_ids without cascading
     setEditingStaff(prev => {
       if (!prev) return prev;
-      const updates = { school_ids: schoolIds };
-
-      if (schoolIds.length > 0) {
-        const validCourseIds = courses
-          .filter(c => c.is_active && schoolIds.includes(c.school_id))
-          .map(c => c.id);
-        updates.course_ids = (prev.course_ids || []).filter(id => validCourseIds.includes(id));
-
-        if (updates.course_ids.length !== (prev.course_ids || []).length) {
-          const validBranchIds = branches
-            .filter(b => b.is_active && updates.course_ids.includes(b.course_id))
-            .map(b => b.id);
-          updates.branch_ids = (prev.branch_ids || []).filter(id => validBranchIds.includes(id));
-        }
-      }
-
-      return { ...prev, ...updates };
+      return { ...prev, school_ids: schoolIds };
     });
-  };
 
-  // Handle course selection change for EDITING STAFF
-  const handleEditStaffCourseChange = (courseIds) => {
+    // Delay the cascading filter to prevent UI jump
+    setTimeout(() => {
+      setEditingStaff(prev => {
+        if (!prev) return prev;
+
+        if (schoolIds.length > 0) {
+          const validCourseIds = courses
+            .filter(c => c.is_active && schoolIds.includes(c.school_id))
+            .map(c => c.id);
+          const newCourseIds = (prev.course_ids || []).filter(id => validCourseIds.includes(id));
+
+          const validBranchIds = branches
+            .filter(b => b.is_active && newCourseIds.includes(b.course_id))
+            .map(b => b.id);
+          const newBranchIds = (prev.branch_ids || []).filter(id => validBranchIds.includes(id));
+
+          return {
+            ...prev,
+            school_ids: schoolIds,
+            course_ids: newCourseIds,
+            branch_ids: newBranchIds
+          };
+        }
+        return { ...prev, school_ids: schoolIds };
+      });
+    }, 100);
+  }, [courses, branches]);
+
+  // Handle course selection change for EDITING STAFF - with debounced cascade
+  const handleEditStaffCourseChange = useCallback((courseIds) => {
+    // Immediately update course_ids without cascading
     setEditingStaff(prev => {
       if (!prev) return prev;
-      const updates = { course_ids: courseIds };
-
-      if (courseIds.length > 0) {
-        const validBranchIds = branches
-          .filter(b => b.is_active && courseIds.includes(b.course_id))
-          .map(b => b.id);
-        updates.branch_ids = (prev.branch_ids || []).filter(id => validBranchIds.includes(id));
-      }
-
-      return { ...prev, ...updates };
+      return { ...prev, course_ids: courseIds };
     });
-  };
+
+    // Delay the cascading filter to prevent UI jump
+    setTimeout(() => {
+      setEditingStaff(prev => {
+        if (!prev) return prev;
+
+        if (courseIds.length > 0) {
+          const validBranchIds = branches
+            .filter(b => b.is_active && courseIds.includes(b.course_id))
+            .map(b => b.id);
+          const newBranchIds = (prev.branch_ids || []).filter(id => validBranchIds.includes(id));
+
+          return {
+            ...prev,
+            course_ids: courseIds,
+            branch_ids: newBranchIds
+          };
+        }
+        return { ...prev, course_ids: courseIds };
+      });
+    }, 100);
+  }, [branches]);
 
   const tabs = [
     { id: 'general', label: 'General', icon: Settings },
@@ -690,31 +763,43 @@ export default function AdminSettings() {
                         placeholder="Email (optional)"
                       />
 
-                      <div className="w-full space-y-2 mt-2 p-3 bg-gray-50 border border-gray-100 rounded-lg">
-                        <p className="text-xs font-semibold text-gray-500 uppercase">Scope Restriction (Optional)</p>
+                      <div className="w-full space-y-4 mt-4 p-4 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl">
+                        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">🔒 Scope Restriction (Optional)</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Restrict this department to specific schools, courses, or branches.</p>
                         <MultiSelectCheckbox
-                          options={schools.map(s => ({ id: s.id, label: s.name }))}
-                          selected={editingDept.allowed_school_ids || []}
+                          options={schools.filter(s => s.is_active).map(s => ({ id: s.id, label: s.name }))}
+                          selectedIds={editingDept.allowed_school_ids || []}
                           onChange={(ids) => setEditingDept({ ...editingDept, allowed_school_ids: ids })}
-                          placeholder="All Schools"
+                          placeholder="All Schools (no restriction)"
                           label="Restrict to Schools"
+                          emptyMessage="No active schools available"
                         />
                         {(editingDept.allowed_school_ids?.length > 0) && (
                           <MultiSelectCheckbox
-                            options={courses.filter(c => editingDept.allowed_school_ids.includes(c.school_id)).map(c => ({ id: c.id, label: c.name }))}
-                            selected={editingDept.allowed_course_ids || []}
+                            options={courses.filter(c => c.is_active && editingDept.allowed_school_ids.includes(c.school_id)).map(c => ({ 
+                              id: c.id, 
+                              label: c.name,
+                              subtitle: c.config_schools?.name
+                            }))}
+                            selectedIds={editingDept.allowed_course_ids || []}
                             onChange={(ids) => setEditingDept({ ...editingDept, allowed_course_ids: ids })}
                             placeholder="All Courses in Selected Schools"
                             label="Restrict to Courses"
+                            emptyMessage="No courses available for selected schools"
                           />
                         )}
                         {(editingDept.allowed_course_ids?.length > 0) && (
                           <MultiSelectCheckbox
-                            options={branches.filter(b => editingDept.allowed_course_ids.includes(b.course_id)).map(b => ({ id: b.id, label: b.name }))}
-                            selected={editingDept.allowed_branch_ids || []}
+                            options={branches.filter(b => b.is_active && editingDept.allowed_course_ids.includes(b.course_id)).map(b => ({ 
+                              id: b.id, 
+                              label: b.name,
+                              subtitle: b.config_courses?.name
+                            }))}
+                            selectedIds={editingDept.allowed_branch_ids || []}
                             onChange={(ids) => setEditingDept({ ...editingDept, allowed_branch_ids: ids })}
                             placeholder="All Branches in Selected Courses"
                             label="Restrict to Branches"
+                            emptyMessage="No branches available for selected courses"
                           />
                         )}
                       </div>
