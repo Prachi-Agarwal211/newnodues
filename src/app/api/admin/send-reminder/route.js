@@ -203,7 +203,7 @@ export async function POST(request) {
             departmentName,
             daysPending,
             customMessage: customMessage || null,
-            dashboardUrl: 'https://nodues.jecrcuniversity.edu.in/staff/dashboard'
+            dashboardUrl: 'https://newnodues.vercel.app/staff/dashboard'
         });
 
         // Log the reminder

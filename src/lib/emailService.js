@@ -933,7 +933,7 @@ export async function sendStudentReminder({
   const html = generateEmailTemplate({
     title: 'Pending Application Reminder',
     content,
-    actionUrl: dashboardUrl || 'https://nodues.jecrcuniversity.edu.in/staff/dashboard',
+    actionUrl: dashboardUrl || 'https://newnodues.vercel.app/staff/dashboard',
     actionText: 'Review Application',
     footerText: 'This is an automated reminder from the Registration Office.'
   });

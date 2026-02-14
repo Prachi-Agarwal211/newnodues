@@ -8,7 +8,7 @@
 import crypto from 'crypto';
 
 // Production URL - Hardcoded for reliability
-const PRODUCTION_URL = 'https://nodues.jecrcuniversity.edu.in';
+const PRODUCTION_URL = 'https://newnodues.vercel.app';
 
 /**
  * Generate QR data for certificate

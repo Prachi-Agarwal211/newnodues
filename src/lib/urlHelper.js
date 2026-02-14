@@ -5,7 +5,7 @@
  */
 
 // Production URL - HARDCODED for reliability
-const PRODUCTION_URL = 'https://nodues.jecrcuniversity.edu.in';
+const PRODUCTION_URL = 'https://newnodues.vercel.app';
 
 /**
  * Get the base URL for the application
