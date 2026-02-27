@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, Plus, Edit, Trash2, Filter, Download, Upload, User, Mail, Phone, GraduationCap, Building, BookOpen, ChevronDown, X, Check, AlertCircle } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useDebounce } from '@/hooks/useDebounce';
 import toast from 'react-hot-toast';
 
 export default function MasterStudentManager() {
@@ -37,6 +38,9 @@ export default function MasterStudentManager() {
 
   const fileInputRef = useRef(null);
 
+  // Debounced search value
+  const debouncedSearch = useDebounce(filters.search, 500);
+
   // Load configuration data
   useEffect(() => {
     loadConfiguration();
@@ -44,8 +48,12 @@ export default function MasterStudentManager() {
 
   // Load students when filters or page changes
   useEffect(() => {
-    loadStudents();
-  }, [currentPage, filters]);
+    if (debouncedSearch) {
+      searchAllStudents(debouncedSearch);
+    } else {
+      loadStudents();
+    }
+  }, [currentPage, debouncedSearch]);
 
   const loadConfiguration = async () => {
     try {
@@ -97,6 +105,48 @@ export default function MasterStudentManager() {
     } catch (error) {
       console.error('Error loading students:', error);
       toast.error('Failed to load students');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const searchAllStudents = async (searchTerm) => {
+    if (!searchTerm.trim()) {
+      // If search is empty, load normal paginated data
+      loadStudents();
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        noPagination: 'true', // Flag to get all data
+        search: searchTerm.trim(),
+        ...Object.fromEntries(Object.entries(filters).filter(([key, value]) => 
+          key !== 'search' && value // Exclude search from filters to avoid duplication
+        ))
+      });
+
+      const response = await fetch(`/api/admin/students?${params}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setStudents(data.data || []);
+        setTotalPages(1); // No pagination when showing all results
+        setTotalItems(data.count || 0);
+        
+        // Show info about total results found
+        if (data.count > 0) {
+          toast.success(`Found ${data.count} students matching "${searchTerm}"`);
+        } else {
+          toast.info(`No students found matching "${searchTerm}"`);
+        }
+      } else {
+        toast.error(data.error || 'Failed to search students');
+      }
+    } catch (error) {
+      console.error('Error searching students:', error);
+      toast.error('Failed to search students');
     } finally {
       setLoading(false);
     }
@@ -198,12 +248,47 @@ export default function MasterStudentManager() {
 
   const exportStudents = async () => {
     try {
-      const response = await fetch('/api/admin/students/export');
+      // Get current session for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('Authentication required');
+        return;
+      }
+
+      // Build query parameters with current filters
+      const params = new URLSearchParams(
+        Object.fromEntries(
+          Object.entries(filters).filter(([_, value]) => value)
+        )
+      );
+
+      const response = await fetch(`/api/admin/students/export?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Export failed');
+      }
+
+      // Get filename from response headers or create default
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let filename = `students_${new Date().toISOString().split('T')[0]}.csv`;
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `students_${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -211,7 +296,7 @@ export default function MasterStudentManager() {
       toast.success('Students exported successfully');
     } catch (error) {
       console.error('Error exporting students:', error);
-      toast.error('Failed to export students');
+      toast.error(error.message || 'Failed to export students');
     }
   };
 

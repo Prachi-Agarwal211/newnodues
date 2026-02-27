@@ -28,6 +28,7 @@ export async function GET(request) {
     const courseId = searchParams.get('courseId') || '';
     const branchId = searchParams.get('branchId') || '';
     const status = searchParams.get('status') || '';
+    const noPagination = searchParams.get('noPagination') === 'true'; // Flag for full data search
     
     const offset = (page - 1) * limit;
     
@@ -47,8 +48,12 @@ export async function GET(request) {
           passing_year,
           updated_at
         )
-      `)
-      .range(offset, offset + limit - 1);
+      `);
+    
+    // Apply range only if not using noPagination
+    if (!noPagination) {
+      query = query.range(offset, offset + limit - 1);
+    }
     
     // Apply filters
     if (search) {
@@ -81,22 +86,35 @@ export async function GET(request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     
-    // Get total count for pagination
-    const { count: totalCount } = await supabaseAdmin
-      .from('no_dues_forms')
-      .select('*', { count: 'exact', head: true })
-      .range(0, 0);
+    // Get total count for pagination (only if paginated)
+    let totalCount = 0;
+    if (!noPagination) {
+      const { count } = await supabaseAdmin
+        .from('no_dues_forms')
+        .select('*', { count: 'exact', head: true })
+        .range(0, 0);
+      totalCount = count || 0;
+    } else {
+      totalCount = students?.length || 0;
+    }
     
-    return NextResponse.json({
+    const response = {
       success: true,
       data: students || [],
-      pagination: {
+      count: totalCount
+    };
+    
+    // Add pagination info only if paginated
+    if (!noPagination) {
+      response.pagination = {
         page,
         limit,
-        total: totalCount || 0,
+        total: totalCount,
         totalPages: Math.ceil((totalCount || 0) / limit)
-      }
-    });
+      };
+    }
+    
+    return NextResponse.json(response);
     
   } catch (error) {
     console.error('Students API error:', error);
