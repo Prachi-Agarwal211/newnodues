@@ -2,6 +2,7 @@
 
 import ThemeToggle from './ThemeToggle';
 import EnhancedSupportButton from '@/components/landing/EnhancedSupportButton';
+import Button from '@/components/ui/Button';
 import { useTheme } from '@/contexts/ThemeContext';
 
 /**
@@ -26,6 +27,17 @@ export default function PageWrapper({ children, showThemeToggle = true, showSupp
         ${isDark ? 'text-white' : 'text-ink-black'
         }`}>
         {children}
+
+        <a
+          href="https://www.reverbex.in"
+          target="_blank"
+          rel="noreferrer"
+          className="fixed bottom-6 right-6 z-40"
+        >
+          <Button variant="secondary" className="shadow-lg px-4 py-2 text-sm">
+            Know the Developers
+          </Button>
+        </a>
       </div>
     </>
   );

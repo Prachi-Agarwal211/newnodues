@@ -12,6 +12,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import GlobalBackground from '@/components/ui/GlobalBackground'; // Direct import
 import ThemeToggle from '@/components/landing/ThemeToggle';
 import EnhancedSupportButton from '@/components/landing/EnhancedSupportButton';
+import Button from '@/components/ui/Button';
 
 export default function Home() {
   const router = useRouter();
@@ -85,6 +86,16 @@ export default function Home() {
         {/* Minimal Footer with Fade-in Animation */}
         <ScrollReveal animation="fade" delay={0.3}>
           <footer className="mt-auto mb-4 sm:mb-8 flex flex-col items-center gap-5 opacity-80 hover:opacity-100 transition-opacity duration-500">
+            <a
+              href="https://www.reverbex.in"
+              target="_blank"
+              rel="noreferrer"
+              className="group"
+            >
+              <Button variant="secondary" className="px-5 py-2 text-sm">
+                Know the Developers
+              </Button>
+            </a>
             <div
               className={`font-sans text-[9px] tracking-[0.3em] uppercase transition-colors duration-700 ease-smooth ${isDark ? 'text-gray-300' : 'text-gray-900'}`}
               style={isDark ? {
