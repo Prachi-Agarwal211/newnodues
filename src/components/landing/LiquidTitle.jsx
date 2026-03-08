@@ -58,7 +58,7 @@ export default function LiquidTitle() {
         }`}
         style={{
           textShadow: isDark
-            ? '0 0 8px rgba(196, 30, 58, 0.4), 0 1px 3px rgba(0, 0, 0, 0.6)'
+            ? '0 0 8px rgba(196, 30, 58, 0.4)'
             : 'none'
         }}>
         Student Services
@@ -84,6 +84,8 @@ export default function LiquidTitle() {
                 ? 'radial-gradient(ellipse at center, rgba(196,30,58,0.4) 0%, rgba(255,51,102,0.2) 40%, transparent 70%)'
                 : 'radial-gradient(ellipse at center, rgba(196,30,58,0.3) 0%, rgba(139,0,0,0.15) 40%, transparent 70%)',
               filter: 'blur(60px)',
+              transform: 'translate3d(0,0,0)', // Hardware acceleration
+              willChange: 'transform, opacity'
             }}
           />
         )}
@@ -113,7 +115,7 @@ export default function LiquidTitle() {
           className={`font-serif text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight relative z-10 transition-all duration-700 ${isDark ? 'text-white' : 'text-gray-900'
             }`}
           style={isDark ? {
-            background: deviceTier !== 'very-low' && gradientReady
+            backgroundImage: deviceTier !== 'very-low' && gradientReady
               ? 'linear-gradient(145deg, #ff3366 0%, #ffffff 20%, #ff6b89 30%, #c41e3a 50%, #ff3366 70%, #ffffff 85%, #c41e3a 100%)'
               : undefined,
             backgroundSize: '300% 300%',
@@ -125,7 +127,7 @@ export default function LiquidTitle() {
               : 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5))',
             animation: deviceTier === 'high' && gradientReady ? 'chrome-shine 6s ease-in-out infinite' : 'none'
           } : {
-            background: deviceTier !== 'very-low' && gradientReady
+            backgroundImage: deviceTier !== 'very-low' && gradientReady
               ? 'linear-gradient(145deg, #ffffff 0%, #8b0000 20%, #c41e3a 35%, #1f2937 55%, #c41e3a 70%, #8b0000 85%, #ffffff 100%)'
               : undefined,
             backgroundSize: '300% 300%',

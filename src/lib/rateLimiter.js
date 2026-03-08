@@ -61,6 +61,13 @@ export const RATE_LIMITS = {
     message: 'Too many status checks. Please try again in 1 minute.'
   },
 
+  // Authentication endpoints - stricter limits
+  AUTH: {
+    maxRequests: 10,
+    windowMs: 60 * 1000, // 1 minute
+    message: 'Too many authentication attempts. Please try again in 1 minute.'
+  },
+
   // Staff endpoints - higher limits
   STAFF_ACTION: {
     maxRequests: 50,

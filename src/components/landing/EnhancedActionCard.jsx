@@ -147,12 +147,10 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
         scale: 0.98,
         transition: { duration: 0.15 }
       } : {}}
-      onHoverStart={() => setIsHovering(true)}
-      onHoverEnd={() => setIsHovering(false)}
-      onClick={onClick}
       style={{
-        x: magneticOffset.x,
-        y: magneticOffset.y,
+        transform: `translate3d(${magneticOffset.x}px, ${magneticOffset.y}px, 0)`,
+        transition: isHovering ? 'none' : 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
+        willChange: 'transform',
         boxShadow: isDark ? (
           isHovering
             ? '0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'

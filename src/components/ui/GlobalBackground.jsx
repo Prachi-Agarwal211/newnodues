@@ -62,7 +62,7 @@ export default function GlobalBackground() {
 
       {/* 2. JECRC Campus Image (Enhanced Visibility) - Optimized for mobile */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 z-10"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 z-10"
         style={{
           backgroundImage: "url('/assets/9-1-1536x720.jpg')",
           opacity: isDark
@@ -71,8 +71,8 @@ export default function GlobalBackground() {
           mixBlendMode: isDark ? 'screen' : 'multiply',
           filter: isMobile
             ? (isDark ? 'brightness(0.8) contrast(0.9) saturate(0.3) blur(2px)' : 'brightness(1.0) contrast(1.1) saturate(0.8) blur(2px)')
-            : (isDark ? 'brightness(0.7) contrast(1.0) saturate(0.3) blur(1px)' : 'brightness(1.0) contrast(1.15) saturate(0.9)'),
-          transform: 'translateZ(0)', // GPU acceleration
+            : (isDark ? 'brightness(0.7) contrast(1.0) saturate(0.3)' : 'brightness(1.0) contrast(1.15) saturate(0.9)'),
+          transform: 'translate3d(0,0,0)', // Better GPU acceleration
           willChange: 'opacity'
         }}
       />

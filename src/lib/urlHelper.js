@@ -5,7 +5,7 @@
  */
 
 // Production URL - HARDCODED for reliability
-const PRODUCTION_URL = 'https://newnodues.vercel.app';
+const PRODUCTION_URL = 'https://jecrc-no-dues-system.reverbex.in';
 
 /**
  * Get the base URL for the application

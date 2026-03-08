@@ -11,13 +11,13 @@ export default function SmoothScroll({ children }) {
     <ReactLenis 
       root 
       options={{ 
-        lerp: 0.1,           // Smoothness (0.1 = very smooth)
-        duration: 1.2,       // Scroll duration
+        lerp: 0.15,          // Snappier lerp (was 0.1)
+        duration: 0.6,       // Much faster duration (was 1.2)
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 1,
-        touchMultiplier: 2,
+        wheelMultiplier: 1.2, // Slightly faster wheel (was 1)
+        touchMultiplier: 1.5, // Reduced for mobile to prevent wild scrolling
         infinite: false,
       }}
     >

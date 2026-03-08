@@ -203,7 +203,7 @@ export async function POST(request) {
             departmentName,
             daysPending,
             customMessage: customMessage || null,
-            dashboardUrl: 'https://newnodues.vercel.app/staff/dashboard'
+            dashboardUrl: 'https://jecrc-no-dues-system.reverbex.in/staff/dashboard'
         });
 
         // Log the reminder
