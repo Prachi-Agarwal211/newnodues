@@ -5,11 +5,16 @@ import { ApiResponse } from '@/lib/apiResponse';
 import applicationService from '@/lib/services/ApplicationService';
 import { supabase } from '@/lib/supabaseClient';
 import { verifyStudentCanAccessForm, verifyStudentCanReapplyToDepartment } from '@/lib/authUtils';
+import { sign } from 'jsonwebtoken';
+import { cookies } from 'next/headers';
 
 // Force dynamic rendering - this route uses request.url
 export const dynamic = 'force-dynamic';
 
 export const runtime = 'nodejs';
+
+// JWT Secret for auto-authentication after form submission
+const JWT_SECRET = process.env.SUPABASE_JWT_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-change-me';
 
 export async function POST(request) {
   try {
@@ -37,7 +42,39 @@ export async function POST(request) {
     // 3. Submit via Application Service
     const result = await applicationService.submitApplication(validation.data);
 
-    return ApiResponse.success(result.data, 'Application submitted successfully');
+    // 4. Auto-authenticate the student after form submission
+    // This allows them to immediately check status without needing to request OTP
+    const regNo = validation.data.registration_no;
+    const email = validation.data.personal_email || validation.data.college_email;
+    
+    // Generate JWT token
+    const token = sign(
+      {
+        regNo: regNo,
+        email: email,
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+      },
+      JWT_SECRET
+    );
+
+    // Set HTTP-Only Cookie
+    const cookieStore = cookies();
+    cookieStore.set('student_session', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24, // 24 hours
+      path: '/',
+    });
+
+    // Return success with auto-login flag
+    const response = ApiResponse.success(
+      { ...result.data, autoLoggedIn: true },
+      'Application submitted successfully'
+    );
+    
+    return response;
 
   } catch (error) {
     console.error('Submission Error:', error);

@@ -39,21 +39,38 @@ export async function POST(request) {
 
         const regNo = registrationNo.toUpperCase().trim();
 
-        // 2. Lookup Student Email from Forms
-        const { data: form, error: formError } = await supabaseAdmin
+        // 2. Lookup Student from student_data table (master records)
+        // This allows new students who haven't submitted a form yet to authenticate
+        const { data: student, error: studentError } = await supabaseAdmin
+            .from('student_data')
+            .select('student_name, personal_email, college_email')
+            .or(`registration_no.eq.${regNo},roll_number.eq.${regNo},enrollment_number.eq.${regNo}`)
+            .limit(1)
+            .maybeSingle();
+
+        if (studentError) {
+            console.error('Student lookup error:', studentError);
+        }
+
+        // Also check no_dues_forms for existing form (for returning students)
+        const { data: existingForm, error: formError } = await supabaseAdmin
             .from('no_dues_forms')
             .select('student_name, personal_email, college_email')
             .eq('registration_no', regNo)
             .limit(1)
             .maybeSingle();
 
-        if (formError || !form) {
-            // SECURITY: Don't reveal if user exists or not, but for UX we might need to be explicit.
-            // For this student portal, explicit error is better for support.
-            return NextResponse.json(
-                { error: 'No application found for this registration number.' },
-                { status: 404 }
-            );
+        // Use student_data if available, otherwise fall back to no_dues_forms
+        const form = student || existingForm;
+
+        if (!form) {
+            // SECURITY: Don't reveal if user exists - check both tables
+            if (!student && !existingForm) {
+                return NextResponse.json(
+                    { error: 'No student found with this registration number.' },
+                    { status: 404 }
+                );
+            }
         }
 
         // Prefer Personal Email, Fallback to College Email

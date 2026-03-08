@@ -376,8 +376,9 @@ export default function SubmitForm() {
       setFormId(result.data.id);
       setSuccess(true);
 
+      // Use window.location.href instead of router.push to ensure cookie is preserved
       setTimeout(() => {
-        router.push(`/student/check-status?reg=${sanitizedData.registration_no}`);
+        window.location.href = `/student/check-status?reg=${sanitizedData.registration_no}`;
       }, 3000);
 
     } catch (err) {
@@ -392,7 +393,7 @@ export default function SubmitForm() {
       }
       if (err.message && err.message.includes('already exists')) {
         setTimeout(() => {
-          router.push(`/student/check-status?reg=${formData.registration_no.toUpperCase()}`);
+          window.location.href = `/student/check-status?reg=${formData.registration_no.toUpperCase()}`;
         }, 3000);
       }
     } finally {
@@ -419,10 +420,10 @@ export default function SubmitForm() {
           Application Submitted!
         </h2>
         <p className={`text-sm sm:text-base mb-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          Your no dues application has been successfully recorded.
+          Your no dues application has been successfully recorded. You are now automatically logged in.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button onClick={() => router.push(`/student/check-status?reg=${formData.registration_no}`)}>
+          <Button onClick={() => window.location.href = `/student/check-status?reg=${formData.registration_no}`}>
             Track Status
           </Button>
         </div>
