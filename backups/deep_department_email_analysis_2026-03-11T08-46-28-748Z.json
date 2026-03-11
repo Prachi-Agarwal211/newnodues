@@ -1,0 +1,1505 @@
+{
+  "timestamp": "2026-03-11T08:46:28.750Z",
+  "summary": {
+    "total_departments": 7,
+    "total_department_users": 38,
+    "correct_assignments": 1,
+    "mismatches": 37,
+    "suspicious_accounts": 1
+  },
+  "official_departments": {
+    "accounts_department": {
+      "official_email": "accounts@jecrcu.edu.in"
+    },
+    "alumni_association": {
+      "official_email": "alumni@jecrcu.edu.in"
+    },
+    "hostel": {
+      "official_email": "hostel@jecrcu.edu.in"
+    },
+    "it_department": {
+      "official_email": "it@jecrcu.edu.in"
+    },
+    "library": {
+      "official_email": "razorrag.official@gmail.com"
+    },
+    "registrar": {
+      "official_email": "registrar@jecrcu.edu.in"
+    },
+    "school_hod": {
+      "official_email": "hod@jecrcu.edu.in"
+    }
+  },
+  "correct_assignments": [
+    {
+      "user_email": "razorrag.official@gmail.com",
+      "user_name": "Librarian",
+      "department": "library",
+      "official_email": "razorrag.official@gmail.com",
+      "match_type": "official"
+    }
+  ],
+  "mismatches": [
+    {
+      "user_email": "yogesh.joshi@jecrcu.edu.in",
+      "user_name": "Yogesh Joshi",
+      "department": "accounts_department",
+      "official_email": "accounts@jecrcu.edu.in"
+    },
+    {
+      "user_email": "mohit.badgujar@jecrcu.edu.in",
+      "user_name": "Mohit Badgujar",
+      "department": "alumni_association",
+      "official_email": "alumni@jecrcu.edu.in"
+    },
+    {
+      "user_email": "15anuragsingh2003@gmail.com",
+      "user_name": "Anurag singh",
+      "department": "alumni_association",
+      "official_email": "alumni@jecrcu.edu.in"
+    },
+    {
+      "user_email": "nirmal.jain@jecrcu.edu.in",
+      "user_name": "Nirmal Jain",
+      "department": "hostel",
+      "official_email": "hostel@jecrcu.edu.in"
+    },
+    {
+      "user_email": "seniormanager.it@jecrcu.edu.in",
+      "user_name": "IT Senior Manager",
+      "department": "it_department",
+      "official_email": "it@jecrcu.edu.in"
+    },
+    {
+      "user_email": "librarian@jecrcu.edu.in",
+      "user_name": "Librarian",
+      "department": "library",
+      "official_email": "razorrag.official@gmail.com"
+    },
+    {
+      "user_email": "ashok.singh@jecrcu.edu.in",
+      "user_name": "Ashok Singh",
+      "department": "registrar",
+      "official_email": "registrar@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.mathmatics@jecrcu.edu.in",
+      "user_name": "HOD - Mathematics",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.political@jecrcu.edu.in",
+      "user_name": "HOD - Political Science",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.hotelmanagement@jecrcu.edu.in",
+      "user_name": "HOD - Hotel Management",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.mechanical@jecrcu.edu.in",
+      "user_name": "HOD - Mechanical Engineering",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.bba@jecrcu.edu.in",
+      "user_name": "HOD - BBA",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.brit@jecrcu.edu.in",
+      "user_name": "HOD - BRIT",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.english@jecrcu.edu.in",
+      "user_name": "HOD - English",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "sunita.sharma01@jecrcu.edu.in",
+      "user_name": "Sunita Sharma - BBA/MBA CollegeDekho",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.bmlt@jecrcu.edu.in",
+      "user_name": "HOD - BMLT",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.design@jecrcu.edu.in",
+      "user_name": "HOD - Design",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.csedept@jecrcu.edu.in",
+      "user_name": "HOD - Computer Science and Engineering (Alt)",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.ece@jecrcu.edu.in",
+      "user_name": "HOD - Electronics and Communication Engineering",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "nimesh.gupta@jecrcu.edu.in",
+      "user_name": "Nimesh Gupta - ISDC",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.mba@jecrcu.edu.in",
+      "user_name": "HOD - MBA",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.chemistry@jecrcu.edu.in",
+      "user_name": "HOD - Chemistry",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "vandana.ladha@sunstone.in",
+      "user_name": "Vandana Ladha - MBA Sunstone",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.psychology@jecrcu.edu.in",
+      "user_name": "HOD - Psychology",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.microbiology@jecrcu.edu.in",
+      "user_name": "HOD - Microbiology",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.forensic@jecrcu.edu.in",
+      "user_name": "HOD - Forensic Science",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.bpt@jecrcu.edu.in",
+      "user_name": "HOD - Physiotherapy (BPT)",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.jmc@jecrcu.edu.in",
+      "user_name": "HOD - Journalism & Mass Communication",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.economics@jecrcu.edu.in",
+      "user_name": "HOD - Economics",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.bcom@jecrcu.edu.in",
+      "user_name": "HOD - B.Com",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "neha.gupta03@jecrcu.edu.in",
+      "user_name": "Neha Gupta - CA Sunstone",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.biotechnology@jecrcu.edu.in",
+      "user_name": "HOD - Biotechnology",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.ca@jecrcu.edu.in",
+      "user_name": "HOD - Computer Applications",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "jyoti.meratwal@sunstone.in",
+      "user_name": "Jyoti Meratwal - BBA Sunstone",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.ce@jecrcu.edu.in",
+      "user_name": "HOD - Civil Engineering",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.physics@jecrcu.edu.in",
+      "user_name": "HOD - Physics",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    },
+    {
+      "user_email": "hod.law@jecrcu.edu.in",
+      "user_name": "HOD - School of Law",
+      "department": "school_hod",
+      "official_email": "hod@jecrcu.edu.in"
+    }
+  ],
+  "suspicious_accounts": [
+    {
+      "user_email": "seniormanager.it@jecrcu.edu.in",
+      "user_name": "IT Senior Manager",
+      "department": "it_department",
+      "issue": "Suspicious email pattern (senior/manager/head)"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "5af85133-8e66-42af-946b-b571a9b98171",
+      "email": "yogesh.joshi@jecrcu.edu.in",
+      "full_name": "Yogesh Joshi",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "accounts_department",
+      "assigned_department_ids": [
+        "9e2d2f46-b3cd-437d-838a-9862315c371f",
+        "298fc653-f445-455d-a7e8-faa6ff1f093c"
+      ],
+      "school_id": null,
+      "school_ids": [],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:25.504",
+      "updated_at": "2026-02-03T09:25:46.086",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "ccd04028-f366-4137-ae7f-6b88f2393920",
+      "email": "mohit.badgujar@jecrcu.edu.in",
+      "full_name": "Mohit Badgujar",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "alumni_association",
+      "assigned_department_ids": [
+        "dbbf403d-44f6-42e3-8190-abc36f9ca3fc",
+        "73ec86af-1e4c-4300-816d-553ca4dabc74"
+      ],
+      "school_id": null,
+      "school_ids": [],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:27.645",
+      "updated_at": "2026-02-03T09:25:47.056",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "ad7e603a-0177-4beb-a8ff-eafd8c990ef1",
+      "email": "15anuragsingh2003@gmail.com",
+      "full_name": "Anurag singh",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "alumni_association",
+      "assigned_department_ids": [
+        "dbbf403d-44f6-42e3-8190-abc36f9ca3fc",
+        "73ec86af-1e4c-4300-816d-553ca4dabc74"
+      ],
+      "school_id": null,
+      "school_ids": [],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:37.051",
+      "updated_at": "2026-02-08T19:14:08.214",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": "ad7e603a-0177-4beb-a8ff-eafd8c990ef1-1770578048109-fqls36",
+      "reset_token_expires_at": "2026-02-08T19:44:08.109+00:00"
+    },
+    {
+      "id": "4082fb0f-242b-4643-8ba5-ab788c021d91",
+      "email": "nirmal.jain@jecrcu.edu.in",
+      "full_name": "Nirmal Jain",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "hostel",
+      "assigned_department_ids": [
+        "c38f72ae-9b21-4630-a2e8-c303db21e1ca",
+        "0ca357bb-7052-481d-b3ac-667f359fb602"
+      ],
+      "school_id": null,
+      "school_ids": [],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:41.075",
+      "updated_at": "2026-02-03T09:25:54.358",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "41b42b2d-02d3-44b7-bc4e-48511147b800",
+      "email": "seniormanager.it@jecrcu.edu.in",
+      "full_name": "IT Senior Manager",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "it_department",
+      "assigned_department_ids": [
+        "d2b0040b-066d-4bd0-a797-b10b84c149a9",
+        "6bc9f0a2-2b7d-403c-a203-dd5f9580a5ca"
+      ],
+      "school_id": null,
+      "school_ids": [],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:40.564",
+      "updated_at": "2026-02-03T09:25:54.131",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "8c6f19b7-c8f8-4969-958c-38c0c373b816",
+      "email": "razorrag.official@gmail.com",
+      "full_name": "Librarian",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "library",
+      "assigned_department_ids": [
+        "bcf3fdf3-20bb-40a8-aefb-b77bb119ed0f"
+      ],
+      "school_id": null,
+      "school_ids": [],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-01-24T12:29:13.011",
+      "updated_at": "2026-02-03T08:10:28.973",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "3d6b51a4-977d-4247-8407-37e8e19ecf88",
+      "email": "librarian@jecrcu.edu.in",
+      "full_name": "Librarian",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "library",
+      "assigned_department_ids": [
+        "397c48e1-f242-4612-b0ec-fdb2e386d2d3",
+        "bcf3fdf3-20bb-40a8-aefb-b77bb119ed0f"
+      ],
+      "school_id": null,
+      "school_ids": [],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:38.363",
+      "updated_at": "2026-02-03T09:23:53.172",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "a6fbd3f8-0aa1-4206-ac29-b09d89efbe9c",
+      "email": "ashok.singh@jecrcu.edu.in",
+      "full_name": "Ashok Singh",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "registrar",
+      "assigned_department_ids": [
+        "bf324616-7d34-47b1-a23f-8d4bd4100e12",
+        "f352252f-4c86-47b5-a86c-3e0d84c9cc55"
+      ],
+      "school_id": null,
+      "school_ids": [],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:33.097",
+      "updated_at": "2026-02-03T09:25:50.205",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "47a1e238-0dbe-4173-9a7c-a04e600e7a0d",
+      "email": "hod.mathmatics@jecrcu.edu.in",
+      "full_name": "HOD - Mathematics",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59",
+      "school_ids": [
+        "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59"
+      ],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:29.854",
+      "updated_at": "2026-02-03T09:25:48.313",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "8155d221-ff22-4934-a050-9f250d93cf7f",
+      "email": "hod.political@jecrcu.edu.in",
+      "full_name": "HOD - Political Science",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "b34d5388-f804-4646-89e9-fa1ad747bb0f",
+      "school_ids": [
+        "b34d5388-f804-4646-89e9-fa1ad747bb0f"
+      ],
+      "course_ids": [
+        "f12aa98c-822e-4dc7-aa3c-bf1e6c656c14"
+      ],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:30.264",
+      "updated_at": "2026-02-03T09:25:48.555",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "a8e72c96-420b-4553-8ae9-07c4c51e0726",
+      "email": "hod.hotelmanagement@jecrcu.edu.in",
+      "full_name": "HOD - Hotel Management",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "dbbbc235-1d15-4694-a3e0-3d033f88f596",
+      "school_ids": [
+        "dbbbc235-1d15-4694-a3e0-3d033f88f596"
+      ],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:30.731",
+      "updated_at": "2026-02-03T09:25:48.926",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "c2b178f1-8254-41ee-b316-4038a4b09431",
+      "email": "hod.mechanical@jecrcu.edu.in",
+      "full_name": "HOD - Mechanical Engineering",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "3e60ced0-41d3-4bd1-b105-6a38d22acb3c",
+      "school_ids": [
+        "3e60ced0-41d3-4bd1-b105-6a38d22acb3c"
+      ],
+      "course_ids": [
+        "4070b71a-6a9a-4436-9452-f9ed8e97e1f1",
+        "347943b8-49de-4154-8c4c-ec312d7a1432",
+        "055760e8-e471-4215-88ec-c3a9967625c7"
+      ],
+      "branch_ids": [
+        "76481278-ed0c-4538-a0e0-f9644630482a",
+        "8b0776af-d823-47ae-a9bc-8e7c342f2cbc",
+        "c6934119-7e84-4892-a28e-83078637fb98"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:31.11",
+      "updated_at": "2026-02-03T09:25:49.128",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "eed6d89f-fa97-4bf6-a9a8-361a5ce975be",
+      "email": "hod.bba@jecrcu.edu.in",
+      "full_name": "HOD - BBA",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "c9d871d3-5bb9-40dc-ba46-eef5e87a556b",
+      "school_ids": [
+        "c9d871d3-5bb9-40dc-ba46-eef5e87a556b"
+      ],
+      "course_ids": [
+        "cd5e3027-5077-4593-bb1c-0e6345291689"
+      ],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:31.589",
+      "updated_at": "2026-02-03T09:25:49.371",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "fb5494e2-462a-4824-a2d5-c71e9005ebc6",
+      "email": "hod.brit@jecrcu.edu.in",
+      "full_name": "HOD - BRIT",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "6a955f51-12e0-4f8b-99a5-678156d8c718",
+      "school_ids": [
+        "6a955f51-12e0-4f8b-99a5-678156d8c718"
+      ],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:31.963",
+      "updated_at": "2026-02-03T09:25:49.576",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "2282875e-3293-4027-9856-dd73d766b513",
+      "email": "hod.english@jecrcu.edu.in",
+      "full_name": "HOD - English",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "b34d5388-f804-4646-89e9-fa1ad747bb0f",
+      "school_ids": [
+        "b34d5388-f804-4646-89e9-fa1ad747bb0f"
+      ],
+      "course_ids": [
+        "f12aa98c-822e-4dc7-aa3c-bf1e6c656c14",
+        "3ac96508-f0fb-494c-929f-e8bdcf82765e"
+      ],
+      "branch_ids": [
+        "b2f9cd5e-0be2-4659-b004-055c1a00330d",
+        "b56a2255-7069-42ab-bfcc-ff2ebbb9a953"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:25.938",
+      "updated_at": "2026-02-11T20:27:10.82",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "2bb811a6-449e-4086-9ed2-93333d983cb9",
+      "email": "sunita.sharma01@jecrcu.edu.in",
+      "full_name": "Sunita Sharma - BBA/MBA CollegeDekho",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "c9d871d3-5bb9-40dc-ba46-eef5e87a556b",
+      "school_ids": [
+        "c9d871d3-5bb9-40dc-ba46-eef5e87a556b"
+      ],
+      "course_ids": [
+        "cd5e3027-5077-4593-bb1c-0e6345291689",
+        "fffc3234-e6e0-4466-891b-1acce82f143c"
+      ],
+      "branch_ids": [
+        "30c7d41b-4f38-46ac-8821-0d8953e11b3f",
+        "d376c6e6-8752-4819-afe2-512b179312c2",
+        "149fd26d-6141-4141-b8c9-c15c316280df",
+        "7f5d006f-f71c-42c2-9795-e0a1ec1414c9",
+        "189db9ed-84cd-4b90-98b0-91361761c83d",
+        "4847af35-4259-4a6c-8009-03031b11ef45",
+        "698f3f9c-85ce-43bd-bffb-2d1f31dd3342",
+        "38acc9ab-620a-4162-b713-49ab9ea513c3"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:28.066",
+      "updated_at": "2026-02-11T20:36:45.885",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "7407ff9d-f621-431c-ac6e-56304680d24d",
+      "email": "hod.bmlt@jecrcu.edu.in",
+      "full_name": "HOD - BMLT",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "6a955f51-12e0-4f8b-99a5-678156d8c718",
+      "school_ids": [
+        "6a955f51-12e0-4f8b-99a5-678156d8c718"
+      ],
+      "course_ids": [
+        "683bb134-98c3-4f90-a54b-761249c3befd",
+        "7aea6461-fc7f-4ac8-8885-790b60b5f2d2",
+        "a5a24084-f992-4bb8-8a8b-e79adb737144"
+      ],
+      "branch_ids": [
+        "ff590025-ee77-4292-85c8-6008e3ad5eca",
+        "69ebbbce-b876-411e-a831-e94dadae23ed",
+        "cee1f579-e009-493f-bdbe-a84af4c52b46",
+        "bc53841c-bee4-4c99-ab5f-803d06c8d073"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:32.661",
+      "updated_at": "2026-02-03T09:25:49.8",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "cc497ff4-51e7-46e8-9734-4bdd227789c3",
+      "email": "hod.design@jecrcu.edu.in",
+      "full_name": "HOD - Design",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "d797703d-4af4-41c7-b4dc-96ed8332c4db",
+      "school_ids": [
+        "d797703d-4af4-41c7-b4dc-96ed8332c4db"
+      ],
+      "course_ids": [
+        "194d40a3-a20c-4401-be51-ed83b0a79ca4",
+        "245f599c-48cb-448c-8c78-e38d4d05766c",
+        "1b8209fe-ac22-41d8-9bf9-2bd9675dbfb7",
+        "748275a4-77a8-402a-bc16-e1559536bfa5",
+        "6bdde4b6-99a9-43c1-becf-d6e96071fe0c"
+      ],
+      "branch_ids": [
+        "01447fc7-e14d-4574-8e12-50b22dbd456e",
+        "6579893b-8d88-4c06-8edd-a6e8b7fd60d7",
+        "abad4593-b466-4636-bd49-940113f77968",
+        "fe1e7678-97c0-460b-98cf-bbe15844503c",
+        "1c693fc0-deeb-45e0-8ab3-0db74d77014d",
+        "ac18a485-57f6-4507-9435-c50b6fdabdde",
+        "a0356e52-0ac2-485c-b562-3db71e113621",
+        "b1db2b98-659a-49bd-a31d-ac146948f76c",
+        "82a4844b-d283-4314-8f7e-c9b40771ab2d",
+        "bd0c7a06-eb4c-4bd1-8c81-23ee36d5e96a",
+        "441eccd2-cd9e-4e69-8c7c-60bf3cf97138",
+        "76f2a401-74d5-4920-bec7-4114b4755ec9",
+        "06a4e8c7-4560-419e-bab4-e203dc05c253",
+        "ba80387e-9e6f-4163-a075-5faa5b829432",
+        "497a8b63-7347-4d99-8b8a-e8de6b998421",
+        "74ed9446-ccbf-4dff-a0c5-387a3dd9811d"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:27.247",
+      "updated_at": "2026-02-11T20:32:17.972",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "45a8a4d1-6d89-4c6b-9ee5-33576bdcd4a9",
+      "email": "hod.csedept@jecrcu.edu.in",
+      "full_name": "HOD - Computer Science and Engineering (Alt)",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "3e60ced0-41d3-4bd1-b105-6a38d22acb3c",
+      "school_ids": [
+        "3e60ced0-41d3-4bd1-b105-6a38d22acb3c"
+      ],
+      "course_ids": [
+        "4070b71a-6a9a-4436-9452-f9ed8e97e1f1",
+        "347943b8-49de-4154-8c4c-ec312d7a1432"
+      ],
+      "branch_ids": [
+        "50b0d5f8-2bc2-4c83-a718-cdaf63fdb848",
+        "4677cb3a-8340-49e7-94ca-68e56d454607",
+        "61a1bb99-5bd8-49e2-a57b-a763aa3d128f",
+        "13775b8b-f2a1-437d-8ec0-1c908dde0fb9",
+        "6fccb7fe-52e7-4e31-a58a-b290ee95a752",
+        "19c77a78-006d-47fc-baa8-34438705b3ac",
+        "16f5f15a-1454-4ccb-834a-5267fd12bab2",
+        "32770008-86bf-4964-b0a3-79ac77e27212",
+        "7a73263b-c809-4e30-99a1-854764f4dab2",
+        "9c149ff2-5925-49df-93f7-dc2e74cf6a99",
+        "05ec4365-bb49-4ea3-9bb3-0842861a1644",
+        "1f88cd57-6daa-4021-84aa-e27e9a16db42",
+        "a2085dbc-a650-4a03-8a07-e3060c079e35",
+        "c05d9d6d-b554-4889-8af0-71832bd27166",
+        "12d47b77-b6e0-4287-a473-4c06c8ad7094",
+        "d9dc5c8f-c97a-48f8-b810-5db860767498",
+        "70698dfb-9deb-4567-8841-f6b563661ee5",
+        "f0ec872c-f196-435e-8a62-0bb36c7f5b6b",
+        "51e2e9aa-60c3-45b0-b5ac-dc547dd893ee",
+        "347dfa5b-ba7e-4c06-81e8-a1a8ceb360fa"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:33.593",
+      "updated_at": "2026-02-03T09:25:50.433",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "1492ce13-1d8c-42f4-8a1c-a081f23a0636",
+      "email": "hod.ece@jecrcu.edu.in",
+      "full_name": "HOD - Electronics and Communication Engineering",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "3e60ced0-41d3-4bd1-b105-6a38d22acb3c",
+      "school_ids": [
+        "3e60ced0-41d3-4bd1-b105-6a38d22acb3c"
+      ],
+      "course_ids": [
+        "4070b71a-6a9a-4436-9452-f9ed8e97e1f1",
+        "347943b8-49de-4154-8c4c-ec312d7a1432",
+        "055760e8-e471-4215-88ec-c3a9967625c7"
+      ],
+      "branch_ids": [
+        "07a2cc26-ab8d-483c-aa3a-ebfbc72aba83",
+        "362f1d51-9c5f-459b-be68-b64cc449016d",
+        "8497ebe3-062a-489b-b9fa-7dd3f586fc28",
+        "caf21404-b352-4d35-86a5-308f01670183",
+        "2b32d49c-0b51-48f0-91d4-3e464b473d0a",
+        "009b19d9-1e11-47ee-960f-0394f11e6c98"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:39.727",
+      "updated_at": "2026-02-11T20:41:14.629",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "f14dc2be-bd56-42a7-a313-0706876eaad1",
+      "email": "nimesh.gupta@jecrcu.edu.in",
+      "full_name": "Nimesh Gupta - ISDC",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "c9d871d3-5bb9-40dc-ba46-eef5e87a556b",
+      "school_ids": [
+        "c9d871d3-5bb9-40dc-ba46-eef5e87a556b"
+      ],
+      "course_ids": [
+        "cd5e3027-5077-4593-bb1c-0e6345291689",
+        "fffc3234-e6e0-4466-891b-1acce82f143c",
+        "4d8c7015-2e6e-4b7f-8542-2f5ba91fc75b"
+      ],
+      "branch_ids": [
+        "825e31b6-2559-4753-a598-3755b5bbad3e",
+        "215a70de-8eab-412d-b1c5-f92aae66b628",
+        "2d205a23-c8c3-4677-8a38-de3227804e3d",
+        "0cfa2aee-42c8-4e99-a36d-0c911841b07c"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:34.001",
+      "updated_at": "2026-02-03T09:25:50.642",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "b2a0516c-0d2b-4bbd-b3b5-411c5d15b161",
+      "email": "hod.mba@jecrcu.edu.in",
+      "full_name": "HOD - MBA",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "c9d871d3-5bb9-40dc-ba46-eef5e87a556b",
+      "school_ids": [
+        "c9d871d3-5bb9-40dc-ba46-eef5e87a556b"
+      ],
+      "course_ids": [
+        "fffc3234-e6e0-4466-891b-1acce82f143c"
+      ],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:34.472",
+      "updated_at": "2026-02-03T09:25:50.868",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "8896a18f-05f0-483e-8b96-db7b819a24af",
+      "email": "hod.chemistry@jecrcu.edu.in",
+      "full_name": "HOD - Chemistry",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59",
+      "school_ids": [
+        "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59"
+      ],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:34.88",
+      "updated_at": "2026-02-03T09:25:51.096",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "654a879a-e6dd-4395-b9cb-f1b5eebb35a3",
+      "email": "vandana.ladha@sunstone.in",
+      "full_name": "Vandana Ladha - MBA Sunstone",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "c9d871d3-5bb9-40dc-ba46-eef5e87a556b",
+      "school_ids": [
+        "c9d871d3-5bb9-40dc-ba46-eef5e87a556b"
+      ],
+      "course_ids": [
+        "fffc3234-e6e0-4466-891b-1acce82f143c"
+      ],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:35.315",
+      "updated_at": "2026-02-03T09:25:51.351",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "e72367b2-df04-4244-bfb9-fcba3ff37af8",
+      "email": "hod.psychology@jecrcu.edu.in",
+      "full_name": "HOD - Psychology",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "b34d5388-f804-4646-89e9-fa1ad747bb0f",
+      "school_ids": [
+        "b34d5388-f804-4646-89e9-fa1ad747bb0f"
+      ],
+      "course_ids": [
+        "f12aa98c-822e-4dc7-aa3c-bf1e6c656c14",
+        "3ac96508-f0fb-494c-929f-e8bdcf82765e"
+      ],
+      "branch_ids": [
+        "c299164b-60e3-47ae-a801-88897f6d30b5",
+        "c2c4e456-60dd-4cd1-b387-9d86a689a159"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:35.798",
+      "updated_at": "2026-02-12T12:55:14.38",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "e74ba096-c0a9-4bc7-b7d7-637217202725",
+      "email": "hod.microbiology@jecrcu.edu.in",
+      "full_name": "HOD - Microbiology",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59",
+      "school_ids": [
+        "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59"
+      ],
+      "course_ids": [
+        "825e1d1c-16e0-49b8-9dcf-e06fc8d958a9",
+        "7710f175-1f51-4abb-ae58-f9cb9529bed3"
+      ],
+      "branch_ids": [
+        "387d8a85-293d-47e7-99f7-773afab91a9b",
+        "97f679bb-15f1-4995-9722-590511fd6521"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:36.186",
+      "updated_at": "2026-02-12T12:54:30.256",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "ea0a9057-c1a5-4b7f-9c7d-5b03383ce09b",
+      "email": "hod.forensic@jecrcu.edu.in",
+      "full_name": "HOD - Forensic Science",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59",
+      "school_ids": [
+        "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59"
+      ],
+      "course_ids": [
+        "825e1d1c-16e0-49b8-9dcf-e06fc8d958a9",
+        "7710f175-1f51-4abb-ae58-f9cb9529bed3"
+      ],
+      "branch_ids": [
+        "3135d9c2-c3fa-46a6-9f53-1ba4d10f9198",
+        "cec6bf0b-d601-451a-991f-f976deac5c03"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:39.264",
+      "updated_at": "2026-02-11T20:41:52.997",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "5dcd0df1-8e38-4a04-a546-6147eeb8d67b",
+      "email": "hod.bpt@jecrcu.edu.in",
+      "full_name": "HOD - Physiotherapy (BPT)",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "6a955f51-12e0-4f8b-99a5-678156d8c718",
+      "school_ids": [
+        "6a955f51-12e0-4f8b-99a5-678156d8c718"
+      ],
+      "course_ids": [
+        "4fc3c652-ba8f-43d4-b4f0-b3ad34012dad",
+        "683bb134-98c3-4f90-a54b-761249c3befd",
+        "7aea6461-fc7f-4ac8-8885-790b60b5f2d2",
+        "a5a24084-f992-4bb8-8a8b-e79adb737144"
+      ],
+      "branch_ids": [
+        "3029606c-1826-4c7f-b0ec-e8f7ca38faad",
+        "ff590025-ee77-4292-85c8-6008e3ad5eca"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:38.867",
+      "updated_at": "2026-02-12T12:50:42.841",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "bce858d7-2bb2-474c-8289-586a4b03bae9",
+      "email": "hod.jmc@jecrcu.edu.in",
+      "full_name": "HOD - Journalism & Mass Communication",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "c393bd0d-a3b5-4aa2-b5b8-2621b99f2919",
+      "school_ids": [
+        "c393bd0d-a3b5-4aa2-b5b8-2621b99f2919"
+      ],
+      "course_ids": [
+        "60550dd6-6116-4bae-8a76-78efb55fa651",
+        "62886d79-e5ff-4246-9b6b-b3b45c0457a3"
+      ],
+      "branch_ids": [
+        "c6187690-a995-4287-bbc1-65a525b18766",
+        "dac48f53-19f4-4b61-9acf-c80d66029c27",
+        "3ef3f946-4011-4991-9237-cf18ca787ad8",
+        "173ad983-3e31-4085-a236-2e463b286ec1"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:36.663",
+      "updated_at": "2026-02-12T12:53:56.574",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "adf8a302-1218-496f-933f-5a99abb6754f",
+      "email": "hod.economics@jecrcu.edu.in",
+      "full_name": "HOD - Economics",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "b34d5388-f804-4646-89e9-fa1ad747bb0f",
+      "school_ids": [
+        "f5c2014a-6de6-4e99-ba3a-c8471e4922a9"
+      ],
+      "course_ids": [
+        "e46c5796-d72c-4d41-8151-8cdfb471be46",
+        "d4619a34-10cd-4209-afc9-13d225b82d08"
+      ],
+      "branch_ids": [
+        "975d17ac-2d46-4863-8fc2-79e1b4477a44",
+        "a472e244-b129-424e-bd6a-e30a7422c59e",
+        "3d4bc6ed-496d-41dc-8362-2ab427d1eb4c"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:37.992",
+      "updated_at": "2026-02-12T12:52:18.121",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "95ff4d5f-9025-478d-90f2-75e4d73e8368",
+      "email": "hod.bcom@jecrcu.edu.in",
+      "full_name": "HOD - B.Com",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "c9d871d3-5bb9-40dc-ba46-eef5e87a556b",
+      "school_ids": [
+        "c9d871d3-5bb9-40dc-ba46-eef5e87a556b"
+      ],
+      "course_ids": [
+        "4d8c7015-2e6e-4b7f-8542-2f5ba91fc75b"
+      ],
+      "branch_ids": [
+        "e244b4ed-af0f-4758-bfc0-4837a72246db",
+        "19109ad6-714a-4dac-b00c-e283c30c5c86",
+        "56b7a422-e95d-4c60-9966-e0389ed790c8",
+        "092ed007-7c31-4e63-a1a4-0a4c5feed98e",
+        "d07c4f33-a0a4-4f92-8cb2-df96eaa05ed2",
+        "4fcd52ea-3bfa-4c44-8c0d-bc8ab321c570",
+        "fa484c92-b990-42c6-98f3-15e867e3909a",
+        "e53d4d4b-046d-426d-948d-5eccb8506b00",
+        "fe58a087-1666-4b74-a6a8-753dd5c1c577"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:37.556",
+      "updated_at": "2026-02-12T12:53:04.011",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "eefb8507-7f5e-4c93-8f92-b1dacfcbfcb7",
+      "email": "neha.gupta03@jecrcu.edu.in",
+      "full_name": "Neha Gupta - CA Sunstone",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "cd230360-7640-4625-9e4c-7e2fcd8f6f5b",
+      "school_ids": [
+        "cd230360-7640-4625-9e4c-7e2fcd8f6f5b"
+      ],
+      "course_ids": [
+        "afe542c8-a3e9-4dac-851f-9e583e8ae125",
+        "9fd733a2-7258-45ef-a725-3854b71dc972"
+      ],
+      "branch_ids": [
+        "b85c5bbe-c137-409a-b212-2fa5cca16987",
+        "3109630c-c09c-48d9-aa0f-83bab47c9c84"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:26.824",
+      "updated_at": "2026-02-03T09:25:46.569",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "9bde1140-e17a-4867-ae68-7a0e70083b83",
+      "email": "hod.biotechnology@jecrcu.edu.in",
+      "full_name": "HOD - Biotechnology",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59",
+      "school_ids": [
+        "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59"
+      ],
+      "course_ids": [
+        "825e1d1c-16e0-49b8-9dcf-e06fc8d958a9",
+        "7710f175-1f51-4abb-ae58-f9cb9529bed3"
+      ],
+      "branch_ids": [
+        "1771fa82-02b2-4d52-b2b3-1a485b44645b",
+        "5fad83ec-5931-4c62-ab42-334a9a49b967"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:28.535",
+      "updated_at": "2026-02-11T20:37:51.334",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "4da7935c-56e9-4a25-8497-96a967bd106f",
+      "email": "hod.ca@jecrcu.edu.in",
+      "full_name": "HOD - Computer Applications",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "cd230360-7640-4625-9e4c-7e2fcd8f6f5b",
+      "school_ids": [
+        "cd230360-7640-4625-9e4c-7e2fcd8f6f5b"
+      ],
+      "course_ids": [
+        "afe542c8-a3e9-4dac-851f-9e583e8ae125",
+        "9fd733a2-7258-45ef-a725-3854b71dc972"
+      ],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:25.038",
+      "updated_at": "2026-02-03T09:25:45.709",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "d748e966-d371-4685-8596-69d1e3073197",
+      "email": "jyoti.meratwal@sunstone.in",
+      "full_name": "Jyoti Meratwal - BBA Sunstone",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "c9d871d3-5bb9-40dc-ba46-eef5e87a556b",
+      "school_ids": [
+        "c9d871d3-5bb9-40dc-ba46-eef5e87a556b"
+      ],
+      "course_ids": [
+        "cd5e3027-5077-4593-bb1c-0e6345291689"
+      ],
+      "branch_ids": [
+        "4afa31db-3013-45de-b05e-4c9b2d7381f7",
+        "96c22273-6d25-41f8-95bb-d02352d245f3",
+        "64a0aba3-0264-4e8c-8d8f-517d4fbeb916",
+        "757b83d5-d228-43ae-8415-9b20086bf2fd"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:40.186",
+      "updated_at": "2026-02-08T19:58:01.998",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "78380a5a-8afa-4cf6-a931-420e33adcc6e",
+      "email": "hod.ce@jecrcu.edu.in",
+      "full_name": "HOD - Civil Engineering",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "3e60ced0-41d3-4bd1-b105-6a38d22acb3c",
+      "school_ids": [
+        "3e60ced0-41d3-4bd1-b105-6a38d22acb3c"
+      ],
+      "course_ids": [
+        "4070b71a-6a9a-4436-9452-f9ed8e97e1f1",
+        "347943b8-49de-4154-8c4c-ec312d7a1432",
+        "055760e8-e471-4215-88ec-c3a9967625c7"
+      ],
+      "branch_ids": [
+        "624e6212-fe2d-40b4-9f42-c8e0b2045efa",
+        "8cef0f2a-99dd-434c-8230-7045d1175973",
+        "b454c57b-5e45-46a9-a674-a0c723ef440c",
+        "251b711d-6bbb-407b-ae7d-6e44f5521d52",
+        "4eecb74d-72da-4e94-96be-7c53bfeda14e",
+        "8224741f-280d-457d-aaaf-7af83ef78f13"
+      ],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:41.445",
+      "updated_at": "2026-02-11T20:39:51.244",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "0ca0b7de-7a13-4770-8ec0-d888d8c48b35",
+      "email": "hod.physics@jecrcu.edu.in",
+      "full_name": "HOD - Physics",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59",
+      "school_ids": [
+        "0ca48cc2-6ad7-4f90-bce0-3b68b78ecd59"
+      ],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:29.399",
+      "updated_at": "2026-02-03T09:25:48.078",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    },
+    {
+      "id": "3928beb9-31c1-4907-a62b-da9474445618",
+      "email": "hod.law@jecrcu.edu.in",
+      "full_name": "HOD - School of Law",
+      "registration_no": null,
+      "role": "department",
+      "department_name": "school_hod",
+      "assigned_department_ids": [
+        "8961341d-720d-4671-8a9a-3fbfb2282406",
+        "f9fa5127-87e6-4bcc-8598-55fb53f021dd"
+      ],
+      "school_id": "32606273-b37b-4891-819b-bc7069f34e3b",
+      "school_ids": [
+        "32606273-b37b-4891-819b-bc7069f34e3b"
+      ],
+      "course_ids": [],
+      "branch_ids": [],
+      "is_active": true,
+      "metadata": {},
+      "created_at": "2026-02-03T07:07:28.926",
+      "updated_at": "2026-02-03T09:25:47.807",
+      "last_active_at": null,
+      "otp_code": null,
+      "otp_expires_at": null,
+      "otp_attempts": 0,
+      "reset_token": null,
+      "reset_token_expires_at": null
+    }
+  ]
+}

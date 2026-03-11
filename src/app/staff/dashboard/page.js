@@ -484,10 +484,7 @@ export default function StaffDashboard() {
               <RefreshCcw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
             </button>
             <button
-              onClick={async () => {
-                await supabase.auth.signOut();
-                router.push('/staff/login');
-              }}
+              onClick={() => router.push('/staff/logout')}
               className="p-2.5 bg-gradient-to-r from-jecrc-red to-jecrc-red-dark text-white rounded-xl shadow-lg hover:shadow-jecrc-red/25 transition-all"
               title="Logout"
             >

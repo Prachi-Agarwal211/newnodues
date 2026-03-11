@@ -1,0 +1,286 @@
+{
+  "timestamp": "2026-03-11T08:20:42.790Z",
+  "total_users": 44,
+  "users": [
+    {
+      "id": "8c6f19b7-c8f8-4969-958c-38c0c373b816",
+      "email": "razorrag.official@gmail.com",
+      "role": "unknown",
+      "created_at": "2026-02-03T07:04:17.190077Z"
+    },
+    {
+      "id": "147d7ab1-30c9-4b99-90c4-eea0c0e57fe0",
+      "email": "alumni@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T23:45:17.101287Z",
+      "last_sign_in_at": "2026-02-03T06:43:22.682636Z"
+    },
+    {
+      "id": "b32eb673-273d-4ce8-b578-38c0bb2f9cd7",
+      "email": "registrar@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T23:45:16.098671Z",
+      "last_sign_in_at": "2026-02-03T06:43:21.820612Z"
+    },
+    {
+      "id": "bc578663-0d1a-41e7-bd21-4485d7cd758a",
+      "email": "accounts@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T23:45:15.176139Z",
+      "last_sign_in_at": "2026-02-03T06:43:21.172112Z"
+    },
+    {
+      "id": "f27dd643-4c4c-4943-92ad-d2620cc20e75",
+      "email": "hostel@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T23:45:14.381041Z",
+      "last_sign_in_at": "2026-02-03T06:43:20.527189Z"
+    },
+    {
+      "id": "392d3431-cad2-4c93-b9f9-d1d7a0615b76",
+      "email": "it@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T23:45:13.59852Z",
+      "last_sign_in_at": "2026-02-03T06:43:19.835112Z"
+    },
+    {
+      "id": "30cb74ae-4087-4816-b9e9-fe67cacfedb5",
+      "email": "admin@jecrcu.edu.in",
+      "role": "admin",
+      "created_at": "2026-02-02T21:49:56.143916Z",
+      "last_sign_in_at": "2026-02-27T14:31:48.240382Z"
+    },
+    {
+      "id": "78380a5a-8afa-4cf6-a931-420e33adcc6e",
+      "email": "hod.ce@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:43.054517Z",
+      "last_sign_in_at": "2026-02-02T23:45:22.864413Z"
+    },
+    {
+      "id": "4082fb0f-242b-4643-8ba5-ab788c021d91",
+      "email": "nirmal.jain@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:42.598339Z",
+      "last_sign_in_at": "2026-02-03T08:10:11.713392Z"
+    },
+    {
+      "id": "41b42b2d-02d3-44b7-bc4e-48511147b800",
+      "email": "seniormanager.it@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:42.134298Z",
+      "last_sign_in_at": "2026-02-03T08:10:09.711873Z"
+    },
+    {
+      "id": "d748e966-d371-4685-8596-69d1e3073197",
+      "email": "jyoti.meratwal@sunstone.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:41.672316Z"
+    },
+    {
+      "id": "1492ce13-1d8c-42f4-8a1c-a081f23a0636",
+      "email": "hod.ece@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:41.131659Z"
+    },
+    {
+      "id": "ea0a9057-c1a5-4b7f-9c7d-5b03383ce09b",
+      "email": "hod.forensic@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:40.533059Z"
+    },
+    {
+      "id": "5dcd0df1-8e38-4a04-a546-6147eeb8d67b",
+      "email": "hod.bpt@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:40.070027Z"
+    },
+    {
+      "id": "3d6b51a4-977d-4247-8407-37e8e19ecf88",
+      "email": "librarian@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:39.611406Z",
+      "last_sign_in_at": "2026-02-05T21:03:53.025003Z"
+    },
+    {
+      "id": "adf8a302-1218-496f-933f-5a99abb6754f",
+      "email": "hod.economics@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:39.10396Z"
+    },
+    {
+      "id": "95ff4d5f-9025-478d-90f2-75e4d73e8368",
+      "email": "hod.bcom@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:38.587942Z"
+    },
+    {
+      "id": "ad7e603a-0177-4beb-a8ff-eafd8c990ef1",
+      "email": "15anuragsingh2003@gmail.com",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:38.127141Z",
+      "last_sign_in_at": "2026-02-08T22:09:37.622947Z"
+    },
+    {
+      "id": "bce858d7-2bb2-474c-8289-586a4b03bae9",
+      "email": "hod.jmc@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:37.670764Z"
+    },
+    {
+      "id": "e74ba096-c0a9-4bc7-b7d7-637217202725",
+      "email": "hod.microbiology@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:37.071963Z"
+    },
+    {
+      "id": "e72367b2-df04-4244-bfb9-fcba3ff37af8",
+      "email": "hod.psychology@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:36.603355Z"
+    },
+    {
+      "id": "654a879a-e6dd-4395-b9cb-f1b5eebb35a3",
+      "email": "vandana.ladha@sunstone.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:36.14182Z"
+    },
+    {
+      "id": "8896a18f-05f0-483e-8b96-db7b819a24af",
+      "email": "hod.chemistry@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:35.626209Z"
+    },
+    {
+      "id": "b2a0516c-0d2b-4bbd-b3b5-411c5d15b161",
+      "email": "hod.mba@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:35.137634Z"
+    },
+    {
+      "id": "f14dc2be-bd56-42a7-a313-0706876eaad1",
+      "email": "nimesh.gupta@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:34.657417Z"
+    },
+    {
+      "id": "2282875e-3293-4027-9856-dd73d766b513",
+      "email": "hod.english@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:34.103485Z"
+    },
+    {
+      "id": "45a8a4d1-6d89-4c6b-9ee5-33576bdcd4a9",
+      "email": "hod.csedept@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:33.570802Z"
+    },
+    {
+      "id": "a6fbd3f8-0aa1-4206-ac29-b09d89efbe9c",
+      "email": "ashok.singh@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:33.057595Z",
+      "last_sign_in_at": "2026-02-03T08:10:07.980307Z"
+    },
+    {
+      "id": "7407ff9d-f621-431c-ac6e-56304680d24d",
+      "email": "hod.bmlt@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:32.499353Z"
+    },
+    {
+      "id": "fb5494e2-462a-4824-a2d5-c71e9005ebc6",
+      "email": "hod.brit@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:32.030574Z"
+    },
+    {
+      "id": "eed6d89f-fa97-4bf6-a9a8-361a5ce975be",
+      "email": "hod.bba@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:31.563156Z"
+    },
+    {
+      "id": "c2b178f1-8254-41ee-b316-4038a4b09431",
+      "email": "hod.mechanical@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:31.094173Z",
+      "last_sign_in_at": "2026-02-03T08:10:16.505346Z"
+    },
+    {
+      "id": "a8e72c96-420b-4553-8ae9-07c4c51e0726",
+      "email": "hod.hotelmanagement@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:30.631564Z"
+    },
+    {
+      "id": "8155d221-ff22-4934-a050-9f250d93cf7f",
+      "email": "hod.political@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:30.12696Z"
+    },
+    {
+      "id": "47a1e238-0dbe-4173-9a7c-a04e600e7a0d",
+      "email": "hod.mathmatics@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:29.575169Z"
+    },
+    {
+      "id": "0ca0b7de-7a13-4770-8ec0-d888d8c48b35",
+      "email": "hod.physics@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:28.957073Z"
+    },
+    {
+      "id": "3928beb9-31c1-4907-a62b-da9474445618",
+      "email": "hod.law@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:28.457838Z"
+    },
+    {
+      "id": "9bde1140-e17a-4867-ae68-7a0e70083b83",
+      "email": "hod.biotechnology@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:27.558242Z"
+    },
+    {
+      "id": "2bb811a6-449e-4086-9ed2-93333d983cb9",
+      "email": "sunita.sharma01@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:26.377705Z"
+    },
+    {
+      "id": "ccd04028-f366-4137-ae7f-6b88f2393920",
+      "email": "mohit.badgujar@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:25.896017Z",
+      "last_sign_in_at": "2026-02-05T21:01:17.243419Z"
+    },
+    {
+      "id": "cc497ff4-51e7-46e8-9734-4bdd227789c3",
+      "email": "hod.design@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:25.391113Z"
+    },
+    {
+      "id": "5af85133-8e66-42af-946b-b571a9b98171",
+      "email": "yogesh.joshi@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:24.82975Z",
+      "last_sign_in_at": "2026-02-03T08:10:03.869272Z"
+    },
+    {
+      "id": "4da7935c-56e9-4a25-8497-96a967bd106f",
+      "email": "hod.ca@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:24.291107Z"
+    },
+    {
+      "id": "eefb8507-7f5e-4c93-8f92-b1dacfcbfcb7",
+      "email": "neha.gupta03@jecrcu.edu.in",
+      "role": "department",
+      "created_at": "2026-02-02T21:49:23.647973Z",
+      "last_sign_in_at": "2026-02-03T07:14:57.425808Z"
+    }
+  ]
+}

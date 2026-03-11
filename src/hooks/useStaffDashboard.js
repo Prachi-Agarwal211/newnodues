@@ -416,13 +416,10 @@ export function useStaffDashboard() {
       console.log('🧹 Staff dashboard cleaning up AUTOMATIC realtime subscriptions');
       if (retryTimeout) clearTimeout(retryTimeout);
       if (debounceTimer) clearTimeout(debounceTimer);
-      if (unsubscribeRealtime) unsubscribeRealtime();
-      if (unsubscribeGlobal) unsubscribeGlobal();
-      window.removeEventListener('bulk-action-completed', immediateUpdate);
-      window.removeEventListener('individual-action-completed', immediateUpdate);
-      window.removeEventListener('department-action-completed', immediateUpdate);
       if (loadingTimeoutRef.current) clearTimeout(loadingTimeoutRef.current);
       if (statsTimeoutRef.current) clearTimeout(statsTimeoutRef.current);
+      // Call the cleanup function returned by setupRealtime (handles all event listeners)
+      if (cleanup) cleanup();
     };
   }, [userId, user?.department_name]);
 

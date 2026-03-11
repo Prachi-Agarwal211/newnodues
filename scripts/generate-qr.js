@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '../public/qr-code.png');
-const WEBSITE_URL = 'https://newnodues.vercel.app';
+const WEBSITE_URL = 'https://jecrc-no-dues.reverbex.in';
 
 async function generateQR() {
   try {
