@@ -29,7 +29,11 @@ export async function GET(request) {
     const page = parseInt(searchParams.get('page')) || 1;
     const limit = parseInt(searchParams.get('limit')) || 20;
     const statusFilter = searchParams.get('status'); // approved, rejected, or all
+    const search = searchParams.get('search') || '';
     const offset = (page - 1) * limit;
+
+    // ... auth and profile lookup code remains same ...
+
 
     // Get authenticated user from Authorization header
     const authHeader = request.headers.get('Authorization');
@@ -73,99 +77,98 @@ export async function GET(request) {
       myDeptNames = [profile.department_name];
     }
 
-    // Build query for action history (Online forms only)
+    // ✅ REFACTORED: Use no_dues_forms as base table for robust searching
     let query = supabaseAdmin
-      .from('no_dues_status')
+      .from('no_dues_forms')
       .select(`
         id,
-        form_id,
-        department_name,
-        status,
-        rejection_reason,
-        action_at,
-        action_by_user_id,
-        no_dues_forms!inner (
+        student_name,
+        registration_no,
+        course,
+        branch,
+        contact_no,
+        created_at,
+        school_id,
+        course_id,
+        branch_id,
+        no_dues_status!inner (
           id,
-          student_name,
-          registration_no,
-          course,
-          branch,
-          contact_no,
-          created_at,
-          school_id,
-          course_id,
-          branch_id
+          form_id,
+          department_name,
+          status,
+          rejection_reason,
+          action_at,
+          action_by_user_id
         )
-      `);
+      `, { count: 'exact' });
 
-    // Filter by department if not admin
-    if (profile.role === 'department') {
-      query = query.in('department_name', myDeptNames); // ✅ FIXED: Use UUID-resolved names
+    // Filter by department and scope
+    query = query.in('no_dues_status.department_name', myDeptNames);
 
-      // Apply scope filtering
-      if (profile.school_ids && profile.school_ids.length > 0) {
-        query = query.in('no_dues_forms.school_id', profile.school_ids);
-      } else if (profile.department_name === 'school_hod' && profile.school_id) {
-        query = query.eq('no_dues_forms.school_id', profile.school_id);
-      }
-
-      if (profile.course_ids && profile.course_ids.length > 0) {
-        query = query.in('no_dues_forms.course_id', profile.course_ids);
-      }
-
-      if (profile.branch_ids && profile.branch_ids.length > 0) {
-        query = query.in('no_dues_forms.branch_id', profile.branch_ids);
-      }
-
-      // Show all department actions (not just this user's)
-    }
-
-    // Filter by status if provided
+    // Apply status filter
     if (statusFilter && statusFilter !== 'all') {
-      query = query.eq('status', statusFilter);
+      query = query.eq('no_dues_status.status', statusFilter);
     } else {
-      // Show all statuses (includes pending) to match full department history
-      query = query.in('status', ['approved', 'rejected', 'pending']);
+      query = query.in('no_dues_status.status', ['approved', 'rejected', 'pending']);
     }
 
-    // Apply pagination and ordering
+    // Apply scope filtering (if department role)
+    if (profile.role === 'department') {
+      if (profile.school_ids && profile.school_ids.length > 0) {
+        query = query.in('school_id', profile.school_ids);
+      }
+      if (profile.course_ids && profile.course_ids.length > 0) {
+        query = query.in('course_id', profile.course_ids);
+      }
+      if (profile.branch_ids && profile.branch_ids.length > 0) {
+        query = query.in('branch_id', profile.branch_ids);
+      }
+    }
+
+    // Robust Search Implementation
+    if (search) {
+      query = query.or(`student_name.ilike.%${search}%,registration_no.ilike.%${search}%`);
+    }
+
+    // Apply pagination and ordering (sort by action_at from the joined table)
     query = query
-      .order('action_at', { ascending: false })
+      .order('action_at', { foreignTable: 'no_dues_status', ascending: false })
       .range(offset, offset + limit - 1);
 
-    const { data: history, error: historyError } = await query;
+    const { data: forms, error: historyError, count: totalCount } = await query;
 
     if (historyError) {
       console.error('Error fetching action history:', historyError);
       return NextResponse.json({ error: historyError.message }, { status: 500 });
     }
 
-    // Get total count for pagination
-    let countQuery = supabaseAdmin
-      .from('no_dues_status')
-      .select('*', { count: 'exact', head: true });
-
-    if (profile.role === 'department') {
-      countQuery = countQuery
-        .in('department_name', myDeptNames); // ✅ FIXED: Use UUID-resolved names
-    }
-
-    if (statusFilter && statusFilter !== 'all') {
-      countQuery = countQuery.eq('status', statusFilter);
-    } else {
-      countQuery = countQuery.in('status', ['approved', 'rejected', 'pending']);
-    }
-
-    const { count: totalCount, error: countError } = await countQuery;
-
-    if (countError) {
-      return NextResponse.json({ error: countError.message }, { status: 500 });
-    }
+    // TRANSFORM: Map back to the format the UI expects
+    const transformedHistory = (forms || []).map(form => {
+      // The joined data is returned as an array due to 1-to-many relationship
+      // but our filters ensure only one status per form per department exists
+      const statusRow = Array.isArray(form.no_dues_status) ? form.no_dues_status[0] : form.no_dues_status;
+      
+      return {
+        ...statusRow,
+        no_dues_forms: {
+          id: form.id,
+          student_name: form.student_name,
+          registration_no: form.registration_no,
+          course: form.course,
+          branch: form.branch,
+          contact_no: form.contact_no,
+          created_at: form.created_at,
+          school_id: form.school_id,
+          course_id: form.course_id,
+          branch_id: form.branch_id
+        }
+      };
+    });
 
     return NextResponse.json({
       success: true,
       data: {
-        history: history || [],
+        history: transformedHistory,
         pagination: {
           page,
           limit,

@@ -13,6 +13,15 @@ export function useStaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [requests, setRequests] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalRecords: 0,
+    hasNextPage: false,
+    hasPrevPage: false
+  });
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
   const [stats, setStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -70,7 +79,7 @@ export function useStaffDashboard() {
   };
 
   // PERFORMANCE: Parallel fetch of dashboard + stats for instant load
-  const fetchDashboardData = useCallback(async (searchTerm = '', isRefresh = false) => {
+  const triggerDashboardFetch = useCallback(async (searchTerm = '', isRefresh = false, targetPage = page, targetLimit = limit, targetStatus = 'pending') => {
     // Store search term for real-time refresh
     currentSearchRef.current = searchTerm;
 
@@ -110,8 +119,9 @@ export function useStaffDashboard() {
         // Build query params with search term
         const params = new URLSearchParams({
           userId: session.user.id,
-          page: 1,
-          limit: 50,
+          page: targetPage,
+          limit: targetLimit,
+          status: targetStatus,
           includeStats: 'true',
           _t: Date.now()
         });
@@ -156,6 +166,17 @@ export function useStaffDashboard() {
             setStats(result.data.stats);
           }
 
+          // Update pagination metadata
+          if (result.data.pagination) {
+            setPagination({
+              currentPage: result.data.pagination.currentPage,
+              totalPages: result.data.pagination.totalPages,
+              totalRecords: result.data.pagination.totalRecords,
+              hasNextPage: result.data.pagination.hasNextPage,
+              hasPrevPage: result.data.pagination.hasPrevPage
+            });
+          }
+
           setLastUpdate(new Date());
         }
       } catch (error) {
@@ -174,10 +195,10 @@ export function useStaffDashboard() {
 
     pendingDashboardRequest.current = fetchPromise;
     return fetchPromise;
-  }, []);
+  }, [page, limit]);
 
   // Store latest function in ref
-  fetchDashboardDataRef.current = fetchDashboardData;
+  fetchDashboardDataRef.current = triggerDashboardFetch;
 
   // PERFORMANCE: Lazy load stats only if not included in dashboard response
   const fetchStats = useCallback(async () => {
@@ -244,7 +265,7 @@ export function useStaffDashboard() {
     const promises = [];
 
     if (fetchDashboardDataRef.current) {
-      promises.push(fetchDashboardDataRef.current(currentSearchRef.current, true));
+      promises.push(fetchDashboardDataRef.current(currentSearchRef.current, true, page, limit));
     }
 
     if (force && fetchStatsRef.current) {
@@ -264,14 +285,14 @@ export function useStaffDashboard() {
     } catch (error) {
       console.error('❌ Dashboard refresh failed:', error);
     }
-  }, []);
+  }, [page, limit]);
 
   // PERFORMANCE: Combined initial load
   useEffect(() => {
     if (userId) {
-      fetchDashboardData();
+      triggerDashboardFetch(currentSearchRef.current, false, page, limit);
     }
-  }, [userId]);
+  }, [userId, page, limit]);
 
   // REAL-TIME SUBSCRIPTION - ENHANCED FOR AUTOMATIC UPDATES
   useEffect(() => {
@@ -308,7 +329,7 @@ export function useStaffDashboard() {
             } else {
               // New request - fetch latest data
               console.log('🆕 New request detected, fetching latest data');
-              fetchDashboardDataRef.current(currentSearchRef.current, true);
+              fetchDashboardDataRef.current(currentSearchRef.current, true, page, limit);
             }
 
             return newRequests;
@@ -323,11 +344,11 @@ export function useStaffDashboard() {
         } else if (updateType === 'new_application') {
           // New application - refresh immediately
           console.log('🚀 New application - immediate refresh');
-          fetchDashboardDataRef.current(currentSearchRef.current, true);
+          fetchDashboardDataRef.current(currentSearchRef.current, true, page, limit);
         } else if (updateType === 'bulk_action') {
           // Bulk action completed - refresh data
           console.log('📋 Bulk action completed - refreshing data');
-          fetchDashboardDataRef.current(currentSearchRef.current, true);
+          fetchDashboardDataRef.current(currentSearchRef.current, true, page, limit);
         }
       };
 
@@ -393,7 +414,7 @@ export function useStaffDashboard() {
         console.log('🔄 Force dashboard refresh received:', e.detail);
         if (fetchDashboardDataRef.current) {
           console.log('🚀 Executing immediate dashboard data fetch');
-          fetchDashboardDataRef.current(currentSearchRef.current, true);
+          fetchDashboardDataRef.current(currentSearchRef.current, true, page, limit);
         }
       };
       window.addEventListener('force-dashboard-refresh', handleForceRefresh);
@@ -421,7 +442,7 @@ export function useStaffDashboard() {
       // Call the cleanup function returned by setupRealtime (handles all event listeners)
       if (cleanup) cleanup();
     };
-  }, [userId, user?.department_name]);
+  }, [userId, user?.department_name, page, limit]);
 
   return {
     user,
@@ -429,11 +450,16 @@ export function useStaffDashboard() {
     loading,
     refreshing,
     requests,
+    pagination,
+    page,
+    limit,
+    setPage,
+    setLimit,
     stats,
     statsLoading,
     error,
     lastUpdate,
-    fetchDashboardData,
+    triggerDashboardFetch,
     refreshData,
     fetchStats,
     handleManualRefresh: refreshData

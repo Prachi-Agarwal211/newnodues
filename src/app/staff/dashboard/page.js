@@ -38,11 +38,16 @@ export default function StaffDashboard() {
 
   const [localRequests, setLocalRequests] = useState([]);
 
+  // DESTRUCTURE HOOK
   const {
     user,
     loading,
     requests,
+    pagination,
+    page,
+    setPage,
     stats,
+    triggerDashboardFetch,
     refreshData,
     lastUpdate
   } = useStaffDashboard();
@@ -51,8 +56,13 @@ export default function StaffDashboard() {
   const [historyData, setHistoryData] = useState([]);
   const [rejectedLoading, setRejectedLoading] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
-  const [historyFetched, setHistoryFetched] = useState(false);
   const [rejectedFetched, setRejectedFetched] = useState(false);
+  const [historyFetched, setHistoryFetched] = useState(false);
+  
+  const [rejectedPagination, setRejectedPagination] = useState({ currentPage: 1, totalPages: 1 });
+  const [historyPagination, setHistoryPagination] = useState({ currentPage: 1, totalPages: 1 });
+  const [rejectedPage, setRejectedPage] = useState(1);
+  const [historyPage, setHistoryPage] = useState(1);
 
   const [unreadMessages, setUnreadMessages] = useState({});
 
@@ -88,16 +98,28 @@ export default function StaffDashboard() {
     };
   }, []);
 
+  // DATA FETCHING EFFECT
   useEffect(() => {
-    if (activeTab === 'rejected' && !rejectedFetched) fetchRejectedForms();
-    if (activeTab === 'history' && !historyFetched) fetchHistory();
-  }, [activeTab]);
+    if (activeTab === 'rejected') {
+      fetchRejectedForms(rejectedPage, search);
+    } else if (activeTab === 'history') {
+      fetchHistory(historyPage, search);
+    } else if (activeTab === 'pending') {
+      // Use explicit check for function definition to be safe
+      if (typeof triggerDashboardFetch === 'function') {
+        triggerDashboardFetch(search, true, page, 20, 'pending');
+      }
+    }
+  }, [activeTab, rejectedPage, historyPage, search, page, triggerDashboardFetch]);
 
   useEffect(() => {
     setHistoryFetched(false);
     setRejectedFetched(false);
     setSelectedItems(new Set());
-  }, [lastUpdate]);
+    setRejectedPage(1);
+    setHistoryPage(1);
+    setPage(1);
+  }, [lastUpdate, activeTab, setPage]);
 
   useEffect(() => {
     setSelectedItems(new Set());
@@ -138,12 +160,10 @@ export default function StaffDashboard() {
   useEffect(() => {
     const handleDashboardRefresh = (e) => {
       console.log('🔄 Dashboard refresh event received:', e.detail);
-      // Refresh unread counts when dashboard refreshes
       fetchUnreadMessages();
     };
 
     const handleRefreshUnreadCounts = () => {
-      console.log('📊 Refreshing unread message counts');
       fetchUnreadMessages();
     };
 
@@ -185,42 +205,40 @@ export default function StaffDashboard() {
           );
         }
       })
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Staff chat notifications subscribed');
-        }
-      });
+      .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [user?.department_name]);
 
-  const fetchRejectedForms = async () => {
+  const fetchRejectedForms = async (targetPage = 1, searchTerm = '') => {
     setRejectedLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/staff/history?status=rejected&limit=300&t=${Date.now()}`, {
+      const res = await fetch(`/api/staff/history?status=rejected&limit=20&page=${targetPage}&search=${encodeURIComponent(searchTerm)}&t=${Date.now()}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` }
       });
       const json = await res.json();
       if (json.success) {
         setRejectedForms(json.data.history || []);
+        setRejectedPagination(json.data.pagination || { currentPage: 1, totalPages: 1 });
         setRejectedFetched(true);
       }
     } catch (e) { console.error(e); } finally { setRejectedLoading(false); }
   };
 
-  const fetchHistory = async () => {
+  const fetchHistory = async (targetPage = 1, searchTerm = '') => {
     setHistoryLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/staff/history?limit=300&t=${Date.now()}`, {
+      const res = await fetch(`/api/staff/history?limit=20&page=${targetPage}&search=${encodeURIComponent(searchTerm)}&t=${Date.now()}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` }
       });
       const json = await res.json();
       if (json.success) {
         setHistoryData(json.data.history || []);
+        setHistoryPagination(json.data.pagination || { currentPage: 1, totalPages: 1 });
         setHistoryFetched(true);
       }
     } catch (e) { console.error(e); } finally { setHistoryLoading(false); }
@@ -308,7 +326,6 @@ export default function StaffDashboard() {
 
       toast.success(json.message || 'Bulk action successful', { id: 'bulk-toast' });
       
-      // TRIGGER AUTOMATIC REAL-TIME UPDATE
       window.dispatchEvent(new CustomEvent('bulk-action-completed', {
         detail: {
           action,
@@ -359,7 +376,6 @@ export default function StaffDashboard() {
       
       toast.success('Approved ✓', { id: 'action-toast' });
       
-      // TRIGGER AUTOMATIC REAL-TIME UPDATE
       window.dispatchEvent(new CustomEvent('individual-action-completed', {
         detail: {
           action,
@@ -802,6 +818,58 @@ export default function StaffDashboard() {
                     )}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Pagination UI */}
+              <div className={`p-4 flex items-center justify-between border-t ${isDark ? 'border-gray-700 bg-gray-800/50' : 'border-gray-100 bg-gray-50/50'}`}>
+                <div className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Showing {currentData.length} records
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      if (activeTab === 'pending') setPage(prev => Math.max(1, prev - 1));
+                      else if (activeTab === 'rejected') setRejectedPage(prev => Math.max(1, prev - 1));
+                      else if (activeTab === 'history') setHistoryPage(prev => Math.max(1, prev - 1));
+                    }}
+                    disabled={
+                      (activeTab === 'pending' && page === 1) ||
+                      (activeTab === 'rejected' && rejectedPage === 1) ||
+                      (activeTab === 'history' && historyPage === 1)
+                    }
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border
+                      ${isDark 
+                        ? 'bg-gray-800 border-gray-700 text-gray-300 disabled:opacity-30 hover:bg-gray-700' 
+                        : 'bg-white border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50'}`}
+                  >
+                    Previous
+                  </button>
+                  <div className={`px-3 py-1.5 rounded-lg text-xs font-bold ${isDark ? 'bg-jecrc-red/10 text-jecrc-red' : 'bg-red-50 text-jecrc-red'}`}>
+                    Page {activeTab === 'pending' ? page : activeTab === 'rejected' ? rejectedPage : historyPage} of {
+                      activeTab === 'pending' ? (pagination?.totalPages || 1) : 
+                      activeTab === 'rejected' ? (rejectedPagination?.totalPages || 1) : 
+                      (historyPagination?.totalPages || 1)
+                    }
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (activeTab === 'pending') setPage(prev => prev + 1);
+                      else if (activeTab === 'rejected') setRejectedPage(prev => prev + 1);
+                      else if (activeTab === 'history') setHistoryPage(prev => prev + 1);
+                    }}
+                    disabled={
+                      (activeTab === 'pending' && page >= (pagination?.totalPages || 1)) ||
+                      (activeTab === 'rejected' && rejectedPage >= (rejectedPagination?.totalPages || 1)) ||
+                      (activeTab === 'history' && historyPage >= (historyPagination?.totalPages || 1))
+                    }
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border
+                      ${isDark 
+                        ? 'bg-gray-800 border-gray-700 text-gray-300 disabled:opacity-30 hover:bg-gray-700' 
+                        : 'bg-white border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50'}`}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             </>
           )}

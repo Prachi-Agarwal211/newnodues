@@ -55,10 +55,13 @@ export default function DepartmentDashboard() {
 
   const [currentUser, setCurrentUser] = useState(null);
   const [departmentName, setDepartmentName] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 20;
 
   const { unreadCounts, totalUnread } = useUnread('staff');
 
-  const loadApplications = async () => {
+  const loadApplications = async (targetPage = page) => {
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -80,7 +83,29 @@ export default function DepartmentDashboard() {
       });
       setDepartmentName(profile.department_name);
 
-      const { data: forms, error: formsError } = await supabase
+      // Get total count first with filters
+      let countQuery = supabase
+        .from('no_dues_status')
+        .select(`*, no_dues_forms!inner(*)`, { count: 'exact', head: true })
+        .eq('department_name', profile.department_name);
+
+      if (filters.status && filters.status !== 'all') {
+        countQuery = countQuery.eq('status', filters.status);
+      }
+
+      if (filters.search) {
+        countQuery = countQuery.or(`student_name.ilike.%${filters.search}%,registration_no.ilike.%${filters.search}%`, { foreignTable: 'no_dues_forms' });
+      }
+
+      const { count, error: countError } = await countQuery;
+
+      if (countError) throw countError;
+      setTotalPages(Math.ceil((count || 0) / limit));
+
+      const from = (targetPage - 1) * limit;
+      const to = from + limit - 1;
+
+      let query = supabase
         .from('no_dues_forms')
         .select(`
           *,
@@ -92,8 +117,19 @@ export default function DepartmentDashboard() {
             rejection_reason
           )
         `)
-        .eq('no_dues_status.department_name', profile.department_name)
-        .order('created_at', { ascending: false });
+        .eq('no_dues_status.department_name', profile.department_name);
+
+      if (filters.status && filters.status !== 'all') {
+        query = query.eq('no_dues_status.status', filters.status);
+      }
+
+      if (filters.search) {
+        query = query.or(`student_name.ilike.%${filters.search}%,registration_no.ilike.%${filters.search}%`);
+      }
+
+      const { data: forms, error: formsError } = await query
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
       if (formsError) throw formsError;
       setApplications(forms || []);
@@ -418,7 +454,10 @@ export default function DepartmentDashboard() {
                       <label className={`block text-xs font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Status Filter</label>
                       <select
                         value={filters.status}
-                        onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                        onChange={(e) => {
+                          setFilters(prev => ({ ...prev, status: e.target.value }));
+                          setPage(1);
+                        }}
                         className={`w-full p-3 rounded-xl text-sm font-medium transition-all border border-1
                           ${isDark
                             ? 'bg-gray-800 border-gray-600 text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
@@ -441,7 +480,10 @@ export default function DepartmentDashboard() {
                         <input
                           type="text"
                           value={filters.search}
-                          onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                          onChange={(e) => {
+                            setFilters(prev => ({ ...prev, search: e.target.value }));
+                            setPage(1);
+                          }}
                           placeholder="Search by student name or registration number..."
                           className={`w-full pl-10 pr-4 py-3 rounded-xl border outline-none text-sm font-medium transition-all
                             ${isDark
@@ -727,6 +769,37 @@ export default function DepartmentDashboard() {
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination UI */}
+            {!loading && totalPages > 1 && (
+              <div className={`p-4 flex items-center justify-between border-t ${isDark ? 'border-gray-700 bg-gray-800/50' : 'border-gray-100 bg-gray-50/50'}`}>
+                <div className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Showing page {page} of {totalPages}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPage(prev => Math.max(1, prev - 1))}
+                    disabled={page === 1}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border
+                      ${isDark 
+                        ? 'bg-gray-800 border-gray-700 text-gray-300 disabled:opacity-30 hover:bg-gray-700' 
+                        : 'bg-white border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50'}`}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => setPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={page === totalPages}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border
+                      ${isDark 
+                        ? 'bg-gray-800 border-gray-700 text-gray-300 disabled:opacity-30 hover:bg-gray-700' 
+                        : 'bg-white border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50'}`}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
           </GlassCard>
         </div>
 

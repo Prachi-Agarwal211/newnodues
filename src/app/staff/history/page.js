@@ -11,18 +11,24 @@ export default function StaffHistory() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
 
   useEffect(() => {
     const fetchHistory = async () => {
+      setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return router.push('/staff/login');
 
       try {
-        const res = await fetch('/api/staff/history?limit=300', {
+        const res = await fetch(`/api/staff/history?limit=20&page=${page}`, {
           headers: { 'Authorization': `Bearer ${session.access_token}` }
         });
         const json = await res.json();
-        if (json.success) setHistory(json.data.history || []);
+        if (json.success) {
+          setHistory(json.data.history || []);
+          setPagination(json.data.pagination || { currentPage: 1, totalPages: 1 });
+        }
       } catch (e) {
         console.error("Fetch error:", e);
       } finally {
@@ -30,7 +36,7 @@ export default function StaffHistory() {
       }
     };
     fetchHistory();
-  }, []);
+  }, [page]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
@@ -115,6 +121,29 @@ export default function StaffHistory() {
                 </div>
             )}
         </GlassCard>
+
+        {/* Pagination */}
+        {!loading && pagination.totalPages > 1 && (
+          <div className="flex items-center justify-center gap-4 mt-8">
+            <button
+              onClick={() => setPage(prev => Math.max(1, prev - 1))}
+              disabled={page === 1}
+              className="px-4 py-2 bg-white dark:bg-gray-800 border border-red-100 dark:border-red-900/40 rounded-xl text-gray-700 dark:text-gray-300 disabled:opacity-50 transition-all hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              Previous
+            </button>
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Page {page} of {pagination.totalPages}
+            </span>
+            <button
+              onClick={() => setPage(prev => Math.min(pagination.totalPages, prev + 1))}
+              disabled={page === pagination.totalPages}
+              className="px-4 py-2 bg-white dark:bg-gray-800 border border-red-100 dark:border-red-900/40 rounded-xl text-gray-700 dark:text-gray-300 disabled:opacity-50 transition-all hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </PageWrapper>
   );

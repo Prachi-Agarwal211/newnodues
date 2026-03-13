@@ -39,6 +39,8 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page')) || 1;
     const limit = parseInt(searchParams.get('limit')) || 20;
+    const search = searchParams.get('search') || '';
+    const statusFilter = searchParams.get('status') || 'pending';
     const offset = (page - 1) * limit;
 
     const authHeader = request.headers.get('Authorization');
@@ -105,54 +107,47 @@ export async function GET(request) {
       approvedCountResult,
       rejectedCountResult
     ] = await Promise.all([
-      // Get pending applications with PAGINATION
+      // ✅ REFACTORED: Get applications with PAGINATION + ROBUST SEARCH
       (async () => {
-        // Production-ready query with INNER JOIN + PAGINATION
         let query = supabaseAdmin
-          .from('no_dues_status')
+          .from('no_dues_forms')
           .select(`
             id,
-            department_name,
+            registration_no,
+            student_name,
+            course,
+            branch,
+            created_at,
             status,
-            action_at,
-            rejection_reason,
-            no_dues_forms!inner (
+            school_id,
+            alumni_profile_link,
+            no_dues_status!inner (
               id,
-              registration_no,
-              student_name,
-              course,
-              branch,
-              created_at,
+              department_name,
               status,
-              school_id,
-              alumni_profile_link
+              action_at,
+              rejection_reason
             )
-          `, { count: 'exact' }) // ✅ Get total count for pagination
-          .in('department_name', myDeptNames)
-          .eq('status', 'pending');
+          `, { count: 'exact' })
+          .in('no_dues_status.department_name', myDeptNames)
+          .eq('no_dues_status.status', statusFilter);
 
-        // SCOPE ENFORCEMENT: Apply filtering based on staff's assigned scope
-        // This ensures staff only see forms matching their school/course/branch restrictions
+        // Apply Robust Search Implementation
+        if (search) {
+          query = query.or(`student_name.ilike.%${search}%,registration_no.ilike.%${search}%`);
+        }
 
-        // Filter by schools (if staff has school_ids restriction)
+        // Apply scope filtering (schools, courses, branches)
         if (profile.school_ids && profile.school_ids.length > 0) {
-          console.log('📊 Dashboard Debug - Applying school filter:', profile.school_ids);
-          query = query.in('no_dues_forms.school_id', profile.school_ids);
+          query = query.in('school_id', profile.school_ids);
         }
-
-        // Filter by courses (if staff has course_ids restriction)
         if (profile.course_ids && profile.course_ids.length > 0) {
-          console.log('📊 Dashboard Debug - Applying course filter:', profile.course_ids);
-          query = query.in('no_dues_forms.course_id', profile.course_ids);
+          query = query.in('course_id', profile.course_ids);
         }
-
-        // Filter by branches (if staff has branch_ids restriction)
         if (profile.branch_ids && profile.branch_ids.length > 0) {
-          console.log('📊 Dashboard Debug - Applying branch filter:', profile.branch_ids);
-          query = query.in('no_dues_forms.branch_id', profile.branch_ids);
+          query = query.in('branch_id', profile.branch_ids);
         }
 
-        // 📄 APPLY PAGINATION with range
         query = query
           .order('created_at', { ascending: false })
           .range(offset, offset + limit - 1);
