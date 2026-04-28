@@ -156,9 +156,9 @@ export async function GET(request) {
            query = query.in('no_dues_forms.branch_id', scopeBranchIds);
          }
 
-         query = query
-           .order('no_dues_forms.created_at', { ascending: false })
-           .range(offset, offset + limit - 1);
+          query = query
+            .order('created_at', { ascending: false })
+            .range(offset, offset + limit - 1);
 
          return await query;
        })(),
