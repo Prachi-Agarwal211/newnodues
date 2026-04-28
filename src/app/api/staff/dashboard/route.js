@@ -114,53 +114,54 @@ export async function GET(request) {
       approvedCountResult,
       rejectedCountResult
     ] = await Promise.all([
-      // ✅ REFACTORED: Get applications with PAGINATION + ROBUST SEARCH
-      (async () => {
-        let query = supabaseAdmin
-          .from('no_dues_forms')
-          .select(`
-            id,
-            registration_no,
-            student_name,
-            course,
-            branch,
-            created_at,
-            status,
-            school_id,
-            alumni_profile_link,
-            no_dues_status!inner (
-              id,
-              department_name,
-              status,
-              action_at,
-              rejection_reason
-            )
-          `, { count: 'exact' })
-          .in('no_dues_status.department_name', myDeptNames)
-          .eq('no_dues_status.status', statusFilter);
+       // ✅ FIXED: Query no_dues_status as base table to avoid PostgREST .in() on embedded table bug
+       // This fixes the "pending table empty" issue while keeping history working
+       (async () => {
+         let query = supabaseAdmin
+           .from('no_dues_status')
+           .select(`
+             id,
+             department_name,
+             status,
+             action_at,
+             rejection_reason,
+             no_dues_forms!inner (
+               id,
+               registration_no,
+               student_name,
+               course,
+               branch,
+               created_at,
+               status,
+               school_id,
+               alumni_profile_link
+             )
+           `, { count: 'exact' })
+           .in('department_name', myDeptNames)
+           .eq('status', statusFilter);
 
-        // Apply Robust Search Implementation
-        if (search) {
-          query = query.or(`student_name.ilike.%${search}%,registration_no.ilike.%${search}%`);
-        }
+         // Apply Robust Search Implementation (through joined table)
+         if (search) {
+           query = query.or(`no_dues_forms.student_name.ilike.%${search}%,no_dues_forms.registration_no.ilike.%${search}%`);
+         }
 
-        // Apply scope filtering (schools, courses, branches)
-        if (scopeSchoolIds && scopeSchoolIds.length > 0) {
-          query = query.in('school_id', scopeSchoolIds);
-        }
-        if (scopeCourseIds && scopeCourseIds.length > 0) {
-          query = query.in('course_id', scopeCourseIds);
-        }
-        if (scopeBranchIds && scopeBranchIds.length > 0) {
-          query = query.in('branch_id', scopeBranchIds);
-        }
+         // Apply scope filtering on the joined no_dues_forms table
+         if (scopeSchoolIds && scopeSchoolIds.length > 0) {
+           query = query.in('no_dues_forms.school_id', scopeSchoolIds);
+         }
+         if (scopeCourseIds && scopeCourseIds.length > 0) {
+           query = query.in('no_dues_forms.course_id', scopeCourseIds);
+         }
+         if (scopeBranchIds && scopeBranchIds.length > 0) {
+           query = query.in('no_dues_forms.branch_id', scopeBranchIds);
+         }
 
-        query = query
-          .order('created_at', { ascending: false })
-          .range(offset, offset + limit - 1);
+         query = query
+           .order('no_dues_forms.created_at', { ascending: false })
+           .range(offset, offset + limit - 1);
 
-        return await query;
-      })(),
+         return await query;
+       })(),
 
       // Count pending (with HOD scoping)
       (async () => {
