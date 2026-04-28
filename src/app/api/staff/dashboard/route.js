@@ -68,7 +68,7 @@ export async function GET(request) {
     if (profile.assigned_department_ids?.length > 0) {
       const { data: deptData } = await supabaseAdmin
         .from('departments')
-        .select('name, display_name')
+        .select('name, display_name, allowed_school_ids, allowed_course_ids, allowed_branch_ids')
         .in('id', profile.assigned_department_ids);
       departments = deptData;
     }
@@ -81,14 +81,21 @@ export async function GET(request) {
       console.warn('⚠️ Dashboard Debug - ID lookup failed, falling back to profile.department_name:', profile.department_name);
       departments = [{
         name: profile.department_name,
-        display_name: profile.department_name.charAt(0).toUpperCase() + profile.department_name.slice(1).replace(/_/g, ' ')
+        display_name: profile.department_name.charAt(0).toUpperCase() + profile.department_name.slice(1).replace(/_/g, ' '),allowed_school_ids:[],allowed_course_ids:[],allowed_branch_ids:[]
       }];
     }
 
+    // Use department-level scope filters
+    const deptSchools = departments?.[0]?.allowed_school_ids || [];
+    const deptCourses = departments?.[0]?.allowed_course_ids || [];
+    const deptBranches = departments?.[0]?.allowed_branch_ids || [];
+    const scopeSchoolIds = deptSchools.length > 0 ? deptSchools : profile.school_ids;
+    const scopeCourseIds = deptCourses.length > 0 ? deptCourses : profile.course_ids;
+    const scopeBranchIds = deptBranches.length > 0 ? deptBranches : profile.branch_ids;
+    console.log('Scope IDs - Schools:', scopeSchoolIds);
     // Extract department info
     const myDeptNames = departments?.map(d => d.name) || [];
     const deptInfo = departments?.map(d => ({ name: d.name, displayName: d.display_name })) || [];
-
     console.log('📊 Dashboard Debug - Final My Dept Names:', myDeptNames);
 
     if (myDeptNames.length === 0 && profile.role !== 'admin') {
@@ -138,14 +145,14 @@ export async function GET(request) {
         }
 
         // Apply scope filtering (schools, courses, branches)
-        if (profile.school_ids && profile.school_ids.length > 0) {
-          query = query.in('school_id', profile.school_ids);
+        if (scopeSchoolIds && scopeSchoolIds.length > 0) {
+          query = query.in('school_id', scopeSchoolIds);
         }
-        if (profile.course_ids && profile.course_ids.length > 0) {
-          query = query.in('course_id', profile.course_ids);
+        if (scopeCourseIds && scopeCourseIds.length > 0) {
+          query = query.in('course_id', scopeCourseIds);
         }
-        if (profile.branch_ids && profile.branch_ids.length > 0) {
-          query = query.in('branch_id', profile.branch_ids);
+        if (scopeBranchIds && scopeBranchIds.length > 0) {
+          query = query.in('branch_id', scopeBranchIds);
         }
 
         query = query
@@ -164,14 +171,14 @@ export async function GET(request) {
           .eq('status', 'pending');
 
         // Apply scope filtering (schools, courses, branches)
-        if (profile.school_ids && profile.school_ids.length > 0) {
-          query = query.in('no_dues_forms.school_id', profile.school_ids);
+        if (scopeSchoolIds && scopeSchoolIds.length > 0) {
+          query = query.in('no_dues_forms.school_id', scopeSchoolIds);
         }
-        if (profile.course_ids && profile.course_ids.length > 0) {
-          query = query.in('no_dues_forms.course_id', profile.course_ids);
+        if (scopeCourseIds && scopeCourseIds.length > 0) {
+          query = query.in('no_dues_forms.course_id', scopeCourseIds);
         }
-        if (profile.branch_ids && profile.branch_ids.length > 0) {
-          query = query.in('no_dues_forms.branch_id', profile.branch_ids);
+        if (scopeBranchIds && scopeBranchIds.length > 0) {
+          query = query.in('no_dues_forms.branch_id', scopeBranchIds);
         }
 
         return query;
@@ -186,14 +193,14 @@ export async function GET(request) {
           .eq('status', 'approved');
 
         // Apply scope filtering (schools, courses, branches)
-        if (profile.school_ids && profile.school_ids.length > 0) {
-          query = query.in('no_dues_forms.school_id', profile.school_ids);
+        if (scopeSchoolIds && scopeSchoolIds.length > 0) {
+          query = query.in('no_dues_forms.school_id', scopeSchoolIds);
         }
-        if (profile.course_ids && profile.course_ids.length > 0) {
-          query = query.in('no_dues_forms.course_id', profile.course_ids);
+        if (scopeCourseIds && scopeCourseIds.length > 0) {
+          query = query.in('no_dues_forms.course_id', scopeCourseIds);
         }
-        if (profile.branch_ids && profile.branch_ids.length > 0) {
-          query = query.in('no_dues_forms.branch_id', profile.branch_ids);
+        if (scopeBranchIds && scopeBranchIds.length > 0) {
+          query = query.in('no_dues_forms.branch_id', scopeBranchIds);
         }
 
         return query;
@@ -208,14 +215,14 @@ export async function GET(request) {
           .eq('status', 'rejected');
 
         // Apply scope filtering (schools, courses, branches)
-        if (profile.school_ids && profile.school_ids.length > 0) {
-          query = query.in('no_dues_forms.school_id', profile.school_ids);
+        if (scopeSchoolIds && scopeSchoolIds.length > 0) {
+          query = query.in('no_dues_forms.school_id', scopeSchoolIds);
         }
-        if (profile.course_ids && profile.course_ids.length > 0) {
-          query = query.in('no_dues_forms.course_id', profile.course_ids);
+        if (scopeCourseIds && scopeCourseIds.length > 0) {
+          query = query.in('no_dues_forms.course_id', scopeCourseIds);
         }
-        if (profile.branch_ids && profile.branch_ids.length > 0) {
-          query = query.in('no_dues_forms.branch_id', profile.branch_ids);
+        if (scopeBranchIds && scopeBranchIds.length > 0) {
+          query = query.in('no_dues_forms.branch_id', scopeBranchIds);
         }
 
         return query;
