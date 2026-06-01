@@ -93,7 +93,7 @@ export default function Home() {
               className="group"
             >
               <Button variant="secondary" className="px-5 py-2 text-sm">
-                Know the Developers
+                Developed and Maintained by Reverbex Technologies
               </Button>
             </a>
             <div
@@ -103,7 +103,7 @@ export default function Home() {
               } : {
                 textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)'
               }}>
-              Jaipur Engineering College and Research Centre
+              JECRC University, Jaipur
             </div>
           </footer>
         </ScrollReveal>
