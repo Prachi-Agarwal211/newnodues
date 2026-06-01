@@ -6,10 +6,13 @@ import Button from '@/components/ui/Button';
 import { useTheme } from '@/contexts/ThemeContext';
 
 /**
- * PageWrapper - Layout wrapper for landing pages
- * Note: GlobalBackground is rendered once in ClientProviders to avoid duplication
+ * PageWrapper - Layout wrapper for pages
+ * Note: GlobalBackground is rendered once in ClientProviders to avoid duplication.
+ *
+ * Includes a persistent floating "Developed and Maintained by" credit button
+ * (bottom-right) on pages that use this wrapper.
  */
-export default function PageWrapper({ children, showThemeToggle = true, showSupportButton = true }) {
+export default function PageWrapper({ children, showThemeToggle = true, showSupportButton = true, showDeveloperCredit = true }) {
   const { theme } = useTheme();
 
   // Provide default theme during SSR/initial render (match ThemeProvider default)
@@ -28,16 +31,19 @@ export default function PageWrapper({ children, showThemeToggle = true, showSupp
         }`}>
         {children}
 
-        <a
-          href="https://www.reverbex.in"
-          target="_blank"
-          rel="noreferrer"
-          className="fixed bottom-6 right-6 z-40"
-        >
-          <Button variant="secondary" className="shadow-lg px-4 py-2 text-sm">
-            Know the Developers
-          </Button>
-        </a>
+        {/* Persistent floating developer credit */}
+        {showDeveloperCredit && (
+          <a
+            href="https://www.reverbex.in"
+            target="_blank"
+            rel="noreferrer"
+            className="fixed bottom-6 right-6 z-40"
+          >
+            <Button variant="secondary" className="shadow-lg px-5 py-2 text-sm">
+              Developed and Maintained by Reverbex Technologies
+            </Button>
+          </a>
+        )}
       </div>
     </>
   );
