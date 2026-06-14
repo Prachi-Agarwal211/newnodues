@@ -35,14 +35,20 @@ export async function GET(request) {
     const page = parseInt(searchParams.get('page')) || 1;
     const limit = parseInt(searchParams.get('limit')) || 20;
     const status = searchParams.get('status');
-    const department = searchParams.get('department');
+    const departments = searchParams.getAll('departments');
+    const schools = searchParams.getAll('schools');
+    const courses = searchParams.getAll('courses');
+    const branches = searchParams.getAll('branches');
+    const admissionYear = searchParams.get('admissionYear');
+    const passingYear = searchParams.get('passingYear');
+    const priority = searchParams.get('priority');
     const searchQuery = searchParams.get('search');
     const sortField = searchParams.get('sortField') || 'created_at';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
     const includeStats = searchParams.get('includeStats') === 'true';
     
     // ⚡ PERFORMANCE: Generate cache key from request params
-    const cacheKey = `dashboard_${page}_${limit}_${status || 'all'}_${department || 'all'}_${searchQuery || 'none'}_${sortField}_${sortOrder}_${includeStats}`;
+    const cacheKey = `dashboard_${page}_${limit}_${status || 'all'}_${departments.join(',') || 'all'}_${searchQuery || 'none'}_${sortField}_${sortOrder}_${includeStats}`;
     
     // ⚡ PERFORMANCE: Check cache first
     const cached = dashboardCache.get(cacheKey);
@@ -114,7 +120,7 @@ export async function GET(request) {
           action_at,
           created_at,
           rejection_reason,
-          profiles!no_dues_status_action_by_user_id_fkey (
+          profiles (
             full_name
           )
         )
@@ -127,12 +133,12 @@ export async function GET(request) {
     }
 
     // Apply department filter - filter by department status
-    if (department) {
+    if (departments && departments.length > 0) {
       // Get forms that have this department in their status
       const { data: formsWithDept } = await supabaseAdmin
         .from('no_dues_status')
         .select('form_id')
-        .eq('department_name', department);
+        .in('department_name', departments);
       
       if (formsWithDept && formsWithDept.length > 0) {
         const formIds = formsWithDept.map(f => f.form_id);
@@ -141,6 +147,18 @@ export async function GET(request) {
         // No forms found for this department, return empty
         query = query.eq('id', '00000000-0000-0000-0000-000000000000'); // Non-existent UUID
       }
+    }
+
+    if (schools && schools.length > 0) {
+      query = query.in('school', schools);
+    }
+    
+    if (courses && courses.length > 0) {
+      query = query.in('course', courses);
+    }
+    
+    if (branches && branches.length > 0) {
+      query = query.in('branch', branches);
     }
 
     // Apply search filter
