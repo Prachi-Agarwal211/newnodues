@@ -467,7 +467,7 @@ class DataSyncManager {
   getFieldsToCompare(type) {
     const fieldMap = {
       'no_dues_forms': ['status', 'student_name', 'registration_no', 'updated_at'],
-      'no_dues_status': ['status', 'remarks', 'updated_at'],
+      'no_dues_status': ['status', 'rejection_reason', 'action_at'],
       'no_dues_messages': ['message', 'read_status', 'updated_at'],
       'support_tickets': ['status', 'priority', 'updated_at']
     };

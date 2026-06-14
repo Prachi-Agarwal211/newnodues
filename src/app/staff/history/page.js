@@ -93,7 +93,7 @@ export default function StaffHistory() {
                                         <td className="p-4">
                                             {item.status === 'approved' && (
                                                 <span className="flex items-center gap-2 text-green-600 font-medium">
-                                                  <CheckCircle className="w-4 h-4" /> Approved
+                                                  <CheckCircle className="w-4 h-4" /> Completed
                                                 </span>
                                             )}
                                             {item.status === 'rejected' && (

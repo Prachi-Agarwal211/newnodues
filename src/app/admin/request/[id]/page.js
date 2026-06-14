@@ -48,7 +48,7 @@ export default function AdminRequestDetail() {
             action_at,
             action_by_user_id,
             rejection_reason,
-            profiles (
+            profiles!no_dues_status_action_by_user_id_fkey (
               full_name
             )
           )

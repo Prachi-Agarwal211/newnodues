@@ -33,7 +33,7 @@ export const DEPARTMENT_SHORT_NAMES = {
 // ============================================================================
 export const STATUS_DISPLAY = {
   'pending': { label: 'Pending Review', color: 'yellow', icon: '⏳' },
-  'approved': { label: 'Approved', color: 'green', icon: '✅' },
+  'approved': { label: 'Completed', color: 'green', icon: '✅' },
   'rejected': { label: 'Rejected', color: 'red', icon: '❌' },
   'completed': { label: 'Completed', color: 'blue', icon: '🎓' }
 };

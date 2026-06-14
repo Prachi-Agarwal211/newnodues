@@ -1,15 +1,20 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimiter';
+import { cookies } from 'next/headers';
+import { verify } from 'jsonwebtoken';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+
+const JWT_SECRET = process.env.SUPABASE_JWT_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-change-me';
 
 /**
  * GET /api/student/lookup?registration_no=XXX
  * Look up student data from master student_data table
  * 
  * This endpoint is used by the frontend to auto-fill form fields
+ * Requires student_session cookie for authentication
  */
 export async function GET(request) {
   try {
@@ -23,6 +28,22 @@ export async function GET(request) {
       }, { status: 429 });
     }
 
+    // 🔐 SESSION VERIFICATION
+    const cookieStore = cookies();
+    const token = cookieStore.get('student_session')?.value;
+
+    if (!token) {
+      return NextResponse.json({ success: false, error: 'Session expired or required' }, { status: 401 });
+    }
+
+    let decoded;
+    try {
+      decoded = verify(token, JWT_SECRET);
+    } catch (err) {
+      return NextResponse.json({ success: false, error: 'Invalid session' }, { status: 401 });
+    }
+
+    // Verify the lookup is for the authenticated student
     const { searchParams } = new URL(request.url);
     const registrationNo = searchParams.get('registration_no');
 
@@ -35,6 +56,11 @@ export async function GET(request) {
 
     // Clean the registration number
     const cleanRegNo = registrationNo.trim().toUpperCase();
+
+    // Students can only look up their own data
+    if (decoded.regNo !== cleanRegNo) {
+      return NextResponse.json({ success: false, error: 'Unauthorized: can only look up your own data' }, { status: 403 });
+    }
 
     // Search in student_data table using Supabase Admin (bypasses RLS)
     let { data: student, error } = await supabaseAdmin
@@ -109,6 +135,21 @@ export async function GET(request) {
  */
 export async function POST(request) {
   try {
+    // 🔐 SESSION VERIFICATION
+    const cookieStore = cookies();
+    const token = cookieStore.get('student_session')?.value;
+
+    if (!token) {
+      return NextResponse.json({ success: false, error: 'Session expired or required' }, { status: 401 });
+    }
+
+    let decoded;
+    try {
+      decoded = verify(token, JWT_SECRET);
+    } catch (err) {
+      return NextResponse.json({ success: false, error: 'Invalid session' }, { status: 401 });
+    }
+
     const { registration_no } = await request.json();
 
     if (!registration_no) {
@@ -118,8 +159,12 @@ export async function POST(request) {
       );
     }
 
-    // Same logic as GET but for POST requests
     const cleanRegNo = registration_no.trim().toUpperCase();
+
+    // Students can only look up their own data
+    if (decoded.regNo !== cleanRegNo) {
+      return NextResponse.json({ success: false, error: 'Unauthorized: can only look up your own data' }, { status: 403 });
+    }
 
     let { data: student, error } = await supabaseAdmin
       .from('student_data')

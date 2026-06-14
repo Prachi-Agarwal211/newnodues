@@ -14,23 +14,20 @@ function DepartmentStatus({ departmentName, status, actionAt, rejectionReason })
         return <CheckCircle className="w-5 h-5 text-green-500" />;
       case 'rejected':
         return <XCircle className="w-5 h-5 text-red-500" />;
-      case 'in_progress':
-        return <AlertCircle className="w-5 h-5 text-blue-500" />;
       default:
         return <Clock className="w-5 h-5 text-yellow-500" />;
     }
   };
 
   const getStatusBadge = (status) => {
-    switch (status) {
+    const normalized = status === 'in_progress' ? 'pending' : status;
+    switch (normalized) {
       case 'approved':
         return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-green-900/30 text-green-300' : 'bg-green-200 text-green-900'}`;
       case 'rejected':
         return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-red-900/30 text-red-300' : 'bg-red-200 text-red-900'}`;
-      case 'in_progress':
-        return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-200 text-blue-900'}`;
       default:
-        return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-yellow-900/30 text-yellow-300' : 'bg-yellow-200 text-yellow-900'}`;
+        return `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-amber-900/30 text-amber-300' : 'bg-amber-200 text-amber-900'}`;
     }
   };
 

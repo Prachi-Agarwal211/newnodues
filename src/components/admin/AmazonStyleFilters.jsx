@@ -338,7 +338,6 @@ export default function AmazonStyleFilters({
                 <SingleSelectFilter
                   options={[
                     { value: 'pending', label: 'Pending' },
-                    { value: 'in_progress', label: 'In Progress' },
                     { value: 'completed', label: 'Completed' },
                     { value: 'rejected', label: 'Rejected' }
                   ]}

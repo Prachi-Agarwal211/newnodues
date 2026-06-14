@@ -98,8 +98,7 @@ class AdminDashboardService {
 
     const stats = {
       total: data?.length || 0,
-      pending: data?.filter(f => f.status === 'pending').length || 0,
-      in_progress: data?.filter(f => f.status === 'in_progress').length || 0,
+      pending: data?.filter(f => f.status === 'pending' || f.status === 'in_progress').length || 0,
       completed: data?.filter(f => f.status === 'completed').length || 0,
       rejected: data?.filter(f => f.status === 'rejected').length || 0,
       reapplied: data?.filter(f => f.status === 'reapplied').length || 0
@@ -299,7 +298,7 @@ class AdminDashboardService {
             department_name,
             status,
             action_at,
-            action_by
+            action_by_user_id
           )
         `);
 
@@ -364,10 +363,8 @@ class AdminDashboardService {
             department_name,
             status,
             action_at,
-            action_by,
-            remarks,
-            rejection_reason,
-            student_reply_message
+            action_by_user_id,
+            rejection_reason
           ),
           no_dues_messages(
             id,

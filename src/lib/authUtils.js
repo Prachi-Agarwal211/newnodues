@@ -72,7 +72,7 @@ export async function verifyStudentCanReapplyToDepartment(formId, departmentName
     // Get department status to verify it's rejected
     const { data: deptStatus, error: statusError } = await supabaseAdmin
         .from('no_dues_status')
-        .select('status, rejection_count')
+        .select('status')
         .eq('form_id', formId)
         .eq('department_name', departmentName)
         .single();
@@ -85,9 +85,9 @@ export async function verifyStudentCanReapplyToDepartment(formId, departmentName
         return { valid: false, error: 'Department has not rejected this form' };
     }
 
-    // Check reapplication limits
+    // Check reapplication limits (count is on no_dues_forms, not no_dues_status)
     const MAX_REAPPLIES = 5;
-    if ((deptStatus.rejection_count || 0) >= MAX_REAPPLIES) {
+    if ((form.reapplication_count || 0) >= MAX_REAPPLIES) {
         return { valid: false, error: `Maximum reapplication limit (${MAX_REAPPLIES}) reached` };
     }
 

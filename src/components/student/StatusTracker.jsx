@@ -496,7 +496,7 @@ function StatusTrackerContent({ registrationNo, formId }) {
         </motion.div>
       )}
 
-      {/* All Approved Message */}
+      {/* All Completed Message */}
       {allApproved && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -508,7 +508,7 @@ function StatusTrackerContent({ registrationNo, formId }) {
             }`}
         >
           <h3 className="text-green-500 font-bold text-lg mb-2">
-            {isManualEntry ? '✅ Certificate Approved!' : '✅ All Departments Approved!'}
+            {isManualEntry ? '✅ Certificate Ready!' : '✅ All Departments Completed!'}
           </h3>
           <p className={`text-sm mb-4 transition-colors duration-700 ease-smooth
             ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>

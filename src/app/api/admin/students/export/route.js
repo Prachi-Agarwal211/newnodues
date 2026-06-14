@@ -58,7 +58,7 @@ export async function GET(request) {
           department_name,
           status,
           action_at,
-          action_by,
+          action_by_user_id,
           profiles!inner (
             full_name
           )
@@ -137,7 +137,7 @@ export async function GET(request) {
           acc[`${deptName} Action Date`] = deptStatusMap[deptName].action_at 
             ? new Date(deptStatusMap[deptName].action_at).toLocaleDateString() 
             : 'N/A';
-          acc[`${deptName} Action By`] = deptStatusMap[deptName].action_by || 'N/A';
+          acc[`${deptName} Action By`] = deptStatusMap[deptName].action_by_user_id || 'N/A';
           return acc;
         }, {})
       };

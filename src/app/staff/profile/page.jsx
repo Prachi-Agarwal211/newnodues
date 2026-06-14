@@ -176,7 +176,7 @@ export default function StaffProfilePage() {
                     />
                     <StatCard
                         icon={CheckCircle}
-                        label="Approved"
+                        label="Completed"
                         value={stats.approved || 0}
                         subValue={`${stats.approval_rate || 0}% rate`}
                         color="bg-green-500"

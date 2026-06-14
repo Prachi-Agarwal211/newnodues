@@ -113,7 +113,7 @@ export async function GET(request, { params }) {
         // Get department status
         const { data: status } = await supabaseAdmin
             .from('no_dues_status')
-            .select('status, rejection_reason, action_at, action_by')
+            .select('status, rejection_reason, action_at, action_by_user_id')
             .eq('form_id', formId)
             .eq('department_name', department)
             .single();

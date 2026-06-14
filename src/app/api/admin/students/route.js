@@ -41,7 +41,7 @@ export async function GET(request) {
           department_name,
           status,
           action_at,
-          action_by
+          action_by_user_id
         ),
         student_data (
           admission_year,
@@ -165,7 +165,6 @@ export async function POST(request) {
       contact_no: body.contact_no || null,
       personal_email: body.personal_email.toLowerCase().trim(),
       college_email: body.college_email.toLowerCase().trim(),
-      email: body.email?.toLowerCase().trim() || body.college_email.toLowerCase().trim(),
       alumni_profile_link: body.alumni_profile_link?.trim() || null,
       admission_year: body.admission_year?.toString() || null,
       passing_year: body.passing_year?.toString() || null,
@@ -218,8 +217,7 @@ export async function POST(request) {
         form_id: newStudent.id,
         department_name: dept.name,
         status: 'pending',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        created_at: new Date().toISOString()
       }));
       
       await supabaseAdmin
@@ -267,7 +265,6 @@ export async function PUT(request) {
       student_name: updateData.student_name?.trim(),
       personal_email: updateData.personal_email?.toLowerCase().trim(),
       college_email: updateData.college_email?.toLowerCase().trim(),
-      email: updateData.email?.toLowerCase().trim() || updateData.college_email?.toLowerCase().trim(),
       updated_at: new Date().toISOString()
     };
     

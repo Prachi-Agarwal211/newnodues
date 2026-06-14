@@ -120,11 +120,9 @@ export async function GET(request) {
         updated_at,
         reapplication_count,
         rejection_context,
-        certificate_status,
         certificate_generated_at,
         final_certificate_generated,
         certificate_url,
-        certificate_error,
         no_dues_status!inner (
           id,
           department_name,
@@ -132,7 +130,7 @@ export async function GET(request) {
           action_at,
           created_at,
           rejection_reason,
-          profiles (
+          profiles!no_dues_status_action_by_user_id_fkey (
             full_name
           )
         )
@@ -140,8 +138,13 @@ export async function GET(request) {
       .order(sortField, { ascending: sortOrder === 'asc' });
 
     // Apply status filter
+    // "pending" also matches "in_progress" (legacy forms before trigger fix)
     if (status) {
-      query = query.eq('status', status);
+      if (status === 'pending') {
+        query = query.in('status', ['pending', 'in_progress']);
+      } else {
+        query = query.eq('status', status);
+      }
     }
 
     // Apply department filter - filter by department status
@@ -181,12 +184,26 @@ export async function GET(request) {
     }
 
     // Build a separate count query with the SAME filters applied
+    // Must also filter for forms that have at least one no_dues_status row
+    // (matches the data query's no_dues_status!inner join)
+    const { data: allFormIdsWithStatus } = await supabaseAdmin
+      .from('no_dues_status')
+      .select('form_id')
+      .limit(10000);
+
+    const formIdsWithStatus = [...new Set((allFormIdsWithStatus || []).map(r => r.form_id))];
+
     let countQuery = supabaseAdmin
       .from('no_dues_forms')
-      .select('id', { count: 'exact', head: true });
+      .select('id', { count: 'exact', head: true })
+      .in('id', formIdsWithStatus);
 
     if (status) {
-      countQuery = countQuery.eq('status', status);
+      if (status === 'pending') {
+        countQuery = countQuery.in('status', ['pending', 'in_progress']);
+      } else {
+        countQuery = countQuery.eq('status', status);
+      }
     }
 
     if (departments && departments.length > 0) {
@@ -332,7 +349,7 @@ export async function GET(request) {
             departmentStatsMap.set(dept.department_name, {
               department_name: dept.department_name,
               total_requests: total,
-              approved_requests: approved,
+              completed_requests: approved,
               rejected_requests: rejected,
               pending_requests: Number(dept.pending_count || 0),
               response_times: [],
@@ -364,7 +381,7 @@ export async function GET(request) {
           return {
             department_name: dept.department_name,
             total_requests: dept.total_requests,
-            approved_requests: dept.approved_requests,
+            completed_requests: dept.completed_requests,
             rejected_requests: dept.rejected_requests,
             pending_requests: dept.pending_requests,
             avg_response_time: formatTime(avgResponseTime),
@@ -379,7 +396,6 @@ export async function GET(request) {
             total_forms: Number(overallStats?.total_applications || 0),
             total_requests: Number(overallStats?.total_applications || 0),
             pending_requests: Number(overallStats?.pending_applications || 0),
-            in_progress_requests: Number(overallStats?.in_progress_applications || 0),
             completed_requests: Number(overallStats?.completed_applications || 0),
             rejected_requests: Number(overallStats?.rejected_applications || 0),
             reapplied_requests: Number(overallStats?.reapplied_applications || 0)

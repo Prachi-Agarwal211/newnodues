@@ -62,7 +62,7 @@ export async function GET(request) {
     const overallStats = {
       totalApplications: Number(rawStats.total_applications || 0),
       pendingApplications: Number(rawStats.pending_applications || 0),
-      approvedApplications: Number(rawStats.approved_applications || 0),
+      completedApplications: Number(rawStats.completed_applications || 0),
       rejectedApplications: Number(rawStats.rejected_applications || 0)
     };
 
@@ -70,7 +70,7 @@ export async function GET(request) {
     const departmentStats = (workloadResult.data || []).map(dept => ({
       department_name: dept.department_name,
       pending_count: Number(dept.pending_count || 0),
-      approved_count: Number(dept.approved_count || 0),
+      completed_count: Number(dept.approved_count || 0),
       rejected_count: Number(dept.rejected_count || 0),
       total_requests: Number(dept.pending_count || 0) + Number(dept.approved_count || 0) + Number(dept.rejected_count || 0)
     }));

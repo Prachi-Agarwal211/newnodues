@@ -140,9 +140,8 @@ class ApplicationService {
         .from('no_dues_status')
         .update({
           status: 'approved',
-          action_by: actionBy || departmentName,
+          action_by_user_id: actionBy || departmentName,
           action_at: new Date().toISOString(),
-          remarks: remarks || null,
           rejection_reason: null
         })
         .eq('form_id', formId)
@@ -192,8 +191,7 @@ class ApplicationService {
         .update({
           status: 'rejected',
           rejection_reason: reason,
-          remarks: remarks || null,
-          action_by: actionBy || departmentName,
+          action_by_user_id: actionBy || departmentName,
           action_at: new Date().toISOString()
         })
         .eq('form_id', formId)
@@ -237,7 +235,7 @@ class ApplicationService {
             status: 'rejected',
             rejection_reason: `Auto-rejected due to ${departmentName} rejection: ${reason}`,
             action_at: new Date().toISOString(),
-            action_by: 'system_cascade'
+            action_by_user_id: 'system_cascade'
           })
           .eq('form_id', formId)
           .in('department_name', pendingDepartments);
@@ -408,7 +406,6 @@ class ApplicationService {
         .update({
           status: 'pending',
           rejection_reason: null,
-          student_reply_message: data.reason, // Store the student's reply message
           action_at: null,
           action_by_user_id: null
         })

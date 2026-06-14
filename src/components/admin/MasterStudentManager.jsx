@@ -415,8 +415,8 @@ export default function MasterStudentManager() {
         <div className="bg-white dark:bg-[#141414] p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">In Progress</p>
-              <p className="text-2xl font-bold text-blue-600">{students.filter(s => s.status === 'in_progress').length}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Pending Review</p>
+              <p className="text-2xl font-bold text-amber-600">{students.filter(s => s.status === 'pending' || s.status === 'in_progress').length}</p>
             </div>
             <BookOpen className="w-8 h-8 text-blue-600" />
           </div>
@@ -520,7 +520,6 @@ export default function MasterStudentManager() {
             >
               <option value="">All Status</option>
               <option value="pending">Pending</option>
-              <option value="in_progress">In Progress</option>
               <option value="completed">Completed</option>
               <option value="rejected">Rejected</option>
             </select>
@@ -577,11 +576,11 @@ export default function MasterStudentManager() {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 text-xs rounded-full ${student.status === 'completed' ? 'bg-green-100 text-green-800' :
-                          student.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                            student.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                              'bg-yellow-100 text-yellow-800'
+                          student.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            student.status === 'in_progress' ? 'bg-amber-100 text-amber-800' :
+                              'bg-amber-100 text-amber-800'
                         }`}>
-                        {student.status}
+                        {student.status === 'in_progress' ? 'Pending' : student.status}
                       </span>
                     </td>
                     <td className="px-6 py-4">

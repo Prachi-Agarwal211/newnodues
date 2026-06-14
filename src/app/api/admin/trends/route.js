@@ -54,8 +54,7 @@ export async function GET(request) {
     const monthlyData = {
       pending: Array(months).fill(0),
       completed: Array(months).fill(0),
-      rejected: Array(months).fill(0),
-      in_progress: Array(months).fill(0)
+      rejected: Array(months).fill(0)
     };
 
     // Aggregate data by month
@@ -68,14 +67,12 @@ export async function GET(request) {
       if (monthDiff >= 0 && monthDiff < months) {
         const index = months - 1 - monthDiff;
         
-        if (form.status === 'pending') {
+        if (form.status === 'pending' || form.status === 'in_progress') {
           monthlyData.pending[index]++;
         } else if (form.status === 'completed') {
           monthlyData.completed[index]++;
         } else if (form.status === 'rejected') {
           monthlyData.rejected[index]++;
-        } else if (form.status === 'in_progress') {
-          monthlyData.in_progress[index]++;
         }
       }
     });
@@ -97,13 +94,6 @@ export async function GET(request) {
             data: monthlyData.completed,
             borderColor: 'rgba(72, 187, 120, 0.8)',
             backgroundColor: 'rgba(72, 187, 120, 0.2)',
-            tension: 0.4,
-          },
-          {
-            label: 'In Progress',
-            data: monthlyData.in_progress,
-            borderColor: 'rgba(59, 130, 246, 0.8)',
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
             tension: 0.4,
           },
           {

@@ -527,8 +527,8 @@ export async function sendStudentStatusUpdate({
     approved: {
       color: '#16a34a',
       icon: '✅',
-      title: 'Application Approved',
-      message: 'Great news! Your application has been approved.'
+      title: 'Application Completed',
+      message: 'Great news! Your application has been completed by all departments.'
     },
     rejected: {
       color: '#dc2626',
@@ -683,14 +683,14 @@ export async function sendCertificateReadyNotification({
     </p>
     
     <p style="margin: 0 0 16px 0; color: #374151; font-size: 15px; line-height: 1.6;">
-      All departments have approved your No Dues application. Your certificate is now ready for download.
+      All departments have completed your No Dues application. Your certificate is now ready for download.
     </p>
     
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f0fdf4; border-radius: 8px; border-left: 4px solid #16a34a; padding: 20px; margin: 20px 0;">
       <tr>
         <td>
           <p style="margin: 0 0 8px 0; color: #16a34a; font-size: 18px; font-weight: 600;">
-            ✅ All Departments Approved
+            ✅ All Departments Completed
           </p>
           <p style="margin: 0; color: #1f2937; font-size: 14px;">
             <strong>Registration No:</strong> <span style="font-family: monospace;">${registrationNo}</span>

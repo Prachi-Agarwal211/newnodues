@@ -112,8 +112,7 @@ export default function DepartmentDashboard() {
           no_dues_status!inner(
             status,
             action_at,
-            action_by,
-            remarks,
+            action_by_user_id,
             rejection_reason
           )
         `)
@@ -269,9 +268,15 @@ export default function DepartmentDashboard() {
 
   const handleAction = async (application, action) => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+
       const response = await fetch('/api/department-action', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({
           form_id: application.id,
           status: action,
@@ -357,7 +362,6 @@ export default function DepartmentDashboard() {
       pending: 'bg-amber-200 text-amber-900 dark:bg-amber-900/30 dark:text-amber-200',
       approved: 'bg-emerald-200 text-emerald-900 dark:bg-emerald-900/30 dark:text-emerald-200',
       rejected: 'bg-red-200 text-red-900 dark:bg-red-900/30 dark:text-red-200',
-      in_progress: 'bg-blue-200 text-blue-900 dark:bg-blue-900/30 dark:text-blue-200',
       completed: 'bg-purple-200 text-purple-900 dark:bg-purple-900/30 dark:text-purple-200',
       reapplied: 'bg-orange-200 text-orange-900 dark:bg-orange-900/30 dark:text-orange-200'
     };
@@ -472,9 +476,8 @@ export default function DepartmentDashboard() {
                       >
                         <option value="all">All Status</option>
                         <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
+                        <option value="approved">Completed</option>
                         <option value="rejected">Rejected</option>
-                        <option value="in_progress">In Progress</option>
                         <option value="completed">Completed</option>
                         <option value="reapplied">Reapplied</option>
                       </select>
@@ -552,7 +555,7 @@ export default function DepartmentDashboard() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Approved</p>
+                  <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Completed</p>
                   <p className={`text-3xl font-bold ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>
                     {applications.filter(app => (app.no_dues_status?.[0]?.status || app.status) === 'approved').length}
                   </p>

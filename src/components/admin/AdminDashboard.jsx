@@ -133,7 +133,8 @@ export default function AdminDashboard() {
     total_requests: 0,
     pending_requests: 0,
     completed_requests: 0,
-    rejected_requests: 0
+    rejected_requests: 0,
+    reapplied_requests: 0
   };
 
   // ✅ FIX: Check if stats object exists and has valid data
@@ -286,16 +287,46 @@ export default function AdminDashboard() {
       {activeTab === 'dashboard' ? (
         <div className="space-y-8 animate-fade-in">
           {/* Stats Grid - Always renders with fallback values */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
 
+            <div
+              onClick={() => {
+                setStatusFilter('');
+                setTimeout(() => { scrollToTable(); }, 100);
+              }}
+              className="cursor-pointer transform transition-all duration-300 hover:scale-105 active:scale-95"
+              title="Click to view all requests"
+            >
+              <StatsCard
+                title="Total Requests"
+                value={statusCounts?.total_requests || 0}
+                change={`${statusCounts?.total_requests || 0} forms`}
+                trend="up"
+                color="bg-gray-500"
+              />
+            </div>
+
+            <div
+              onClick={() => {
+                setStatusFilter('pending');
+                setTimeout(() => { scrollToTable(); }, 100);
+              }}
+              className="cursor-pointer transform transition-all duration-300 hover:scale-105 active:scale-95"
+              title="Click to view pending requests"
+            >
+              <StatsCard
+                title="Pending Review"
+                value={statusCounts?.pending_requests || 0}
+                change={statusCounts?.total_requests ? `${((statusCounts.pending_requests / Math.max(statusCounts.total_requests, 1)) * 100).toFixed(1)}%` : '0%'}
+                trend="down"
+                color="bg-yellow-500"
+              />
+            </div>
 
             <div
               onClick={() => {
                 setStatusFilter('completed');
-                // Smooth scroll to table after filter update
-                setTimeout(() => {
-                  scrollToTable();
-                }, 100);
+                setTimeout(() => { scrollToTable(); }, 100);
               }}
               className="cursor-pointer transform transition-all duration-300 hover:scale-105 active:scale-95"
               title="Click to view completed requests"
@@ -311,31 +342,8 @@ export default function AdminDashboard() {
 
             <div
               onClick={() => {
-                setStatusFilter('pending');
-                // Smooth scroll to table after filter update
-                setTimeout(() => {
-                  scrollToTable();
-                }, 100);
-              }}
-              className="cursor-pointer transform transition-all duration-300 hover:scale-105 active:scale-95"
-              title="Click to view pending requests"
-            >
-              <StatsCard
-                title="Pending"
-                value={statusCounts?.pending_requests || 0}
-                change={statusCounts?.total_requests ? `${((statusCounts.pending_requests / Math.max(statusCounts.total_requests, 1)) * 100).toFixed(1)}%` : '0%'}
-                trend="down"
-                color="bg-yellow-500"
-              />
-            </div>
-
-            <div
-              onClick={() => {
                 setStatusFilter('rejected');
-                // Smooth scroll to table after filter update
-                setTimeout(() => {
-                  scrollToTable();
-                }, 100);
+                setTimeout(() => { scrollToTable(); }, 100);
               }}
               className="cursor-pointer transform transition-all duration-300 hover:scale-105 active:scale-95"
               title="Click to view rejected requests"
@@ -346,6 +354,23 @@ export default function AdminDashboard() {
                 change={statusCounts?.total_requests ? `${((statusCounts.rejected_requests / Math.max(statusCounts.total_requests, 1)) * 100).toFixed(1)}%` : '0%'}
                 trend="down"
                 color="bg-red-500"
+              />
+            </div>
+
+            <div
+              onClick={() => {
+                setStatusFilter('reapplied');
+                setTimeout(() => { scrollToTable(); }, 100);
+              }}
+              className="cursor-pointer transform transition-all duration-300 hover:scale-105 active:scale-95"
+              title="Click to view reapplied requests"
+            >
+              <StatsCard
+                title="Reapplied"
+                value={statusCounts?.reapplied_requests || 0}
+                change={statusCounts?.total_requests ? `${((statusCounts.reapplied_requests / Math.max(statusCounts.total_requests, 1)) * 100).toFixed(1)}%` : '0%'}
+                trend="up"
+                color="bg-orange-500"
               />
             </div>
           </div>
@@ -397,10 +422,10 @@ export default function AdminDashboard() {
                 className="px-4 py-2.5 rounded-lg bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-red-600 outline-none text-sm min-h-[44px] dark:[&>option]:bg-[#0f0f0f] dark:[&>option]:text-white"
               >
                 <option value="">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="in_progress">In Progress</option>
+                <option value="pending">Pending Review</option>
                 <option value="completed">Completed</option>
                 <option value="rejected">Rejected</option>
+                <option value="reapplied">Reapplied</option>
               </select>
               <select
                 value={departmentFilter}

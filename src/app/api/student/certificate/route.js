@@ -62,7 +62,6 @@ export async function GET(request) {
         .from('no_dues_forms')
         .select(`
           id,
-          user_id,
           student_name,
           registration_no,
           course,
@@ -85,7 +84,6 @@ export async function GET(request) {
         .from('no_dues_forms')
         .select(`
           id,
-          user_id,
           student_name,
           registration_no,
           course,

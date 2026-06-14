@@ -213,10 +213,14 @@ export function useAdminDashboard() {
               total_forms: result.overallStats?.totalApplications || 0,
               total_requests: result.overallStats?.totalApplications || 0,
               pending_requests: result.overallStats?.pendingApplications || 0,
-              completed_requests: result.overallStats?.approvedApplications || 0,
-              rejected_requests: result.overallStats?.rejectedApplications || 0
+              completed_requests: result.overallStats?.completedApplications || 0,
+              rejected_requests: result.overallStats?.rejectedApplications || 0,
+              reapplied_requests: result.overallStats?.reappliedApplications || 0
             }],
-            departmentStats: result.departmentStats || [],
+            departmentStats: (result.departmentStats || []).map(dept => ({
+              ...dept,
+              completed_requests: dept.completed_count || dept.approved_count || 0
+            })),
             recentActivity: result.recentActivity || []
           };
           

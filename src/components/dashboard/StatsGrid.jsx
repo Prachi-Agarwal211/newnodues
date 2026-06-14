@@ -10,7 +10,7 @@ export default function StatsGrid({ stats, loading = false, onFilterChange }) {
   // Normalize keys to handle both Admin and Staff API formats
   const safeStats = {
     pending: stats?.pending || stats?.pendingApplications || 0,
-    approved: stats?.approved || stats?.approvedApplications || 0,
+    approved: stats?.completed || stats?.approved || stats?.approvedApplications || 0,
     rejected: stats?.rejected || stats?.rejectedApplications || 0,
     total: stats?.total || stats?.totalApplications || 0,
   };
@@ -25,12 +25,12 @@ export default function StatsGrid({ stats, loading = false, onFilterChange }) {
       filter: "pending"
     },
     {
-      title: "Approved",
+      title: "Completed",
       value: safeStats.approved,
       icon: <CheckCircle className="w-5 h-5" />,
       color: "text-emerald-500",
       accentBg: "bg-emerald-500/10",
-      filter: "approved"
+      filter: "completed"
     },
     {
       title: "Rejected",

@@ -22,11 +22,10 @@ class ReapplicationService {
     };
 
     this.priorityWeights = {
-      'reapplied': 1000,  // Highest priority
-      'rejected': 800,    // High priority
-      'pending': 600,     // Medium priority
-      'in_progress': 400, // Low priority
-      'completed': 200    // Lowest priority
+      'reapplied': 1000,
+      'rejected': 800,
+      'pending': 600,
+      'completed': 200
     };
   }
 
@@ -43,10 +42,8 @@ class ReapplicationService {
         .update({
           status: 'rejected',
           rejection_reason: reason,
-          remarks: remarks || null,
-          action_by: actionBy,
-          action_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          action_by_user_id: actionBy,
+          action_at: new Date().toISOString()
         })
         .eq('form_id', formId)
         .eq('department_name', department)
@@ -275,11 +272,8 @@ class ReapplicationService {
       .update({
         status: 'pending',
         action_at: null,
-        action_by: null,
-        remarks: null,
-        rejection_reason: null,
-        student_reply_message: null,
-        updated_at: new Date().toISOString()
+        action_by_user_id: null,
+        rejection_reason: null
       })
       .eq('form_id', formId);
 
@@ -309,7 +303,7 @@ class ReapplicationService {
             department_name,
             status,
             action_at,
-            action_by
+            action_by_user_id
           )
         `);
 

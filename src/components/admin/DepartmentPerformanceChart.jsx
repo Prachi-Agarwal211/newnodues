@@ -23,8 +23,8 @@ function DepartmentPerformanceChart({ data }) {
     labels: data ? data.map(item => item.department_name) : [],
     datasets: [
       {
-        label: 'Approved',
-        data: data ? data.map(item => item.approved_requests || 0) : [],
+        label: 'Completed',
+        data: data ? data.map(item => item.completed_requests || 0) : [],
         backgroundColor: isDark ? 'rgba(0, 255, 136, 0.8)' : 'rgba(45, 122, 69, 0.8)',
       },
       {

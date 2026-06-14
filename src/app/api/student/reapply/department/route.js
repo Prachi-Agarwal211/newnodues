@@ -102,7 +102,6 @@ export async function POST(request) {
           department_name,
           status,
           rejection_reason,
-          rejection_count,
           action_at,
           action_by_user_id
         )
@@ -358,7 +357,6 @@ export async function GET(request) {
           department_name,
           status,
           rejection_reason,
-          rejection_count,
           action_at
         )
       `)

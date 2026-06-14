@@ -213,8 +213,7 @@ class StudentWorkflowService {
       form_id: formId,
       department_name: dept.name,
       status: 'pending',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      created_at: new Date().toISOString()
     }));
 
     const { error } = await supabaseAdmin
@@ -289,8 +288,7 @@ class StudentWorkflowService {
             department_name,
             status,
             action_at,
-            action_by,
-            remarks,
+            action_by_user_id,
             rejection_reason
           )
         `)
@@ -451,11 +449,8 @@ class StudentWorkflowService {
       .update({
         status: 'pending',
         action_at: null,
-        action_by: null,
-        remarks: null,
-        rejection_reason: null,
-        student_reply_message: null,
-        updated_at: new Date().toISOString()
+        action_by_user_id: null,
+        rejection_reason: null
       })
       .eq('form_id', formId);
 

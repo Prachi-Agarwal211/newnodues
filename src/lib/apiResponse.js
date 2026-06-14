@@ -51,7 +51,7 @@ export const ApiResponse = {
      * @param {string} message - Error message
      * @param {object} errors - Zod validation errors
      */
-    validationError: (errors, message = 'Validation Failed') => {
+    validationError: (message = 'Validation Failed', errors = null) => {
         return NextResponse.json(
             {
                 success: false,

@@ -203,7 +203,7 @@ export default function StaffProfilePage({ params }) {
                     />
                     <StatCard
                         icon={CheckCircle}
-                        label="Approved"
+                        label="Completed"
                         value={stats.total_approved || 0}
                         subValue={`${stats.approval_rate || 0}% rate`}
                         color="bg-green-500"
@@ -305,7 +305,7 @@ export default function StaffProfilePage({ params }) {
                                     </div>
                                     <div className="flex-1">
                                         <p className={isDark ? 'text-white' : 'text-gray-900'}>
-                                            <span className="font-medium">{action.status === 'approved' ? 'Approved' : 'Rejected'}</span>
+                                            <span className="font-medium">{action.status === 'approved' ? 'Completed' : 'Rejected'}</span>
                                             {' - '}
                                             {action.no_dues_forms?.student_name} ({action.no_dues_forms?.registration_no})
                                         </p>

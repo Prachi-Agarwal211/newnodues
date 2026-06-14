@@ -95,9 +95,13 @@ export async function GET(request) {
         requestsOverTime.forEach(req => {
           const date = new Date(req.created_at).toISOString().split('T')[0];
           if (!groupedByDate[date]) {
-            groupedByDate[date] = { pending: 0, in_progress: 0, completed: 0, rejected: 0 };
+            groupedByDate[date] = { pending: 0, completed: 0, rejected: 0 };
           }
-          groupedByDate[date][req.status]++;
+          if (req.status === 'in_progress' || req.status === 'pending') {
+            groupedByDate[date].pending++;
+          } else {
+            groupedByDate[date][req.status]++;
+          }
         });
 
         reportData = {

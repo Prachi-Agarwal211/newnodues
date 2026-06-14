@@ -57,10 +57,10 @@ export async function GET() {
       .select(`
         *,
         no_dues_status (
-          department,
+          department_name,
           status,
-          reason,
-          updated_at
+          rejection_reason,
+          action_at
         )
       `)
       .order('created_at', { ascending: false });

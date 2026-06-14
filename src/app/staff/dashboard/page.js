@@ -589,7 +589,7 @@ export default function StaffDashboard() {
         {/* Stats Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
           <StatusCard label="Pending" value={stats?.pending || 0} sub="Awaiting action" icon={Clock} color="yellow" onClick={() => setActiveTab('pending')} isDark={isDark} />
-          <StatusCard label="Approved" value={stats?.approved || 0} sub="By department" icon={CheckCircle} color="green" onClick={() => setActiveTab('history')} isDark={isDark} />
+          <StatusCard label="Completed" value={stats?.approved || 0} sub="By department" icon={CheckCircle} color="green" onClick={() => setActiveTab('history')} isDark={isDark} />
           <StatusCard label="Rejected" value={stats?.rejected || 0} sub="By department" icon={XCircle} color="red" onClick={() => setActiveTab('rejected')} isDark={isDark} />
           <StatusCard label="Total Processed" value={stats?.total || 0} sub={`${stats?.approvalRate || 0}% approval rate`} icon={TrendingUp} color="gray" onClick={() => setActiveTab('history')} isDark={isDark} />
         </div>

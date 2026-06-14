@@ -59,14 +59,12 @@ export async function POST(request) {
                     const { error: updateError } = await supabaseAdmin
                         .from('no_dues_forms')
                         .update({
-                            certificate_status: 'generated',
+                            final_certificate_generated: true,
                             certificate_generated_at: new Date().toISOString(),
-                            final_certificate_generated: true, // Legacy field sync
-                            certificate_error: null,
                             updated_at: new Date().toISOString()
                         })
                         .eq('id', formId)
-                        .eq('status', 'completed'); // Safety: only completed forms
+                        .eq('status', 'completed');
 
                     if (updateError) throw updateError;
 
@@ -83,14 +81,6 @@ export async function POST(request) {
                     console.error(`Failed to generate cert for ${formId}:`, err);
 
                     // C. Log Failure
-                    await supabaseAdmin
-                        .from('no_dues_forms')
-                        .update({
-                            certificate_status: 'failed',
-                            certificate_error: err.message
-                        })
-                        .eq('id', formId);
-
                     await supabaseAdmin.from('certificate_generation_logs').insert({
                         form_id: formId,
                         status: 'failed',

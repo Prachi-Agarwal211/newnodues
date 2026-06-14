@@ -76,7 +76,6 @@ export async function GET(request) {
           department_name,
           status,
           rejection_reason,
-          rejection_count,
           action_at
         )
       `)
@@ -136,7 +135,7 @@ export async function GET(request) {
       rejection_reason: dept.rejection_reason,
       rejection_count: dept.rejection_count || 0,
       remaining_attempts: Math.max(0, MAX_REAPPLICATIONS - (dept.rejection_count || 0)),
-      can_reapply: dept.status === 'rejected' && (dept.rejection_count || 0) < MAX_RE_APPLICATIONS,
+      can_reapply: dept.status === 'rejected' && (dept.rejection_count || 0) < MAX_REAPPLICATIONS,
       action_at: dept.action_at
     }));
 
@@ -165,7 +164,7 @@ export async function GET(request) {
             rejection_reason: d.rejection_reason,
             rejection_count: d.rejection_count || 0,
             remaining_attempts: Math.max(0, MAX_REAPPLICATIONS - (d.rejection_count || 0)),
-            can_reapply: (d.rejection_count || 0) < MAX_RE_APPLICATIONS,
+            can_reapply: (d.rejection_count || 0) < MAX_REAPPLICATIONS,
             action_at: d.action_at
           }))
         } : {
