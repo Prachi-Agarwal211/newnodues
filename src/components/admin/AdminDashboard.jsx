@@ -111,48 +111,20 @@ export default function AdminDashboard() {
     return () => window.removeEventListener('new-submission', handleNewSubmission);
   }, [isDark]);
 
-  // ⚡ PERFORMANCE: Initial data load - fetch everything in parallel
+  // ✅ PERFORMANCE FIX: Single data fetch on mount AND when filters change
+  // Previously there were TWO effects that both called fetchDashboardData on mount,
+  // causing redundant API calls. Consolidated into one.
   useEffect(() => {
     if (userId) {
-      console.log('📥 Initial admin dashboard data load (parallel)');
-
-      // Fetch all data in parallel to minimize load time
-      const loadData = async () => {
-        try {
-          await Promise.all([
-            fetchDashboardData({
-              status: statusFilter,
-              search: '',
-              department: departmentFilter
-            }),
-            fetchStats()
-          ]);
-          console.log('✅ All dashboard data loaded successfully');
-        } catch (error) {
-          console.error('❌ Error loading dashboard data:', error);
-          toast.error('Failed to load dashboard data');
-        }
-      };
-
-      loadData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
-
-  // ✅ PERFORMANCE FIX #1: Fetch data when filters or debounced search change
-  // This prevents API spam while typing - waits 500ms after user stops typing
-  useEffect(() => {
-    if (userId) {
-      console.log('🔍 Filters/pagination changed, fetching data');
+      console.log('🔍 Fetching dashboard data (mount or filter change)');
       fetchDashboardData({
         status: statusFilter,
-        search: debouncedSearch, // ✅ Use debounced value instead of searchTerm
+        search: debouncedSearch,
         department: departmentFilter
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, statusFilter, departmentFilter, debouncedSearch]); // ✅ Removed searchTerm from deps
-  // Now API is only called 500ms AFTER user stops typing, not on every keystroke!
+  }, [userId, currentPage, statusFilter, departmentFilter, debouncedSearch]);
 
 
 

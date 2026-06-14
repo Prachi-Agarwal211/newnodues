@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import StatusBadge from '@/components/ui/StatusBadge';
 import { DepartmentStatusSummary, ExpandedDepartmentDetails } from './DepartmentStatusDisplay';
-import { RefreshCw, ChevronRight, ChevronDown, Download } from 'lucide-react';
+import { RefreshCw, ChevronRight, ChevronDown, Download, FileText } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { supabase } from '@/lib/supabaseClient';
 import { realtimeManager } from '@/lib/realtimeManager';
@@ -71,6 +71,7 @@ export default function ApplicationsTable({ applications: initialApplications, c
     const handleRealtimeUpdate = (event) => {
       if (!event.formIds || event.formIds.length === 0) return;
       const impactedIds = new Set(event.formIds);
+      // Briefly highlight impacted rows to show something changed
       setUpdatingRows(prev => {
         const next = new Set(prev);
         impactedIds.forEach(id => next.add(id));
@@ -83,12 +84,8 @@ export default function ApplicationsTable({ applications: initialApplications, c
           return next;
         });
       }, 2000);
-      setApplications(prevApps => {
-        return prevApps.map(app => {
-          if (!impactedIds.has(app.id)) return app;
-          return app;
-        });
-      });
+      // NOTE: Actual data refresh is handled by the parent AdminDashboard
+      // via the global realtime subscription. No need to duplicate here.
     };
 
     const unsubscribe = realtimeManager.subscribe('globalUpdate', handleRealtimeUpdate);
@@ -336,6 +333,3 @@ export default function ApplicationsTable({ applications: initialApplications, c
     </div>
   );
 }
-
-// Missing import for FileText icon
-import { FileText } from 'lucide-react';

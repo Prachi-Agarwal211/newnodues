@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import GlassCard from '@/components/ui/GlassCard';
@@ -13,6 +13,7 @@ import AdminNotificationBell from '@/components/admin/AdminNotificationBell';
 import optimizedRealtime from '@/lib/optimizedRealtime';
 import toast from 'react-hot-toast';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useDebounce } from '@/hooks/useDebounce';
 
 // Performance Chart Component - Clean progress bars
 const PerformanceBar = ({ label, pending, approved, timeTaken }) => {
@@ -71,6 +72,7 @@ export default function EnhancedAdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [amazonFilters, setAmazonFilters] = useState({});
+  const debouncedSearch = useDebounce(searchTerm, 500);
   const [availableFilters, setAvailableFilters] = useState({
     schools: [],
     courses: [],
@@ -143,7 +145,7 @@ export default function EnhancedAdminDashboard() {
         }
       });
       if (statusFilter) params.append('status', statusFilter);
-      if (searchTerm.trim()) params.append('search', searchTerm.trim());
+      if (debouncedSearch.trim()) params.append('search', debouncedSearch.trim());
       const res = await fetch(`/api/admin/dashboard?${params}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` },
         cache: 'no-store'
@@ -212,7 +214,7 @@ export default function EnhancedAdminDashboard() {
 
   useEffect(() => {
     fetchApplications();
-  }, [currentPage, amazonFilters, statusFilter, searchTerm]);
+  }, [currentPage, amazonFilters, statusFilter, debouncedSearch]);
 
   useEffect(() => {
     console.log('🔌 Setting up optimized admin real-time connection');

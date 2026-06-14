@@ -30,9 +30,10 @@ export function useAdminDashboard() {
   const fetchDashboardDataRef = useRef(null);
   const fetchStatsRef = useRef(null);
   
-  // ⚡ PERFORMANCE: Request deduplication to prevent multiple simultaneous fetches
+  // ⚡ PERFORMANCE: Request deduplication with queued re-fetch
   const pendingDashboardRequest = useRef(null);
   const pendingStatsRequest = useRef(null);
+  const queuedFiltersRef = useRef(null);
 
   // Fetch user data
   useEffect(() => {
@@ -70,15 +71,16 @@ export function useAdminDashboard() {
   };
 
   const fetchDashboardData = useCallback(async (filters = {}, isRefresh = false, pageOverride = null) => {
-    // ⚡ PERFORMANCE: If already fetching, return existing promise
-    if (pendingDashboardRequest.current) {
-      console.log('⏭️ Dashboard fetch already in progress, reusing...');
-      return pendingDashboardRequest.current;
-    }
-
     // Always store the latest filters for real-time refresh
     if (Object.keys(filters).length > 0) {
       currentFiltersRef.current = filters;
+    }
+
+    // ⚡ FIX: If already fetching, queue the latest filters for re-fetch after completion
+    if (pendingDashboardRequest.current) {
+      console.log('⏭️ Dashboard fetch in progress, queueing latest filters...');
+      queuedFiltersRef.current = { filters, isRefresh, pageOverride };
+      return pendingDashboardRequest.current;
     }
 
     if (isRefresh) {
@@ -147,6 +149,14 @@ export function useAdminDashboard() {
         setLoading(false);
         setRefreshing(false);
         pendingDashboardRequest.current = null;
+
+        // ⚡ FIX: Process queued request if filters changed during fetch
+        if (queuedFiltersRef.current) {
+          const queued = queuedFiltersRef.current;
+          queuedFiltersRef.current = null;
+          console.log('🔄 Processing queued dashboard fetch with latest filters');
+          fetchDashboardDataRef.current(queued.filters, queued.isRefresh, queued.pageOverride);
+        }
       }
     })();
 
@@ -195,14 +205,16 @@ export function useAdminDashboard() {
         });
 
         if (response.ok) {
-          // Format stats for component compatibility
+          // ✅ FIX: Format stats to match what AdminDashboard expects
+          // The stats API returns: totalApplications, pendingApplications, approvedApplications, rejectedApplications
+          // AdminDashboard expects: total_requests, pending_requests, completed_requests, rejected_requests
           const formattedStats = {
             overallStats: [{
               total_forms: result.overallStats?.totalApplications || 0,
+              total_requests: result.overallStats?.totalApplications || 0,
               pending_requests: result.overallStats?.pendingApplications || 0,
               completed_requests: result.overallStats?.approvedApplications || 0,
-              rejected_requests: result.overallStats?.rejectedApplications || 0,
-              total_requests: result.overallStats?.totalApplications || 0
+              rejected_requests: result.overallStats?.rejectedApplications || 0
             }],
             departmentStats: result.departmentStats || [],
             recentActivity: result.recentActivity || []

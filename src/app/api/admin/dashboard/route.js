@@ -47,8 +47,20 @@ export async function GET(request) {
     const sortOrder = searchParams.get('sortOrder') || 'desc';
     const includeStats = searchParams.get('includeStats') === 'true';
     
-    // ⚡ PERFORMANCE: Generate cache key from request params
-    const cacheKey = `dashboard_${page}_${limit}_${status || 'all'}_${departments.join(',') || 'all'}_${searchQuery || 'none'}_${sortField}_${sortOrder}_${includeStats}`;
+    // ⚡ PERFORMANCE: Generate cache key from ALL request params
+    const cacheKey = [
+      'dashboard', page, limit,
+      status || 'all',
+      departments.join(',') || 'all',
+      schools.join(',') || 'all',
+      courses.join(',') || 'all',
+      branches.join(',') || 'all',
+      admissionYear || 'all',
+      passingYear || 'all',
+      priority || 'all',
+      searchQuery || 'none',
+      sortField, sortOrder, includeStats
+    ].join('_');
     
     // ⚡ PERFORMANCE: Check cache first
     const cached = dashboardCache.get(cacheKey);
@@ -168,19 +180,53 @@ export async function GET(request) {
       );
     }
 
-    // ⚡ PERFORMANCE: Parallel queries for count and data
-    // Apply pagination to query first
+    // Build a separate count query with the SAME filters applied
+    let countQuery = supabaseAdmin
+      .from('no_dues_forms')
+      .select('id', { count: 'exact', head: true });
+
+    if (status) {
+      countQuery = countQuery.eq('status', status);
+    }
+
+    if (departments && departments.length > 0) {
+      const { data: formsWithDeptCount } = await supabaseAdmin
+        .from('no_dues_status')
+        .select('form_id')
+        .in('department_name', departments);
+
+      if (formsWithDeptCount && formsWithDeptCount.length > 0) {
+        const formIds = formsWithDeptCount.map(f => f.form_id);
+        countQuery = countQuery.in('id', formIds);
+      } else {
+        countQuery = countQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+      }
+    }
+
+    if (schools && schools.length > 0) {
+      countQuery = countQuery.in('school', schools);
+    }
+    if (courses && courses.length > 0) {
+      countQuery = countQuery.in('course', courses);
+    }
+    if (branches && branches.length > 0) {
+      countQuery = countQuery.in('branch', branches);
+    }
+    if (searchQuery) {
+      countQuery = countQuery.or(
+        `student_name.ilike.%${searchQuery}%,registration_no.ilike.%${searchQuery}%,course.ilike.%${searchQuery}%`
+      );
+    }
+
+    // Apply pagination to data query
     const from = (page - 1) * limit;
     const to = from + limit - 1;
     query = query.range(from, to);
 
     // Execute count and data queries in parallel
-    // ✅ FIXED: Table now only contains online forms
     const [applicationsResult, countResult] = await Promise.all([
       query,
-      supabaseAdmin
-        .from('no_dues_forms')
-        .select('id', { count: 'exact', head: true })
+      countQuery
     ]);
 
     const { data: applications, error: applicationsError } = applicationsResult;
@@ -329,7 +375,15 @@ export async function GET(request) {
         }).sort((a, b) => a.department_name.localeCompare(b.department_name));
 
         responseData.stats = {
-          overallStats: overallStats || [],
+          overallStats: [{
+            total_forms: Number(overallStats?.total_applications || 0),
+            total_requests: Number(overallStats?.total_applications || 0),
+            pending_requests: Number(overallStats?.pending_applications || 0),
+            in_progress_requests: Number(overallStats?.in_progress_applications || 0),
+            completed_requests: Number(overallStats?.completed_applications || 0),
+            rejected_requests: Number(overallStats?.rejected_applications || 0),
+            reapplied_requests: Number(overallStats?.reapplied_applications || 0)
+          }],
           departmentStats: formattedDepartmentStats,
           recentActivity: recentActivity || [],
           pendingAlerts: pendingAlerts || []
