@@ -25,7 +25,7 @@ export default function EmptyState({
       <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${
         variant === 'error' 
           ? 'bg-red-100 dark:bg-red-900/20' 
-          : 'bg-gray-100 dark:bg-gray-800'
+          : 'bg-gray-100 dark:bg-[#1a1a1a]'
       }`}>
         <IconComponent className={`w-8 h-8 ${
           variant === 'error' 

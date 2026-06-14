@@ -406,7 +406,7 @@ export default function SubmitForm() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`max-w-lg mx-auto text-center p-8 sm:p-12 rounded-3xl shadow-2xl ${isDark ? 'bg-gradient-to-br from-gray-900 to-black border border-white/10' : 'bg-white border border-gray-100'
+        className={`max-w-lg mx-auto text-center p-8 sm:p-12 rounded-3xl shadow-2xl ${isDark ? 'bg-[#141414] border border-white/10' : 'bg-white border border-gray-100'
           }`}
       >
         <motion.div
@@ -478,7 +478,7 @@ export default function SubmitForm() {
             <p className="text-sm opacity-90 mb-3">
               We couldn't load the Schools/Courses data. This is required to submit the form.
               <br />
-              <span className="text-xs font-mono mt-1 block px-2 py-1 bg-black/5 rounded">Error: {configError}</span>
+              <span className="text-xs font-mono mt-1 block px-2 py-1 bg-black/5 dark:bg-white/10 rounded">Error: {configError}</span>
             </p>
             <Button
               type="button"
@@ -527,7 +527,7 @@ export default function SubmitForm() {
             loading={fetchingStudent}
             className="w-full sm:w-auto h-[50px]"
           >
-            {!fetchingStudent && "Auto-Fill details"}
+            {fetchingStudent ? 'Fetching data...' : 'Auto-Fill details'}
           </Button>
 
           <Button
@@ -538,7 +538,7 @@ export default function SubmitForm() {
             loading={checking}
             className="w-full sm:w-auto h-[50px]"
           >
-            {!checking && "Check Status"}
+            {checking ? 'Checking...' : 'Check Status'}
           </Button>
         </div>
 
@@ -718,7 +718,7 @@ export default function SubmitForm() {
           loading={loading}
           className="w-full sm:w-auto px-10 py-4 text-lg font-bold shadow-xl shadow-red-500/20"
         >
-          Submit Application
+          {loading ? 'Submitting Application...' : 'Submit Application'}
         </Button>
       </div>
     </motion.form>

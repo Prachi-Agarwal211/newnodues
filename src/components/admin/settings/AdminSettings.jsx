@@ -64,7 +64,7 @@ export default function AdminSettings() {
 
       {/* Tab Navigation */}
       <div className={`border rounded-2xl p-2 mb-6 transition-all duration-700 ${
-        isDark ? 'bg-black/20 border-white/10 backdrop-blur-xl' : 'bg-white border-gray-200 shadow-sm'
+        isDark ? 'bg-white/[0.035] border-white/10 backdrop-blur-xl' : 'bg-white border-gray-200 shadow-sm'
       }`}>
         <div className="flex gap-2 overflow-x-auto">
           {tabs.map((tab) => (
@@ -96,7 +96,7 @@ export default function AdminSettings() {
 
       {/* Help Section */}
       <div className={`mt-8 border rounded-2xl p-6 transition-all duration-700 ${
-        isDark ? 'bg-black/20 border-white/10 backdrop-blur-xl' : 'bg-white border-gray-200 shadow-sm'
+        isDark ? 'bg-white/[0.035] border-white/10 backdrop-blur-xl' : 'bg-white border-gray-200 shadow-sm'
       }`}>
         <h3 className={`text-lg font-bold mb-3 transition-colors duration-700 ${
           isDark ? 'text-white' : 'text-ink-black'

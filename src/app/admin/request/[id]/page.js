@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { useTheme } from '@/contexts/ThemeContext';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import StatusBadge from '@/components/ui/StatusBadge';
+import { realtimeService } from '@/lib/supabaseRealtime';
 
 export default function AdminRequestDetail() {
   const { theme } = useTheme();
@@ -16,11 +17,7 @@ export default function AdminRequestDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchRequestDetail();
-  }, [id]);
-
-  const fetchRequestDetail = async () => {
+  const fetchRequestDetail = useCallback(async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
@@ -77,7 +74,45 @@ export default function AdminRequestDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, router]);
+
+  useEffect(() => {
+    fetchRequestDetail();
+  }, [fetchRequestDetail]);
+
+  // Realtime subscription for live updates
+  useEffect(() => {
+    if (!id) return;
+
+    const channel = supabase
+      .channel(`admin-request-detail-${id}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'no_dues_status',
+        filter: `form_id=eq.${id}`
+      }, () => {
+        console.log('🔄 Status changed, refreshing...');
+        fetchRequestDetail();
+      })
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'no_dues_forms',
+        filter: `id=eq.${id}`
+      }, () => {
+        console.log('🔄 Form updated, refreshing...');
+        fetchRequestDetail();
+      })
+      .subscribe();
+
+    // Also trigger global realtime connection
+    realtimeService.subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [id, fetchRequestDetail]);
 
   const calculateResponseTime = (formCreated, statusCreated, actionAt) => {
     if (!actionAt) return 'Pending';
@@ -120,7 +155,7 @@ export default function AdminRequestDetail() {
   if (!request) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-gray-900/50 border border-gray-700 rounded-lg p-6 text-center">
+        <div className="max-w-md w-full bg-[#111111]/80 border border-white/10 rounded-lg p-6 text-center">
           <h2 className="text-xl font-bold text-gray-300 mb-4">Request Not Found</h2>
           <button
             onClick={() => router.back()}
@@ -173,7 +208,7 @@ export default function AdminRequestDetail() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <div className={`backdrop-blur-sm rounded-xl border p-6 transition-colors duration-700 ${
             isDark
-              ? 'bg-gray-800/50 border-gray-700'
+              ? 'bg-[#141414]/70 border-white/10'
               : 'bg-white/60 border-black/10'
           }`}>
             <h2 className={`text-xl font-semibold mb-4 transition-colors duration-700 ${
@@ -260,7 +295,7 @@ export default function AdminRequestDetail() {
           {/* Request Details */}
           <div className={`backdrop-blur-sm rounded-xl border p-6 transition-colors duration-700 ${
             isDark
-              ? 'bg-gray-800/50 border-gray-700'
+              ? 'bg-[#141414]/70 border-white/10'
               : 'bg-white/60 border-black/10'
           }`}>
             <h2 className={`text-xl font-semibold mb-4 transition-colors duration-700 ${
@@ -293,19 +328,27 @@ export default function AdminRequestDetail() {
                   isDark ? 'text-white' : 'text-ink-black'
                 }`}>{new Date(request.updated_at).toLocaleString()}</p>
               </div>
-              {request.alumniProfileLink && (
+              {request.alumni_profile_link && (
                 <div>
                   <span className={`text-sm transition-colors duration-700 ${
                     isDark ? 'text-gray-400' : 'text-gray-600'
-                  }`}>Alumni Screenshot:</span>
+                  }`}>Alumni Profile Link:</span>
                   <div className="mt-2">
-                    <img
-                      src={request.alumniProfileLink}
-                      alt="Alumni verification"
-                      className={`max-w-xs h-auto rounded-lg border transition-colors duration-700 ${
-                        isDark ? 'border-gray-600' : 'border-gray-300'
+                    <a
+                      href={request.alumni_profile_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
+                        isDark
+                          ? 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/30'
+                          : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200'
                       }`}
-                    />
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      View Alumni Profile
+                    </a>
                   </div>
                 </div>
               )}
@@ -316,7 +359,7 @@ export default function AdminRequestDetail() {
         {/* Department Status */}
         <div className={`backdrop-blur-sm rounded-xl border p-6 mb-8 transition-colors duration-700 ${
           isDark
-            ? 'bg-gray-800/50 border-gray-700'
+            ? 'bg-[#141414]/70 border-white/10'
             : 'bg-white/60 border-black/10'
         }`}>
           <h2 className={`text-xl font-semibold mb-4 transition-colors duration-700 ${
@@ -331,22 +374,22 @@ export default function AdminRequestDetail() {
               <thead>
                 <tr>
                   <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-700 ${
-                    isDark ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                    isDark ? 'bg-[#1a1a1a] text-gray-300' : 'bg-gray-100 text-gray-700'
                   }`}>Department</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-700 ${
-                    isDark ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                    isDark ? 'bg-[#1a1a1a] text-gray-300' : 'bg-gray-100 text-gray-700'
                   }`}>Status</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-700 ${
-                    isDark ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                    isDark ? 'bg-[#1a1a1a] text-gray-300' : 'bg-gray-100 text-gray-700'
                   }`}>Response Time</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-700 ${
-                    isDark ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                    isDark ? 'bg-[#1a1a1a] text-gray-300' : 'bg-gray-100 text-gray-700'
                   }`}>Action By</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-700 ${
-                    isDark ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                    isDark ? 'bg-[#1a1a1a] text-gray-300' : 'bg-gray-100 text-gray-700'
                   }`}>Reason for Rejection</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-700 ${
-                    isDark ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                    isDark ? 'bg-[#1a1a1a] text-gray-300' : 'bg-gray-100 text-gray-700'
                   }`}>Updated</th>
                 </tr>
               </thead>

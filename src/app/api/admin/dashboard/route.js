@@ -102,6 +102,11 @@ export async function GET(request) {
         updated_at,
         reapplication_count,
         rejection_context,
+        certificate_status,
+        certificate_generated_at,
+        final_certificate_generated,
+        certificate_url,
+        certificate_error,
         no_dues_status!inner (
           id,
           department_name,

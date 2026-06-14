@@ -63,13 +63,13 @@ export default function StaffHistory() {
                 <input 
                     type="text" 
                     placeholder="Search history..." 
-                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-black/40 border border-red-100 dark:border-red-900/40 rounded-xl text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-[#111] dark:border-white/10 border border-red-100 dark:border-red-900/30 rounded-xl text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-red-500"
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
         </div>
 
-        <GlassCard className="min-h-[500px] bg-white dark:bg-black/40 border border-red-100 dark:border-red-900/40">
+        <GlassCard className="min-h-[500px] bg-white dark:bg-[#141414] dark:border-white/8 border border-red-100 dark:border-red-900/30">
             {loading ? (
                 <div className="p-8 text-center text-gray-400">Loading history...</div>
             ) : (
@@ -128,7 +128,7 @@ export default function StaffHistory() {
             <button
               onClick={() => setPage(prev => Math.max(1, prev - 1))}
               disabled={page === 1}
-              className="px-4 py-2 bg-white dark:bg-gray-800 border border-red-100 dark:border-red-900/40 rounded-xl text-gray-700 dark:text-gray-300 disabled:opacity-50 transition-all hover:bg-red-50 dark:hover:bg-red-900/20"
+              className="px-4 py-2 bg-white dark:bg-[#1a1a1a] border border-red-100 dark:border-red-900/30 rounded-xl text-gray-700 dark:text-gray-300 disabled:opacity-50 transition-all hover:bg-red-50 dark:hover:bg-red-900/20"
             >
               Previous
             </button>
@@ -138,7 +138,7 @@ export default function StaffHistory() {
             <button
               onClick={() => setPage(prev => Math.min(pagination.totalPages, prev + 1))}
               disabled={page === pagination.totalPages}
-              className="px-4 py-2 bg-white dark:bg-gray-800 border border-red-100 dark:border-red-900/40 rounded-xl text-gray-700 dark:text-gray-300 disabled:opacity-50 transition-all hover:bg-red-50 dark:hover:bg-red-900/20"
+              className="px-4 py-2 bg-white dark:bg-[#1a1a1a] border border-red-100 dark:border-red-900/30 rounded-xl text-gray-700 dark:text-gray-300 disabled:opacity-50 transition-all hover:bg-red-50 dark:hover:bg-red-900/20"
             >
               Next
             </button>

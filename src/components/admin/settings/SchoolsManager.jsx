@@ -153,7 +153,7 @@ export default function SchoolsManager() {
       {/* Table */}
       <div className={`border rounded-2xl p-6 transition-all duration-700 ${
         isDark
-          ? 'bg-black/20 backdrop-blur-xl border-white/10'
+          ? 'bg-white/[0.035] backdrop-blur-xl border-white/10'
           : 'bg-white border-gray-200 shadow-sm'
       }`}>
         <ConfigTable

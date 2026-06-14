@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Plus, Edit, Trash2, Filter, Download, Upload, User, Mail, Phone, GraduationCap, Building, BookOpen, ChevronDown, X, Check, AlertCircle } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Filter, Download, Upload, User, Mail, Phone, GraduationCap, Building, BookOpen, ChevronDown, X, Check, AlertCircle, FileText } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useDebounce } from '@/hooks/useDebounce';
 import toast from 'react-hot-toast';
@@ -393,8 +393,8 @@ export default function MasterStudentManager() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="bg-white dark:bg-[#141414] p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Students</p>
@@ -403,7 +403,7 @@ export default function MasterStudentManager() {
             <User className="w-8 h-8 text-jecrc-red" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-[#141414] p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Pending</p>
@@ -412,7 +412,7 @@ export default function MasterStudentManager() {
             <AlertCircle className="w-8 h-8 text-yellow-600" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-[#141414] p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">In Progress</p>
@@ -421,7 +421,7 @@ export default function MasterStudentManager() {
             <BookOpen className="w-8 h-8 text-blue-600" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-[#141414] p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Completed</p>
@@ -430,10 +430,19 @@ export default function MasterStudentManager() {
             <GraduationCap className="w-8 h-8 text-green-600" />
           </div>
         </div>
+        <div className="bg-white dark:bg-[#141414] p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Certificates Issued</p>
+              <p className="text-2xl font-bold text-green-600">{students.filter(s => s.status === 'completed' && (s.certificate_url || s.final_certificate_generated)).length}</p>
+            </div>
+            <FileText className="w-8 h-8 text-green-600" />
+          </div>
+        </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-[#141414] p-4 rounded-lg border border-gray-200 dark:border-gray-700">
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
@@ -443,7 +452,7 @@ export default function MasterStudentManager() {
                 placeholder="Search by name, registration, or email..."
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
               />
             </div>
           </div>
@@ -474,7 +483,7 @@ export default function MasterStudentManager() {
             <select
               value={filters.schoolId}
               onChange={(e) => handleFilterChange('schoolId', e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
             >
               <option value="">All Schools</option>
               {schools.map(school => (
@@ -485,7 +494,7 @@ export default function MasterStudentManager() {
             <select
               value={filters.courseId}
               onChange={(e) => handleFilterChange('courseId', e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
             >
               <option value="">All Courses</option>
               {filteredCourses.map(course => (
@@ -496,7 +505,7 @@ export default function MasterStudentManager() {
             <select
               value={filters.branchId}
               onChange={(e) => handleFilterChange('branchId', e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
             >
               <option value="">All Branches</option>
               {filteredBranches.map(branch => (
@@ -507,7 +516,7 @@ export default function MasterStudentManager() {
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
             >
               <option value="">All Status</option>
               <option value="pending">Pending</option>
@@ -520,10 +529,10 @@ export default function MasterStudentManager() {
       </div>
 
       {/* Students Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-white dark:bg-[#141414] rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-gray-50 dark:bg-[#1a1a1a]">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Student</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Registration</th>
@@ -531,13 +540,14 @@ export default function MasterStudentManager() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Branch</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Certificate</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center">
+                  <td colSpan="8" className="px-6 py-4 text-center">
                     <div className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jecrc-red"></div>
                     </div>
@@ -545,13 +555,13 @@ export default function MasterStudentManager() {
                 </tr>
               ) : students.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan="8" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                     No students found
                   </td>
                 </tr>
               ) : (
                 students.map((student) => (
-                  <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-900">
+                  <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-[#1a1a1a]">
                     <td className="px-6 py-4">
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-white">{student.student_name}</div>
@@ -573,6 +583,28 @@ export default function MasterStudentManager() {
                         }`}>
                         {student.status}
                       </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      {student.status === 'completed' ? (
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2 py-1 text-xs rounded-full ${ (student.certificate_status === 'generated' || student.certificate_url) ? 'bg-green-100 text-green-800' : student.certificate_status === 'failed' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' }`}>
+                            {student.certificate_status || (student.certificate_url ? 'generated' : 'pending')}
+                          </span>
+                          {(student.certificate_url) && (
+                            <a 
+                              href={student.certificate_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="p-1 text-green-600 hover:text-green-800 transition-colors"
+                              title="Download Certificate"
+                            >
+                              <Download className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">—</span>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
@@ -631,7 +663,7 @@ export default function MasterStudentManager() {
       {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+          <div className="bg-white dark:bg-[#141414] rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -659,7 +691,7 @@ export default function MasterStudentManager() {
                       type="text"
                       value={formData.registration_no || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, registration_no: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="e.g. 21BCE1234"
                       required
                     />
@@ -673,7 +705,7 @@ export default function MasterStudentManager() {
                       type="text"
                       value={formData.student_name || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, student_name: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="John Doe"
                       required
                     />
@@ -687,7 +719,7 @@ export default function MasterStudentManager() {
                       type="text"
                       value={formData.parent_name || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, parent_name: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="Richard Doe"
                     />
                   </div>
@@ -699,7 +731,7 @@ export default function MasterStudentManager() {
                     <select
                       value={formData.school_id || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, school_id: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                     >
                       <option value="">Select School</option>
                       {schools.map(school => (
@@ -715,7 +747,7 @@ export default function MasterStudentManager() {
                     <select
                       value={formData.course_id || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, course_id: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                     >
                       <option value="">Select Course</option>
                       {filteredCourses.map(course => (
@@ -731,7 +763,7 @@ export default function MasterStudentManager() {
                     <select
                       value={formData.branch_id || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, branch_id: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                     >
                       <option value="">Select Branch</option>
                       {filteredBranches.map(branch => (
@@ -748,7 +780,7 @@ export default function MasterStudentManager() {
                       type="email"
                       value={formData.personal_email || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, personal_email: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="john.doe@gmail.com"
                       required
                     />
@@ -762,7 +794,7 @@ export default function MasterStudentManager() {
                       type="email"
                       value={formData.college_email || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, college_email: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="john.doe@jecrcu.edu.in"
                       required
                     />
@@ -776,7 +808,7 @@ export default function MasterStudentManager() {
                       type="tel"
                       value={formData.contact_no || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, contact_no: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="+919876543210"
                     />
                   </div>
@@ -789,7 +821,7 @@ export default function MasterStudentManager() {
                       type="url"
                       value={formData.alumni_profile_link || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, alumni_profile_link: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="https://jualumni.in/profile/123456"
                     />
                   </div>
@@ -802,7 +834,7 @@ export default function MasterStudentManager() {
                       type="text"
                       value={formData.admission_year || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, admission_year: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="2020"
                     />
                   </div>
@@ -815,7 +847,7 @@ export default function MasterStudentManager() {
                       type="text"
                       value={formData.passing_year || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, passing_year: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jecrc-red focus:border-transparent bg-white dark:bg-[#111111] text-gray-900 dark:text-white"
                       placeholder="2024"
                     />
                   </div>

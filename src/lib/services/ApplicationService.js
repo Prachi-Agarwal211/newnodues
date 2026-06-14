@@ -23,6 +23,29 @@ class ApplicationService {
       // 1. Check for duplicates
       await this.checkForDuplicates(formData.registration_no);
 
+      // 1.5 🛡️ CRITICAL: Validate registration number exists in student_data master table
+      // This prevents students from submitting fake/invalid registration numbers
+      const regNo = formData.registration_no.toUpperCase();
+      const { data: existingStudent, error: studentLookupError } = await supabase
+        .from('student_data')
+        .select('registration_no, student_name')
+        .eq('registration_no', regNo)
+        .maybeSingle();
+
+      if (studentLookupError) {
+        console.error('Student data lookup error:', studentLookupError);
+      }
+
+      if (!existingStudent) {
+        throw new Error(
+          'Registration number ' + regNo + ' is not found in our student database. ' +
+          'Please verify your registration number is correct. ' +
+          'If you believe this is an error, contact the registration office.'
+        );
+      }
+
+      console.log('✅ Student verified in master database:', existingStudent.student_name);
+
       // 2. Create the form and related data
       const { data: form, error: formError } = await supabase
         .from('no_dues_forms')
@@ -102,12 +125,17 @@ class ApplicationService {
 
   /**
    * Handle Department Approval
+   * 
+   * NOTE: Form status is NOT manually updated here — the DB trigger
+   * `trigger_update_form_status` on `no_dues_status` handles it automatically
+   * after each status INSERT/UPDATE. This prevents race conditions.
    */
   async handleDepartmentApproval(formId, departmentName, remarks, actionBy) {
     try {
       console.log(`✅ Handling approval for ${formId} by ${departmentName}`);
 
       // 1. Update status to Approved
+      //    DB trigger will auto-update no_dues_forms.status
       const { data: updatedStatus, error: statusError } = await supabase
         .from('no_dues_status')
         .update({
@@ -124,44 +152,22 @@ class ApplicationService {
 
       if (statusError) throw new Error(statusError.message);
 
-      // 2. Check overall status of the form
-      const { data: allStatuses, error: statusesError } = await supabase
-        .from('no_dues_status')
-        .select('*')
-        .eq('form_id', formId);
-
-      if (statusesError) throw new Error(statusesError.message);
-
-      const allApproved = allStatuses.every(s => s.status === 'approved');
-      const hasRejection = allStatuses.some(s => s.status === 'rejected');
-
-      let newFormStatus = 'in_progress';
-      if (hasRejection) newFormStatus = 'rejected';
-      else if (allApproved) newFormStatus = 'completed';
-
-      // 3. Update Form Status
+      // 2. Read the updated form (trigger has already updated its status)
       const { data: updatedForm, error: formError } = await supabase
         .from('no_dues_forms')
-        .update({
-          status: newFormStatus,
-          updated_at: new Date().toISOString()
-        })
+        .select('*')
         .eq('id', formId)
-        .select()
         .single();
 
       if (formError) throw new Error(formError.message);
 
-      const result = { updatedForm, updatedStatus, allApproved, newFormStatus };
+      const allApproved = updatedForm.status === 'completed';
+      const result = { updatedForm, updatedStatus, allApproved, newFormStatus: updatedForm.status };
 
       // Post-transaction actions
-      if (result.allApproved) {
-        this.sendCertificateReadyNotification(result.updatedForm);
+      if (allApproved) {
+        this.sendCertificateReadyNotification(updatedForm);
       }
-
-      // Real-time updates are handled by PostgreSQL triggers and Supabase realtime
-      // No need for manual triggers here - database will notify all subscribers automatically
-      console.log('🚀 Real-time updates will be handled by database triggers');
 
       await this.triggerRealtimeUpdate('department_approval', result);
 
@@ -239,11 +245,11 @@ class ApplicationService {
         if (cascadeError) throw cascadeError;
       }
 
-      // 5. Update Form Status with rejection context
+      // 5. Update Form with rejection context (DB trigger handles status)
+      //    Only update rejection metadata — trigger handles setting status to 'rejected'
       const { data: updatedForm, error: formError } = await supabase
         .from('no_dues_forms')
         .update({
-          status: 'rejected',
           rejection_reason: reason,
           rejection_context: rejectionContext,
           updated_at: new Date().toISOString()
@@ -394,6 +400,9 @@ class ApplicationService {
       // 3. RESET DEPARTMENT STATUS
       // Logic: If a specific department is provided, only reset THAT one.
       // If it's a global reapply (no department), reset ALL rejected departments.
+      // NOTE: The DB trigger `trigger_update_form_status` on `no_dues_status`
+      // automatically recalculates and updates `no_dues_forms.status` after
+      // each status change, so we do NOT need to set it manually here.
       let statusQuery = supabase
         .from('no_dues_status')
         .update({
@@ -414,48 +423,39 @@ class ApplicationService {
       const { error: statusResetError } = await statusQuery;
       if (statusResetError) throw statusResetError;
 
-      // 4. CHECK OVERALL FORM STATUS
-      // After resetting, check if all departments are approved or still some rejected
-      const { data: updatedStatuses } = await supabase
-        .from('no_dues_status')
-        .select('status')
-        .eq('form_id', formId);
-
-      const allApproved = updatedStatuses?.every(s => s.status === 'approved');
-      const hasRejected = updatedStatuses?.some(s => s.status === 'rejected');
-
-      let newFormStatus = 'in_progress';
-      if (hasRejected) newFormStatus = 'rejected'; // Still has rejected departments
-      else if (allApproved) newFormStatus = 'completed';
-
-      // 5. UPDATE FORM (only update reapplication fields, not status based on global)
+      // 4. UPDATE FORM METADATA (status is handled by DB trigger)
+      //    The `update_no_dues_forms_updated_at` DB trigger handles `updated_at` automatically.
       const { error: formUpdateError } = await supabase
         .from('no_dues_forms')
         .update({
-          status: newFormStatus, // Set based on actual department statuses
           reapplication_count: newReapplicationCount,
           last_reapplied_at: new Date().toISOString(),
           is_reapplication: true,
-          student_reply_message: data.reason, // Store the latest reply message
-          rejection_reason: hasRejected ? form.rejection_reason : null, // Clear only if no rejected depts
-          rejection_context: hasRejected ? form.rejection_context : null
+          student_reply_message: data.reason
         })
         .eq('id', formId);
 
       if (formUpdateError) throw formUpdateError;
+
+      // 5. Get the final form (DB trigger has already updated its status)
+      const { data: updatedForm } = await supabase
+        .from('no_dues_forms')
+        .select('status')
+        .eq('id', formId)
+        .single();
 
       // 6. TRIGGER REALTIME
       await this.triggerRealtimeUpdate('reapplication_submitted', {
         formId,
         type: 'reapply',
         department: data.department,
-        newStatus: newFormStatus
+        newStatus: updatedForm?.status || 'pending'
       });
 
       return {
         success: true,
         count: newReapplicationCount,
-        newStatus: newFormStatus
+        newStatus: updatedForm?.status || 'pending'
       };
 
     } catch (error) {

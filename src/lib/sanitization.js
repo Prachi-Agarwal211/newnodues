@@ -2,18 +2,38 @@
 // This ensures all user inputs are safe and properly formatted
 
 /**
+ * HTML character entity map for encoding
+ * Using String.fromCharCode and explicit entity names to avoid
+ * any character encoding issues in source files.
+ */
+const HTML_ENCODE_MAP = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '/': '&#x2F;',
+};
+
+/**
+ * Reverse entity map for decoding
+ */
+const HTML_DECODE_MAP = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#x27;': "'",
+    '&#x2F;': '/',
+};
+
+/**
  * HTML Entity encoding to prevent XSS attacks
  */
 export const sanitizeHtml = (input) => {
     if (!input || typeof input !== 'string') return input;
 
-    return input
-        .replace(/&/g, '&')
-        .replace(/</g, '<')
-        .replace(/>/g, '>')
-        .replace(/"/g, '"')
-        .replace(/'/g, '&#x27;')
-        .replace(/\//g, '&#x2F;');
+    return input.replace(/[&<>"'\/]/g, (match) => HTML_ENCODE_MAP[match] || match);
 };
 
 /**
@@ -22,13 +42,7 @@ export const sanitizeHtml = (input) => {
 export const decodeHtml = (input) => {
     if (!input || typeof input !== 'string') return input;
 
-    return input
-        .replace(/&/g, '&')
-        .replace(/</g, '<')
-        .replace(/>/g, '>')
-        .replace(/"/g, '"')
-        .replace(/&#x27;/g, "'")
-        .replace(/&#x2F;/g, '/');
+    return input.replace(/&(?:amp|lt|gt|quot|#x27;|#x2F;);/g, (match) => HTML_DECODE_MAP[match] || match);
 };
 
 /**
@@ -138,18 +152,19 @@ export const sanitizePhoneNumber = (input) => {
 export const sanitizeEmail = (input) => {
     if (!input) return input;
 
-    const sanitized = sanitizeString(input, {
-        allowSpaces: false,
-        allowDashes: true,
-        allowUnderscores: true,
-        allowPeriods: true,
-        allowNumbers: true,
-        maxLength: 254,
-        trim: true
-    }).toLowerCase();
+    let sanitized = String(input).trim().toLowerCase();
+
+    // Strip HTML tags and null bytes
+    sanitized = sanitized.replace(/<[^>]*>/g, '');
+    sanitized = sanitized.replace(/\0/g, '');
+
+    // Limit length
+    if (sanitized.length > 254) {
+        sanitized = sanitized.substring(0, 254);
+    }
 
     // Basic email validation regex
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(sanitized)) {
         throw new Error('Invalid email address format');

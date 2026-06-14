@@ -24,11 +24,12 @@ export default function ClientProviders({ children }) {
         <Toaster
           position="top-right"
           toastOptions={{
-            className: 'dark:bg-black dark:text-white dark:border dark:border-white/20',
+            className: 'dark:bg-[#1a1a1a] dark:text-white dark:border dark:border-white/15',
             style: {
               borderRadius: '10px',
-              background: '#333',
+              background: '#1f1f1f',
               color: '#fff',
+              border: '1px solid rgba(255,255,255,0.1)',
             },
             success: {
               iconTheme: {

@@ -227,8 +227,8 @@ export default function MultiSelectCheckbox({
         aria-label={`${label}: ${selectedCount} selected`}
         className={`w-full px-4 py-3 rounded-xl border transition-all flex items-center justify-between min-h-[52px] ${
           disabled || isLoading
-            ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800'
-            : 'bg-white dark:bg-black/20 hover:border-jecrc-red/50 cursor-pointer'
+            ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-[#1a1a1a]'
+            : 'bg-white dark:bg-[#111111] hover:border-jecrc-red/50 cursor-pointer'
         } ${
           isOpen
             ? 'border-jecrc-red ring-2 ring-jecrc-red/20'
@@ -263,7 +263,7 @@ export default function MultiSelectCheckbox({
           {/* Dropdown panel - Fixed position for stability */}
           <div
             ref={dropdownRef}
-            className={`fixed z-[9999] bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden ${
+            className={`fixed z-[9999] bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden ${
               isMobile ? 'w-[calc(100vw-2rem)] left-4' : ''
             }`}
             style={{
@@ -281,7 +281,7 @@ export default function MultiSelectCheckbox({
             onMouseUp={(e) => e.stopPropagation()}
           >
             {/* Header with Search */}
-            <div className="p-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-gray-800/50">
+            <div className="p-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1a1a1a]/50">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                   {label}
@@ -306,7 +306,7 @@ export default function MultiSelectCheckbox({
                   placeholder="Search options..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 text-sm rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 text-sm rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                   onClick={(e) => e.stopPropagation()}
                   aria-label="Search options"
                 />
@@ -315,7 +315,7 @@ export default function MultiSelectCheckbox({
 
             {/* Action Buttons */}
             {filteredOptions.length > 0 && (
-              <div className="flex gap-3 p-3 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-gray-800/30">
+              <div className="flex gap-3 p-3 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#1a1a1a]/30">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -417,7 +417,7 @@ export default function MultiSelectCheckbox({
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-gray-200 dark:border-white/10 flex items-center justify-between bg-gray-50 dark:bg-gray-800/30">
+            <div className="p-4 border-t border-gray-200 dark:border-white/10 flex items-center justify-between bg-gray-50 dark:bg-[#1a1a1a]/30">
               <span className="text-sm text-gray-500 dark:text-gray-400">
                 {selectedCount} item{selectedCount !== 1 ? 's' : ''} selected
               </span>

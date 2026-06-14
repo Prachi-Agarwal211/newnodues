@@ -200,7 +200,7 @@ export default function CoursesManager() {
       {/* Search and Filters */}
       <div className={`border rounded-2xl p-4 transition-all duration-700 ${
         isDark
-          ? 'bg-black/20 backdrop-blur-xl border-white/10'
+          ? 'bg-white/[0.035] backdrop-blur-xl border-white/10'
           : 'bg-white border-gray-200 shadow-sm'
       }`}>
         <div className="flex flex-col sm:flex-row gap-4">
@@ -274,7 +274,7 @@ export default function CoursesManager() {
       {/* Table */}
       <div className={`border rounded-2xl p-6 transition-all duration-700 ${
         isDark
-          ? 'bg-black/20 backdrop-blur-xl border-white/10'
+          ? 'bg-white/[0.035] backdrop-blur-xl border-white/10'
           : 'bg-white border-gray-200 shadow-sm'
       }`}>
         <ConfigTable

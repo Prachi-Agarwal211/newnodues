@@ -95,7 +95,7 @@ export function RealtimeStatusIndicator() {
     <div className="fixed bottom-4 right-4 z-50">
       {/* Main Status Badge */}
       <div
-        className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-3 py-2 cursor-pointer hover:shadow-xl transition-shadow"
+        className="flex items-center gap-2 bg-white dark:bg-[#1a1a1a] rounded-lg shadow-lg px-3 py-2 cursor-pointer hover:shadow-xl transition-shadow"
         onClick={() => setShowDetails(!showDetails)}
       >
         <div className={`w-2 h-2 rounded-full ${getStatusColor()} ${status.status === 'SUBSCRIBED' ? 'animate-pulse' : ''}`} />
@@ -111,7 +111,7 @@ export function RealtimeStatusIndicator() {
 
       {/* Detailed Status Panel */}
       {showDetails && (
-        <div className="absolute bottom-full right-0 mb-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 space-y-3">
+        <div className="absolute bottom-full right-0 mb-2 w-80 bg-white dark:bg-[#1a1a1a] rounded-lg shadow-xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-gray-900 dark:text-white">
               Realtime Connection
@@ -200,7 +200,7 @@ export function RealtimeStatusIndicator() {
               <summary className="cursor-pointer text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                 Debug Info
               </summary>
-              <pre className="mt-2 p-2 bg-gray-100 dark:bg-gray-900 rounded overflow-auto max-h-40">
+              <pre className="mt-2 p-2 bg-gray-100 dark:bg-[#141414] rounded overflow-auto max-h-40">
                 {JSON.stringify(status, null, 2)}
               </pre>
             </details>

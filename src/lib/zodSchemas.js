@@ -159,7 +159,7 @@ export const studentFormSchema = z.object({
   school: z.string().min(1, 'School is required'), // UUID or Name
   course: z.string().min(1, 'Course is required'), // UUID or Name
   branch: z.string().min(1, 'Branch is required'), // UUID or Name
-  alumni_profile_link: z.string().min(1, 'Alumni profile link is mandatory')
+  alumni_profile_link: urlSchema
 });
 
 

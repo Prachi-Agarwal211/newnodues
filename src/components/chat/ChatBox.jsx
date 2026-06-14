@@ -87,7 +87,7 @@ export default function ChatBox({
 
     if (loading) {
         return (
-            <div className={`flex flex-col h-full rounded-xl overflow-hidden border ${isDark ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'}`}>
+            <div className={`flex flex-col h-full rounded-xl overflow-hidden border ${isDark ? 'bg-[#141414] border-white/10' : 'bg-white border-gray-200'}`}>
                 <div className="px-4 py-3 bg-gradient-to-r from-jecrc-red to-red-600 text-white">
                     <h3 className="font-bold text-lg !text-white">💬 Chat with {departmentName}</h3>
                     <p className="text-xs !text-white/80">Loading messages...</p>
@@ -108,7 +108,7 @@ export default function ChatBox({
     }
 
     return (
-        <div className={`flex flex-col h-full rounded-xl overflow-hidden border shadow-xl ${isDark ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'}`}>
+        <div className={`flex flex-col h-full rounded-xl overflow-hidden border shadow-xl ${isDark ? 'bg-[#141414] border-white/10' : 'bg-white border-gray-200'}`}>
             {/* Header */}
             <div className="px-4 py-3 bg-gradient-to-r from-jecrc-red to-red-600 text-white relative z-10">
                 <div className="flex items-center justify-between">
@@ -155,7 +155,7 @@ export default function ChatBox({
             {/* Messages Area */}
             <div
                 ref={messagesContainerRef}
-                className={`flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px] max-h-[400px] ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}`}
+                className={`flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px] max-h-[400px] ${isDark ? 'bg-[#111111]/50' : 'bg-gray-50'}`}
             >
                 {/* Load More Button */}
                 {hasMore && (
@@ -165,7 +165,7 @@ export default function ChatBox({
                             disabled={loadingMore}
                             className={`flex items-center gap-2 px-4 py-2 text-sm rounded-full border transition-colors disabled:opacity-50
                                 ${isDark
-                                    ? 'text-gray-300 bg-gray-800 border-gray-700 hover:bg-gray-700'
+                                    ? 'text-gray-300 bg-[#141414] border-white/10 hover:bg-[#1a1a1a]'
                                     : 'text-gray-700 bg-white border-gray-200 hover:bg-gray-100'
                                 }`}
                         >
@@ -213,7 +213,7 @@ export default function ChatBox({
 
             {/* Typing Indicator */}
             {typingUsers.length > 0 && (
-                <div className={`px-4 py-2 border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-200'}`}>
+                <div className={`px-4 py-2 border-t ${isDark ? 'bg-[#141414] border-white/10' : 'bg-gray-100 border-gray-200'}`}>
                     <div className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                         <span className="flex gap-1">
                             <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />

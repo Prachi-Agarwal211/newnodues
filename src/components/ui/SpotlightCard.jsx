@@ -57,7 +57,7 @@ export default function SpotlightCard({
         backdrop-blur-md
         transition-all duration-700
         ${isDark 
-          ? 'bg-black/40 border border-white/10 hover:border-white/20' 
+          ? 'bg-white/[0.035] border border-white/10 hover:border-white/18' 
           : 'bg-white/80 border border-black/10 hover:border-black/20'
         }
         ${className}

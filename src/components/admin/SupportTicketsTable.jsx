@@ -214,7 +214,7 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className={`w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl
-            ${isDark ? 'bg-black/70 border border-red-900/40' : 'bg-white border border-red-100'}`}
+            ${isDark ? 'bg-[#141414] border border-white/10' : 'bg-white border border-red-100'}`}
         >
           <div className="p-6">
             {/* Header */}
@@ -515,7 +515,7 @@ export default function SupportTicketsTable({ defaultRequesterTypeFilter = '' })
       </GlassCard>
 
       {/* Tickets Table */}
-      <GlassCard className="overflow-hidden bg-white dark:bg-black/40 border border-red-100 dark:border-red-900/40">
+      <GlassCard className="overflow-hidden bg-white dark:bg-[#141414] border border-red-100 dark:border-red-900/30">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className={`${isDark ? 'bg-red-950/40' : 'bg-red-50/80'}`}>

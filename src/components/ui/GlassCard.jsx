@@ -20,19 +20,19 @@ export default function GlassCard({
   const { theme: currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
 
-  // Clean styling - white cards in light mode, dark cards in dark mode
+  // Premium styling - elegant surfaces, never flat black. Use subtle glass + depth in dark.
   const getVariantClasses = () => {
     if (isDark) {
       switch (variant) {
         case 'glass':
-          return 'bg-gray-900/90 border-gray-700';
+          return 'bg-white/[0.035] border-white/10 backdrop-blur-xl';
         case 'elegant':
-          return 'bg-gray-800/90 border-gray-600';
+          return 'bg-[#141414] border-white/10';
         case 'premium':
-          return 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-600';
+          return 'bg-gradient-to-br from-[#181818] to-[#111111] border-white/10';
         case 'default':
         default:
-          return 'bg-gray-900 border-gray-700';
+          return 'bg-[#141414] border-white/8';
       }
     } else {
       switch (variant) {
@@ -52,7 +52,7 @@ export default function GlassCard({
   const cardClasses = `
     relative overflow-hidden rounded-xl p-5
     ${getVariantClasses()}
-    ${hoverable ? `hover:shadow-lg hover:scale-[1.002] transition-all duration-300 cursor-pointer ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}` : ''}
+    ${hoverable ? `hover:shadow-lg hover:scale-[1.002] transition-all duration-300 cursor-pointer ${isDark ? 'hover:bg-white/[0.06] hover:border-white/15' : 'hover:bg-gray-50'}` : ''}
     ${className}
   `;
 

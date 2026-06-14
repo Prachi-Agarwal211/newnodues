@@ -183,7 +183,7 @@ function StatCard({ title, value, icon, bg, border }) {
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
                     <h3 className="text-3xl font-bold text-gray-900 dark:text-white mt-1">{value}</h3>
                 </div>
-                <div className="p-3 bg-white dark:bg-black/20 rounded-lg">
+                <div className="p-3 bg-white dark:bg-[#111111] rounded-lg">
                     {icon}
                 </div>
             </div>

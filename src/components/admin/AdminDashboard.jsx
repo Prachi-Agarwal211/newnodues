@@ -422,7 +422,7 @@ export default function AdminDashboard() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2.5 rounded-lg bg-white dark:bg-black/50 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-red-600 outline-none text-sm min-h-[44px] dark:[&>option]:bg-[#0f0f0f] dark:[&>option]:text-white"
+                className="px-4 py-2.5 rounded-lg bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-red-600 outline-none text-sm min-h-[44px] dark:[&>option]:bg-[#0f0f0f] dark:[&>option]:text-white"
               >
                 <option value="">All Status</option>
                 <option value="pending">Pending</option>
@@ -433,7 +433,7 @@ export default function AdminDashboard() {
               <select
                 value={departmentFilter}
                 onChange={(e) => setDepartmentFilter(e.target.value)}
-                className="px-4 py-2.5 rounded-lg bg-white dark:bg-black/50 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-red-600 outline-none text-sm min-h-[44px] dark:[&>option]:bg-[#0f0f0f] dark:[&>option]:text-white"
+                className="px-4 py-2.5 rounded-lg bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-red-600 outline-none text-sm min-h-[44px] dark:[&>option]:bg-[#0f0f0f] dark:[&>option]:text-white"
               >
                 <option value="">All Departments</option>
                 {departments

@@ -729,7 +729,7 @@ export default function AdminSettings() {
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Current Academic Year</h4>
                 <input
                   type="text"
-                  className="w-full max-w-xs px-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20"
+                  className="w-full max-w-xs px-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111]"
                   value={systemSettings.academic_year || ''}
                   onChange={(e) => setSystemSettings(prev => ({ ...prev, academic_year: e.target.value }))}
                   onBlur={(e) => updateSetting('academic_year', e.target.value)}
@@ -751,13 +751,13 @@ export default function AdminSettings() {
                     <div className="flex-1 flex flex-col sm:flex-row gap-3">
                       <input
                         type="text"
-                        className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red/50 focus:border-transparent transition-all shadow-sm"
+                        className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red/50 focus:border-transparent transition-all shadow-sm"
                         value={editingDept.display_name}
                         onChange={(e) => setEditingDept({ ...editingDept, display_name: e.target.value })}
                       />
                       <input
                         type="email"
-                        className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red/50 focus:border-transparent transition-all shadow-sm"
+                        className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red/50 focus:border-transparent transition-all shadow-sm"
                         value={editingDept.email || ''}
                         onChange={(e) => setEditingDept({ ...editingDept, email: e.target.value })}
                         placeholder="Email (optional)"
@@ -814,7 +814,7 @@ export default function AdminSettings() {
                         </button>
                         <button
                           onClick={() => setEditingDept(null)}
-                          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl transition-all active:scale-95"
+                          className="px-4 py-2 bg-gray-200 dark:bg-[#1a1a1a] hover:bg-gray-300 dark:hover:bg-[#222] text-gray-900 dark:text-white rounded-xl transition-all active:scale-95"
                         >
                           Cancel
                         </button>
@@ -865,7 +865,7 @@ export default function AdminSettings() {
                     <div className="flex-1 flex gap-3">
                       <input
                         type="text"
-                        className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                        className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                         value={editingSchool.name}
                         onChange={(e) => setEditingSchool({ ...editingSchool, name: e.target.value })}
                       />
@@ -878,7 +878,7 @@ export default function AdminSettings() {
                       </button>
                       <button
                         onClick={() => setEditingSchool(null)}
-                        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl"
+                        className="px-4 py-2 bg-gray-200 dark:bg-[#1a1a1a] hover:bg-gray-300 dark:hover:bg-[#222] text-gray-900 dark:text-white rounded-xl"
                       >
                         Cancel
                       </button>
@@ -921,7 +921,7 @@ export default function AdminSettings() {
                     <div className="flex-1 flex gap-3">
                       <input
                         type="text"
-                        className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                        className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                         value={editingCourse.name}
                         onChange={(e) => setEditingCourse({ ...editingCourse, name: e.target.value })}
                       />
@@ -934,7 +934,7 @@ export default function AdminSettings() {
                       </button>
                       <button
                         onClick={() => setEditingCourse(null)}
-                        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl"
+                        className="px-4 py-2 bg-gray-200 dark:bg-[#1a1a1a] hover:bg-gray-300 dark:hover:bg-[#222] text-gray-900 dark:text-white rounded-xl"
                       >
                         Cancel
                       </button>
@@ -979,7 +979,7 @@ export default function AdminSettings() {
                     <div className="flex-1 flex gap-3">
                       <input
                         type="text"
-                        className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                        className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                         value={editingBranch.name}
                         onChange={(e) => setEditingBranch({ ...editingBranch, name: e.target.value })}
                       />
@@ -992,7 +992,7 @@ export default function AdminSettings() {
                       </button>
                       <button
                         onClick={() => setEditingBranch(null)}
-                        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl"
+                        className="px-4 py-2 bg-gray-200 dark:bg-[#1a1a1a] hover:bg-gray-300 dark:hover:bg-[#222] text-gray-900 dark:text-white rounded-xl"
                       >
                         Cancel
                       </button>
@@ -1037,7 +1037,7 @@ export default function AdminSettings() {
                     <div className="flex-1 flex gap-3">
                       <input
                         type="text"
-                        className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                        className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                         value={editingEmail.value}
                         onChange={(e) => setEditingEmail({ ...editingEmail, value: e.target.value })}
                       />
@@ -1050,7 +1050,7 @@ export default function AdminSettings() {
                       </button>
                       <button
                         onClick={() => setEditingEmail(null)}
-                        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl"
+                        className="px-4 py-2 bg-gray-200 dark:bg-[#1a1a1a] hover:bg-gray-300 dark:hover:bg-[#222] text-gray-900 dark:text-white rounded-xl"
                       >
                         Cancel
                       </button>
@@ -1090,26 +1090,26 @@ export default function AdminSettings() {
                 <input
                   type="email"
                   placeholder="Email *"
-                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                   value={newStaff.email}
                   onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
                 />
                 <input
                   type="password"
                   placeholder="Password (min 6 chars) *"
-                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                   value={newStaff.password}
                   onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
                 />
                 <input
                   type="text"
                   placeholder="Full Name *"
-                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                   value={newStaff.full_name}
                   onChange={(e) => setNewStaff({ ...newStaff, full_name: e.target.value })}
                 />
                 <select
-                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                   value={newStaff.department_name}
                   onChange={(e) => setNewStaff({ ...newStaff, department_name: e.target.value })}
                 >
@@ -1232,12 +1232,12 @@ export default function AdminSettings() {
                           <input
                             type="text"
                             placeholder="Full Name"
-                            className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                            className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                             value={editingStaff.full_name}
                             onChange={(e) => setEditingStaff({ ...editingStaff, full_name: e.target.value })}
                           />
                           <select
-                            className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
+                            className="px-4 py-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#111111] text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-jecrc-red focus:border-transparent"
                             value={editingStaff.department_name}
                             onChange={(e) => setEditingStaff({ ...editingStaff, department_name: e.target.value })}
                           >
@@ -1320,7 +1320,7 @@ export default function AdminSettings() {
                           </button>
                           <button
                             onClick={() => setEditingStaff(null)}
-                            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl"
+                            className="px-4 py-2 bg-gray-200 dark:bg-[#1a1a1a] hover:bg-gray-300 dark:hover:bg-[#222] text-gray-900 dark:text-white rounded-xl"
                           >
                             Cancel
                           </button>

@@ -58,7 +58,7 @@ export default function LiquidTitle() {
         }`}
         style={{
           textShadow: isDark
-            ? '0 0 8px rgba(196, 30, 58, 0.4)'
+            ? '0 0 6px rgba(196, 30, 58, 0.35)'
             : 'none'
         }}>
         Student Services
@@ -112,7 +112,7 @@ export default function LiquidTitle() {
         {/* Chrome Metallic Title Text - FIXED: Only apply transparent when gradient is ready */}
         <h1
           ref={titleRef}
-          className={`font-serif text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight relative z-10 transition-all duration-700 ${isDark ? 'text-white' : 'text-gray-900'
+          className={`font-serif text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight relative z-10 transition-all duration-700 ${isDark ? 'text-white' : 'text-gray-900'
             }`}
           style={isDark ? {
             backgroundImage: deviceTier !== 'very-low' && gradientReady
@@ -123,7 +123,7 @@ export default function LiquidTitle() {
             WebkitBackgroundClip: deviceTier !== 'very-low' && gradientReady ? 'text' : undefined,
             WebkitTextFillColor: deviceTier !== 'very-low' && gradientReady ? 'transparent' : undefined,
             filter: deviceTier === 'high'
-              ? 'drop-shadow(0 0 20px rgba(255,51,102,0.4)) drop-shadow(0 2px 4px rgba(0,0,0,0.8))'
+              ? 'drop-shadow(0 0 18px rgba(255,51,102,0.35)) drop-shadow(0 2px 3px rgba(0,0,0,0.55))'
               : 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5))',
             animation: deviceTier === 'high' && gradientReady ? 'chrome-shine 6s ease-in-out infinite' : 'none'
           } : {
@@ -143,7 +143,7 @@ export default function LiquidTitle() {
       </div>
 
       {/* Decorative Line with Liquid Flow */}
-      <div className="relative h-[1px] w-20 mt-4 overflow-hidden">
+      <div className="relative h-[1px] w-20 mt-3 overflow-hidden">
         <div className={`absolute inset-0 transition-colors duration-700 ease-smooth ${isDark ? 'bg-white/20' : 'bg-black/10'
           }`}></div>
 

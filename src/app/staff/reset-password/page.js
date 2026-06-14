@@ -198,7 +198,7 @@ function ResetPasswordContent() {
                                     type={showNewPassword ? 'text' : 'password'}
                                     name="newPassword"
                                     required
-                                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-black/20 text-gray-900 dark:text-white focus:ring-2 focus:ring-jecrc-red/40 focus:border-jecrc-red outline-none transition-all"
+                                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#111111] text-gray-900 dark:text-white focus:ring-2 focus:ring-jecrc-red/40 focus:border-jecrc-red outline-none transition-all"
                                     placeholder="••••••••"
                                     value={formData.newPassword}
                                     onChange={handleChange}
@@ -235,7 +235,7 @@ function ResetPasswordContent() {
                                     type={showConfirmPassword ? 'text' : 'password'}
                                     name="confirmPassword"
                                     required
-                                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-black/20 text-gray-900 dark:text-white focus:ring-2 focus:ring-jecrc-red/40 focus:border-jecrc-red outline-none transition-all"
+                                    className="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#111111] text-gray-900 dark:text-white focus:ring-2 focus:ring-jecrc-red/40 focus:border-jecrc-red outline-none transition-all"
                                     placeholder="••••••••"
                                     value={formData.confirmPassword}
                                     onChange={handleChange}

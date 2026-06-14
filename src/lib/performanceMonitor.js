@@ -51,7 +51,8 @@ class PerformanceMonitor {
       enableUserTracking: true
     };
     
-    this.init();
+    // NOTE: Auto-init disabled to prevent SSR crash with window.fetch override.
+    // Call init() explicitly where needed (e.g., in a useEffect).
   }
 
   /**
@@ -139,45 +140,34 @@ class PerformanceMonitor {
 
   /**
    * Start network performance monitoring
+   * NOTE: Uses PerformanceObserver instead of monkey-patching window.fetch
    */
   startNetworkMonitoring() {
     if (typeof window === 'undefined') return;
     
-    // Intercept fetch requests
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-      const startTime = performance.now();
-      const url = args[0];
-      
+    // Use PerformanceObserver to monitor fetch requests without monkey-patching
+    if ('PerformanceObserver' in window) {
       try {
-        const response = await originalFetch.apply(window, args);
-        const endTime = performance.now();
-        
-        this.recordNetworkMetric({
-          url,
-          method: args[1]?.method || 'GET',
-          duration: endTime - startTime,
-          status: response.status,
-          success: response.ok,
-          size: response.headers.get('content-length')
+        const observer = new PerformanceObserver((list) => {
+          list.getEntries().forEach(entry => {
+            if (entry.entryType === 'resource' && entry.initiatorType === 'fetch') {
+              this.recordNetworkMetric({
+                url: entry.name,
+                method: 'FETCH',
+                duration: entry.duration,
+                status: 200,
+                success: true,
+                size: entry.transferSize
+              });
+            }
+          });
         });
-        
-        return response;
+        observer.observe({ entryTypes: ['resource'] });
+        this.observers.set('network', observer);
       } catch (error) {
-        const endTime = performance.now();
-        
-        this.recordNetworkMetric({
-          url,
-          method: args[1]?.method || 'GET',
-          duration: endTime - startTime,
-          status: 0,
-          success: false,
-          error: error.message
-        });
-        
-        throw error;
+        console.warn('PerformanceObserver for network not supported:', error);
       }
-    };
+    }
   }
 
   /**

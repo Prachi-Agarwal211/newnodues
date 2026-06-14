@@ -42,7 +42,7 @@ export function ExpandedDepartmentDetails({ departments }) {
           <div
             key={idx}
             className={`p-3 rounded-lg border transition-colors duration-700 ${
-              isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              isDark ? 'bg-[#141414] border-white/10' : 'bg-white border-gray-200'
             }`}
           >
             <div className="flex items-center justify-between mb-2">

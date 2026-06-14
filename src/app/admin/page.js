@@ -25,7 +25,7 @@ const PerformanceBar = ({ label, pending, approved, timeTaken }) => {
     <div className={`
       p-4 rounded-lg border transition-all duration-300
       ${isDark
-        ? 'bg-gray-800 border-gray-700'
+        ? 'bg-[#141414] border-white/10'
         : 'bg-white border-gray-200'
       }
     `}>
@@ -42,7 +42,7 @@ const PerformanceBar = ({ label, pending, approved, timeTaken }) => {
           <span className={isDark ? 'text-amber-400' : 'text-amber-600'}>Pending: {pending}</span>
           <span className={isDark ? 'text-emerald-400' : 'text-emerald-600'}>Cleared: {approved}</span>
         </div>
-        <div className={`flex h-2.5 w-full rounded-full overflow-hidden ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
+        <div className={`flex h-2.5 w-full rounded-full overflow-hidden ${isDark ? 'bg-[#222]' : 'bg-gray-200'}`}>
           <div
             className="bg-amber-400 transition-all duration-1000 ease-out"
             style={{ width: `${100 - approvedPercentage}%` }}
@@ -329,7 +329,7 @@ export default function EnhancedAdminDashboard() {
             onClick={toggleTheme}
             className={`p-3 rounded-xl transition-all active:scale-95 border
               ${isDark
-                ? 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700'
+                ? 'bg-[#141414] border-white/10 text-white hover:bg-[#1a1a1a]'
                 : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
               }`}
             title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -345,7 +345,7 @@ export default function EnhancedAdminDashboard() {
           />
           <button onClick={() => router.push('/admin/settings')} className={`p-3 rounded-xl transition-all active:scale-95 border
               ${isDark
-              ? 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700'
+              ? 'bg-[#141414] border-white/10 text-white hover:bg-[#1a1a1a]'
               : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
             }`}>
             <Settings className="w-5 h-5" />
@@ -382,7 +382,7 @@ export default function EnhancedAdminDashboard() {
               />
 
               {/* Export Actions */}
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+              <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-100 dark:border-white/10">
                 <button
                   onClick={() => {
                     exportStatsToCSV(data);

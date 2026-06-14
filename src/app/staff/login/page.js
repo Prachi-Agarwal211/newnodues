@@ -60,7 +60,7 @@ function LoginForm() {
           href="/"
           className={`absolute top-6 left-6 flex items-center gap-2 transition-colors z-10 px-4 py-2 rounded-full backdrop-blur-sm border
             ${isDark
-              ? 'bg-black/40 text-white border-jecrc-red/40 hover:text-jecrc-red-bright hover:bg-black/60'
+              ? 'bg-white/[0.035] text-white border-white/12 hover:text-white hover:bg-white/[0.06] hover:border-jecrc-red/40'
               : 'bg-white text-jecrc-red border-jecrc-red/40 hover:bg-jecrc-rose/40'
             }`}
         >

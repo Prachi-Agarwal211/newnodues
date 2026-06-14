@@ -80,7 +80,7 @@ export default function EnhancedSupportButton() {
         `}
         style={{
           boxShadow: isDark
-            ? '0 10px 40px rgba(196, 30, 58, 0.4), 0 0 60px rgba(196, 30, 58, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+            ? '0 10px 35px rgba(196, 30, 58, 0.45), 0 0 50px rgba(196, 30, 58, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25)'
             : '0 10px 30px rgba(196, 30, 58, 0.3), 0 4px 20px rgba(0, 0, 0, 0.2)'
         }}
         initial={{ scale: 0, rotate: -180 }}

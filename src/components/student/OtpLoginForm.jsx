@@ -89,7 +89,7 @@ export default function OtpLoginForm({ onLoginSuccess }) {
                 className={`
                     w-full max-w-md 
                     ${isDark 
-                        ? 'bg-gradient-to-br from-gray-900 to-black border border-white/10' 
+                        ? 'bg-[#141414] border border-white/10' 
                         : 'bg-white border border-gray-200'
                     }
                     backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-8

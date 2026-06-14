@@ -237,7 +237,7 @@ export default function StaffDirectoryPage() {
                                 value={departmentFilter}
                                 onChange={(e) => setDepartmentFilter(e.target.value)}
                                 className={`px-4 py-2 rounded-lg border transition-colors ${isDark
-                                    ? 'bg-white/5 border-white/10 text-white [&>option]:bg-gray-900'
+                                    ? 'bg-white/5 border-white/10 text-white [&>option]:bg-[#111111]'
                                     : 'bg-white border-gray-200 text-gray-900'
                                     }`}
                             >

@@ -39,7 +39,7 @@ export default function Input({
         error
             ? (isDark ? "border-red-500 bg-red-900/20" : "border-red-500 bg-red-50/50")
             : (isDark
-                ? "bg-black border-jecrc-red/50 hover:border-jecrc-red/70 focus-within:border-jecrc-red focus-within:shadow-lg focus-within:shadow-jecrc-red/15"
+                ? "bg-[#111111] border-white/15 hover:border-jecrc-red/50 focus-within:border-jecrc-red focus-within:shadow-lg focus-within:shadow-jecrc-red/20"
                 : "bg-white border-jecrc-red/50 hover:border-jecrc-red/70 focus-within:border-jecrc-red focus-within:shadow-lg focus-within:shadow-jecrc-red/15"),
         disabled && "opacity-60 cursor-not-allowed"
     );
@@ -100,7 +100,7 @@ export default function Input({
                         >
                             <option value="" disabled className={cn(
                                 "text-gray-500",
-                                isDark ? "bg-black" : "bg-gray-50"
+                                isDark ? "bg-[#111111]" : "bg-gray-50"
                             )}>
                                 {placeholder}
                             </option>
@@ -110,7 +110,7 @@ export default function Input({
                                     value={option.value}
                                     className={cn(
                                         "py-2",
-                                        isDark ? "bg-black text-white" : "bg-white text-gray-900"
+                                        isDark ? "bg-[#111111] text-white" : "bg-white text-gray-900"
                                     )}
                                 >
                                     {option.label}

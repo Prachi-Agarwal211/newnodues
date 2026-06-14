@@ -42,8 +42,8 @@ export async function PUT(request) {
         if (!formIds || !Array.isArray(formIds) || formIds.length === 0) {
             return NextResponse.json({ success: false, error: 'No items selected' }, { status: 400 });
         }
-        if (!departmentName || action !== 'approve') {
-            return NextResponse.json({ success: false, error: 'Invalid parameters. Only bulk approval is allowed.' }, { status: 400 });
+        if (!departmentName || (action !== 'approve' && action !== 'reject')) {
+            return NextResponse.json({ success: false, error: 'Invalid parameters. Only bulk approval or rejection is allowed.' }, { status: 400 });
         }
 
         // 4. Get Staff Profile & Authorize

@@ -17,7 +17,7 @@ export default function Header({ onMenuClick, title = "Dashboard" }) {
       sticky top-0 z-30
       backdrop-blur-md border-b transition-colors duration-700
       ${isDark 
-        ? 'bg-black/50 border-white/10' 
+        ? 'bg-[#0f0f0f]/95 border-white/8' 
         : 'bg-white/70 border-gray-200'}
     `}>
       <div className="flex items-center gap-3">

@@ -230,33 +230,39 @@ export default function DepartmentDashboard() {
       return;
     }
 
+    // Standardize action names (the bulk API expects 'approve' or 'reject')
+    const apiAction = action === 'approved' ? 'approve' : (action === 'rejected' ? 'reject' : action);
+
     try {
-      const results = await Promise.all(
-        selectedRows.map(rowId =>
-          fetch('/api/department-action', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              form_id: rowId,
-              status: action,
-              department: departmentName,
-              remarks: action === 'reject' ? 'Bulk rejection' : 'Bulk approval'
-            })
-          })
-        )
-      );
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
 
-      const allSuccessful = results.every(res => res.ok);
+      const response = await fetch('/api/staff/bulk-action', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          formIds: selectedRows,
+          action: apiAction,
+          departmentName: departmentName,
+          reason: apiAction === 'reject' ? prompt('Bulk rejection reason:') || 'Bulk rejection' : undefined
+        })
+      });
 
-      if (allSuccessful) {
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         setSelectedRows([]);
         setSelectAll(false);
         loadApplications();
-        alert(`Successfully ${action}d ${selectedRows.length} applications`);
+        alert(`Successfully ${apiAction}d ${selectedRows.length} applications`);
       } else {
-        alert('Some actions failed. Please try again.');
+        alert(result.error || 'Some actions failed. Please try again.');
       }
     } catch (err) {
+      console.error(err);
       alert('Failed to perform bulk action');
     }
   };
@@ -411,7 +417,7 @@ export default function DepartmentDashboard() {
                 onClick={() => setShowFilters(!showFilters)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all text-sm font-medium
                   ${isDark
-                    ? 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700'
+                    ? 'bg-[#141414] border-white/10 text-white hover:bg-[#1a1a1a]'
                     : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
               >
@@ -430,7 +436,7 @@ export default function DepartmentDashboard() {
                 onClick={loadApplications}
                 className={`p-2.5 rounded-xl border transition-all
                   ${isDark
-                    ? 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700'
+                    ? 'bg-[#141414] border-white/10 text-white hover:bg-[#1a1a1a]'
                     : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
               >
@@ -460,7 +466,7 @@ export default function DepartmentDashboard() {
                         }}
                         className={`w-full p-3 rounded-xl text-sm font-medium transition-all border border-1
                           ${isDark
-                            ? 'bg-gray-800 border-gray-600 text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
+                            ? 'bg-[#141414] border-white/10 text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
                             : 'bg-white border-gray-300 text-gray-900 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/10'
                           }`}
                       >
@@ -487,7 +493,7 @@ export default function DepartmentDashboard() {
                           placeholder="Search by student name or registration number..."
                           className={`w-full pl-10 pr-4 py-3 rounded-xl border outline-none text-sm font-medium transition-all
                             ${isDark
-                              ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
+                              ? 'bg-[#141414] border-white/10 text-white placeholder-gray-400 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/10'
                             }`}
                         />
@@ -603,7 +609,7 @@ export default function DepartmentDashboard() {
                   </button>
                   <button
                     onClick={() => setSelectedRows([])}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all text-sm font-medium"
+                    className="px-4 py-2 bg-[#1a1a1a] text-white rounded-lg hover:bg-[#222] border border-white/10 transition-all text-sm font-medium"
                   >
                     Clear Selection
                   </button>
@@ -614,7 +620,7 @@ export default function DepartmentDashboard() {
 
           {/* Applications Table */}
           <GlassCard>
-            <div className="block md:hidden bg-gray-50 dark:bg-black/20 p-4">
+            <div className="block md:hidden bg-gray-50 dark:bg-[#111111]/70 p-4">
               {loading ? (
                 <div className="space-y-4">
                   {[1, 2, 3].map(i => <div key={i} className="h-24 bg-gray-200 dark:bg-white/5 rounded-lg animate-pulse" />)}
@@ -645,7 +651,7 @@ export default function DepartmentDashboard() {
             {/* DESKTOP VIEW Table (>= 768px) */}
             <div id="applications-table" className="hidden md:block overflow-x-auto">
               <table className="w-full">
-                <thead className={`border-b border-gray-200 dark:border-gray-700 ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}`}>
+                <thead className={`border-b border-gray-200 dark:border-white/10 ${isDark ? 'bg-[#111111]/70' : 'bg-gray-50'}`}>
                   <tr>
                     <th className="px-6 py-4 text-left">
                       <input
@@ -684,7 +690,7 @@ export default function DepartmentDashboard() {
                     <th className={`px-6 py-4 text-left text-xs font-bold uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Actions</th>
                   </tr>
                 </thead>
-                <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                <tbody className={`divide-y ${isDark ? 'divide-white/10' : 'divide-gray-200'}`}>
                   {loading ? (
                     <tr>
                       <td colSpan="7" className="px-6 py-4 text-center">
@@ -699,7 +705,7 @@ export default function DepartmentDashboard() {
                     </tr>
                   ) : (
                     sortedApplications.map((application) => (
-                      <tr key={application.id} className={`hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors`}>
+                      <tr key={application.id} className={`hover:bg-gray-50 dark:hover:bg-[#1a1a1a] transition-colors`}>
                         <td className="px-6 py-4">
                           <input
                             type="checkbox"
@@ -757,7 +763,7 @@ export default function DepartmentDashboard() {
                             </button>
                             <button
                               onClick={() => alert(`View details for ${application.registration_no}`)}
-                              className={`p-2 rounded-lg transition-all ${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
+                              className={`p-2 rounded-lg transition-all ${isDark ? 'bg-[#1a1a1a] text-gray-300 hover:bg-[#222222]' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
                             >
                               <Eye className="w-4 h-4" />
                             </button>
@@ -772,7 +778,7 @@ export default function DepartmentDashboard() {
 
             {/* Pagination UI */}
             {!loading && totalPages > 1 && (
-              <div className={`p-4 flex items-center justify-between border-t ${isDark ? 'border-gray-700 bg-gray-800/50' : 'border-gray-100 bg-gray-50/50'}`}>
+              <div className={`p-4 flex items-center justify-between border-t ${isDark ? 'border-gray-700 bg-[#111111]/70' : 'border-gray-100 bg-gray-50/50'}`}>
                 <div className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Showing page {page} of {totalPages}
                 </div>
@@ -782,7 +788,7 @@ export default function DepartmentDashboard() {
                     disabled={page === 1}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border
                       ${isDark 
-                        ? 'bg-gray-800 border-gray-700 text-gray-300 disabled:opacity-30 hover:bg-gray-700' 
+                        ? 'bg-[#141414] border-white/10 text-gray-300 disabled:opacity-30 hover:bg-[#1a1a1a]' 
                         : 'bg-white border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50'}`}
                   >
                     Previous
@@ -792,7 +798,7 @@ export default function DepartmentDashboard() {
                     disabled={page === totalPages}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border
                       ${isDark 
-                        ? 'bg-gray-800 border-gray-700 text-gray-300 disabled:opacity-30 hover:bg-gray-700' 
+                        ? 'bg-[#141414] border-white/10 text-gray-300 disabled:opacity-30 hover:bg-[#1a1a1a]' 
                         : 'bg-white border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50'}`}
                   >
                     Next
@@ -817,7 +823,7 @@ export default function DepartmentDashboard() {
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
-                className={`w-full max-w-2xl max-h-[80vh] overflow-hidden rounded-xl shadow-2xl ${isDark ? 'bg-gray-800' : 'bg-white'}`}
+                className={`w-full max-w-2xl max-h-[80vh] overflow-hidden rounded-xl shadow-2xl ${isDark ? 'bg-[#141414]' : 'bg-white'}`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <ChatBox
@@ -890,7 +896,7 @@ function MobileApplicationCard({ application, selected, onSelect, onApprove, onR
       className={`relative overflow-hidden rounded-xl p-4 mb-3 border transition-all
         ${selected
           ? 'ring-2 ring-jecrc-red bg-jecrc-red/5'
-          : isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          : isDark ? 'bg-[#141414] border-white/10' : 'bg-white border-gray-200'
         }`}
     >
       <div className="flex items-start justify-between mb-3">
@@ -939,7 +945,7 @@ function MobileApplicationCard({ application, selected, onSelect, onApprove, onR
         </div>
       </div>
 
-      <div className="flex gap-2 pt-2 border-t border-gray-200/50 dark:border-gray-700" onClick={(e) => e.stopPropagation()}>
+      <div className="flex gap-2 pt-2 border-t border-gray-200/50 dark:border-white/10" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onApprove}
           className="flex-1 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-1.5 transition-all hover:shadow-lg"
@@ -965,7 +971,7 @@ function MobileApplicationCard({ application, selected, onSelect, onApprove, onR
         </button>
         <button
           onClick={onViewDetails}
-          className={`p-2.5 rounded-lg transition-all ${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
+          className={`p-2.5 rounded-lg transition-all ${isDark ? 'bg-[#1a1a1a] text-gray-300 hover:bg-[#222222]' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
         >
           <Eye className="w-4 h-4" />
         </button>

@@ -78,10 +78,10 @@ export default function CreateTicketModal({ isOpen, onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-white/10 flex flex-col max-h-[90vh]">
+      <div className="bg-white dark:bg-[#141414] w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-white/10 flex flex-col max-h-[90vh]">
 
         {/* Header */}
-        <div className="flex justify-between items-center p-5 border-b border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/5">
+        <div className="flex justify-between items-center p-5 border-b border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.025]">
           <div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">Contact Support</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">We'll help you resolve your issue</p>
@@ -101,7 +101,7 @@ export default function CreateTicketModal({ isOpen, onClose, onSuccess }) {
               <input
                 type="text"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-white/20 bg-white dark:bg-black/20 focus:ring-2 focus:ring-blue-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-400"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-white/20 bg-white dark:bg-[#111111] focus:ring-2 focus:ring-blue-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-400"
                 placeholder="Briefly describe the issue..."
                 value={formData.subject}
                 onChange={e => setFormData({ ...formData, subject: e.target.value })}
@@ -114,7 +114,7 @@ export default function CreateTicketModal({ isOpen, onClose, onSuccess }) {
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Category</label>
                 <div className="relative">
                   <select
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-white/20 bg-white dark:bg-black/20 outline-none text-gray-900 dark:text-white appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-white/20 bg-white dark:bg-[#111111] outline-none text-gray-900 dark:text-white appearance-none cursor-pointer"
                     value={formData.category}
                     onChange={e => setFormData({ ...formData, category: e.target.value })}
                   >
@@ -133,7 +133,7 @@ export default function CreateTicketModal({ isOpen, onClose, onSuccess }) {
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Department (Optional)</label>
                 <div className="relative">
                   <select
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-white/20 bg-white dark:bg-black/20 outline-none text-gray-900 dark:text-white appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-white/20 bg-white dark:bg-[#111111] outline-none text-gray-900 dark:text-white appearance-none cursor-pointer"
                     value={formData.department}
                     onChange={e => setFormData({ ...formData, department: e.target.value })}
                   >
@@ -178,7 +178,7 @@ export default function CreateTicketModal({ isOpen, onClose, onSuccess }) {
               <textarea
                 required
                 rows="4"
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-white/20 bg-white dark:bg-black/20 focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none text-gray-900 dark:text-white placeholder-gray-400"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-white/20 bg-white dark:bg-[#111111] focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none text-gray-900 dark:text-white placeholder-gray-400"
                 placeholder="Explain the issue in detail. Include any relevant details..."
                 value={formData.message}
                 onChange={e => setFormData({ ...formData, message: e.target.value })}

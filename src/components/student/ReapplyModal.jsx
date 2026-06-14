@@ -293,7 +293,7 @@ export default function ReapplyModal({
           className={`
             rounded-xl max-w-md w-full p-6 sm:p-8 text-center
             ${isDark
-              ? 'bg-gradient-to-br from-gray-900 to-black border border-white/10'
+              ? 'bg-[#141414] border border-white/10'
               : 'bg-white border border-gray-200'
             }
           `}
@@ -338,7 +338,7 @@ export default function ReapplyModal({
           className={`
             rounded-xl w-full max-w-2xl lg:max-w-3xl max-h-[90vh] flex flex-col
             ${isDark
-              ? 'bg-gradient-to-br from-gray-900 to-black border border-white/10'
+              ? 'bg-[#141414] border border-white/10'
               : 'bg-white border border-gray-200'
             }
           `}
@@ -352,7 +352,7 @@ export default function ReapplyModal({
           {/* Sticky Header */}
           <div className={`
             sticky top-0 z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 border-b
-            ${isDark ? 'bg-gray-900/95 border-white/10' : 'bg-white/95 border-gray-200'}
+            ${isDark ? 'bg-[#111111]/95 border-white/10' : 'bg-white/95 border-gray-200'}
           `}>
             <div>
               <h2 className={`text-lg sm:text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
@@ -453,7 +453,7 @@ export default function ReapplyModal({
           </div>
 
           {/* Sticky Footer */}
-          <div className={`sticky bottom-0 z-10 p-6 border-t transition-colors duration-700 ${isDark ? 'bg-gray-900 border-white/10' : 'bg-white border-black/10'
+          <div className={`sticky bottom-0 z-10 p-6 border-t transition-colors duration-700 ${isDark ? 'bg-[#111111] border-white/10' : 'bg-white border-black/10'
             }`}>
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-3">
               <button

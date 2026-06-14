@@ -203,7 +203,7 @@ function VerifyOTPContent() {
                                             value={otp[index]}
                                             onChange={(e) => handleOtpChange(index, e.target.value)}
                                             onKeyDown={(e) => handleKeyDown(index, e)}
-                                            className="w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 border-gray-300 dark:border-white/20 bg-gray-50 dark:bg-black/20 text-gray-900 dark:text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/40 outline-none transition-all"
+                                            className="w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 border-gray-300 dark:border-white/20 bg-gray-50 dark:bg-[#111111] text-gray-900 dark:text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/40 outline-none transition-all"
                                             disabled={verifying}
                                             autoFocus={index === 0}
                                         />

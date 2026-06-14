@@ -40,7 +40,7 @@ function DataTable({ headers, data, className = '', onRowClick, staggerAnimation
                 key={index}
                 className={`px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium uppercase tracking-wider transition-colors duration-700 ${
                   isDark
-                    ? 'bg-gray-800 text-gray-300'
+                    ? 'bg-[#141414] text-gray-300'
                     : 'bg-gray-50 text-gray-700'
                 }`}
               >
@@ -65,7 +65,7 @@ function DataTable({ headers, data, className = '', onRowClick, staggerAnimation
                   onRowClick ? 'cursor-pointer hover:-translate-y-[2px] hover:shadow-lg' : ''
                 } ${
                   isDark
-                    ? 'hover:bg-gray-800/50'
+                    ? 'hover:bg-white/[0.04]'
                     : 'hover:bg-gray-50'
                 }`}
                 onClick={() => onRowClick && onRowClick(row)}

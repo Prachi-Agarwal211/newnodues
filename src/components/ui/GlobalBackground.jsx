@@ -54,24 +54,24 @@ export default function GlobalBackground() {
 
   return (
     <div className="fixed inset-0 w-full h-full pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
-      {/* 1. Base Layer - Prevents white flashes */}
+      {/* 1. Base Layer - Prevents white flashes, elegant deep dark not harsh black */}
       <div
-        className={`absolute inset-0 transition-colors duration-700 z-0 ${isDark ? 'bg-black' : 'bg-white'
+        className={`absolute inset-0 transition-colors duration-700 z-0 ${isDark ? 'bg-[#0A0A0A]' : 'bg-white'
           }`}
       />
 
-      {/* 2. JECRC Campus Image (Enhanced Visibility) - Optimized for mobile */}
+      {/* 2. JECRC Campus Image (Enhanced Visibility) - Optimized for mobile, better contrast in dark */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 z-10"
         style={{
           backgroundImage: "url('/assets/9-1-1536x720.jpg')",
           opacity: isDark
-            ? (isMobile ? 0.04 : 0.08)
-            : (isMobile ? 0.15 : 0.25),
+            ? (isMobile ? 0.025 : 0.045)
+            : (isMobile ? 0.12 : 0.18),
           mixBlendMode: isDark ? 'screen' : 'multiply',
           filter: isMobile
-            ? (isDark ? 'brightness(0.8) contrast(0.9) saturate(0.3) blur(2px)' : 'brightness(1.0) contrast(1.1) saturate(0.8) blur(2px)')
-            : (isDark ? 'brightness(0.7) contrast(1.0) saturate(0.3)' : 'brightness(1.0) contrast(1.15) saturate(0.9)'),
+            ? (isDark ? 'brightness(0.85) contrast(0.95) saturate(0.25) blur(1.5px)' : 'brightness(1.0) contrast(1.1) saturate(0.8) blur(2px)')
+            : (isDark ? 'brightness(0.75) contrast(1.05) saturate(0.25)' : 'brightness(1.0) contrast(1.15) saturate(0.9)'),
           transform: 'translate3d(0,0,0)', // Better GPU acceleration
           willChange: 'opacity'
         }}
@@ -89,7 +89,7 @@ export default function GlobalBackground() {
             `}
             style={{
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(196,30,58,0.25) 0%, rgba(255,51,102,0.18) 30%, rgba(139,0,139,0.12) 60%, transparent 100%)'
+                ? 'radial-gradient(ellipse at center, rgba(196,30,58,0.18) 0%, rgba(255,51,102,0.12) 30%, rgba(139,0,139,0.08) 60%, transparent 100%)'
                 : 'radial-gradient(ellipse at center, rgba(255,182,193,0.3) 0%, rgba(255,209,217,0.22) 30%, rgba(255,192,203,0.15) 60%, transparent 100%)',
               filter: `blur(${isVeryLowEnd ? '20px' : isLowEnd ? '30px' : isMobile ? '40px' : '60px'})`,
               transform: 'translateZ(0)',
@@ -105,7 +105,7 @@ export default function GlobalBackground() {
             `}
             style={{
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(255,51,102,0.22) 0%, rgba(196,30,58,0.18) 30%, rgba(255,182,193,0.10) 60%, transparent 100%)'
+                ? 'radial-gradient(ellipse at center, rgba(255,51,102,0.14) 0%, rgba(196,30,58,0.10) 30%, rgba(255,182,193,0.06) 60%, transparent 100%)'
                 : 'radial-gradient(ellipse at center, rgba(255,192,203,0.28) 0%, rgba(255,182,193,0.20) 30%, rgba(255,209,217,0.12) 60%, transparent 100%)',
               filter: `blur(${isVeryLowEnd ? '20px' : isLowEnd ? '30px' : isMobile ? '40px' : '60px'})`,
               transform: 'translateZ(0)',
@@ -132,16 +132,16 @@ export default function GlobalBackground() {
         </div>
       )}
 
-      {/* 4. Premium Aurora Wave Animation - Smooth flowing ribbons */}
+      {/* 4. Premium Aurora Wave Animation - Smooth flowing ribbons (subtle in dark for content pop) */}
       {!isVeryLowEnd && (
-        <div className="absolute inset-0 overflow-hidden z-30" style={{ opacity: isDark ? 0.5 : 0.35 }}>
+        <div className="absolute inset-0 overflow-hidden z-30" style={{ opacity: isDark ? 0.28 : 0.35 }}>
           {/* Wave 1 - Top flowing ribbon */}
           <div
             className={`absolute top-0 left-0 w-full h-full ${isVeryLowEnd || isLowEnd ? 'animate-aurora-wave-1-simple' : 'animate-aurora-wave-1'
               }`}
             style={{
               background: isDark
-                ? 'linear-gradient(90deg, transparent 0%, rgba(196, 30, 58, 0.15) 20%, rgba(255, 105, 180, 0.12) 40%, rgba(196, 30, 58, 0.15) 60%, transparent 80%)'
+                ? 'linear-gradient(90deg, transparent 0%, rgba(196, 30, 58, 0.08) 20%, rgba(255, 105, 180, 0.06) 40%, rgba(196, 30, 58, 0.08) 60%, transparent 80%)'
                 : 'linear-gradient(90deg, transparent 0%, rgba(255, 209, 217, 0.2) 20%, rgba(255, 182, 193, 0.18) 40%, rgba(255, 209, 217, 0.2) 60%, transparent 80%)',
               transform: 'translateZ(0) translateY(-50%) rotate(-15deg) scaleY(0.5)',
               transformOrigin: 'center',
@@ -156,7 +156,7 @@ export default function GlobalBackground() {
               }`}
             style={{
               background: isDark
-                ? 'linear-gradient(90deg, transparent 0%, rgba(139, 0, 139, 0.1) 20%, rgba(196, 30, 58, 0.18) 50%, rgba(255, 105, 180, 0.1) 80%, transparent 100%)'
+                ? 'linear-gradient(90deg, transparent 0%, rgba(139, 0, 139, 0.06) 20%, rgba(196, 30, 58, 0.09) 50%, rgba(255, 105, 180, 0.05) 80%, transparent 100%)'
                 : 'linear-gradient(90deg, transparent 0%, rgba(255, 182, 193, 0.22) 20%, rgba(255, 209, 217, 0.25) 50%, rgba(255, 192, 203, 0.18) 80%, transparent 100%)',
               transform: 'translateZ(0) translateY(-50%) rotate(10deg) scaleY(0.6)',
               transformOrigin: 'center',

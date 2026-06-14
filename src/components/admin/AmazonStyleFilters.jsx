@@ -158,7 +158,7 @@ export default function AmazonStyleFilters({
     <div className="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
       <button
         onClick={() => toggleSection(sectionKey)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-[#1a1a1a] transition-colors"
       >
         <div className="flex items-center gap-3">
           <Icon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
@@ -185,7 +185,7 @@ export default function AmazonStyleFilters({
         {items.map((item) => (
           <label
             key={item.id || item.name}
-            className="flex items-center gap-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded cursor-pointer"
+            className="flex items-center gap-2 p-2 hover:bg-gray-50 dark:hover:bg-[#1a1a1a] rounded cursor-pointer"
           >
             <input
               type="checkbox"
@@ -228,7 +228,7 @@ export default function AmazonStyleFilters({
           className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${
             getActiveFilterCount() > 0
               ? 'border-jecrc-red bg-jecrc-red/10 text-jecrc-red'
-              : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800'
+              : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#1a1a1a]'
           }`}
         >
           <Filter className="w-4 h-4" />
@@ -252,7 +252,7 @@ export default function AmazonStyleFilters({
 
       {/* Filter Dropdown */}
       {showFilters && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+        <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-white dark:bg-[#141414] border border-white/10 rounded-lg shadow-lg">
           <div className="max-h-96 overflow-y-auto">
             {/* Basic Filters */}
             <FilterSection title="Basic Filters" icon={Search} sectionKey="basic">
@@ -405,7 +405,7 @@ export default function AmazonStyleFilters({
             <div className="flex gap-2">
               <button
                 onClick={clearAllFilters}
-                className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1a1a1a] transition-colors"
               >
                 Clear
               </button>

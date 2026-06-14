@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import StatusBadge from '@/components/ui/StatusBadge';
 import { DepartmentStatusSummary, ExpandedDepartmentDetails } from './DepartmentStatusDisplay';
-import { RefreshCw, ChevronRight, ChevronDown } from 'lucide-react';
+import { RefreshCw, ChevronRight, ChevronDown, Download } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { supabase } from '@/lib/supabaseClient';
 import { realtimeManager } from '@/lib/realtimeManager';
@@ -128,7 +128,7 @@ export default function ApplicationsTable({ applications: initialApplications, c
     <div className={`
       rounded-xl overflow-hidden transition-all duration-200 border
       ${isDark
-        ? 'bg-black/40 border-red-900/40'
+        ? 'bg-white/[0.04] border-red-900/40'
         : 'bg-white border-red-100'
       }
     `}>
@@ -218,19 +218,37 @@ export default function ApplicationsTable({ applications: initialApplications, c
                         </td>
                         <td className="px-4 py-4">
                           {app.status === 'completed' ? (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                               <span className={`
                                 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
-                                ${app.certificate_status === 'generated'
+                                ${ (app.certificate_status === 'generated' || app.certificate_url)
                                   ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
                                   : app.certificate_status === 'failed'
                                     ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
                                     : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
                                 }
                               `}>
-                                {app.certificate_status || 'pending'}
+                                {app.certificate_status || (app.certificate_url ? 'generated' : 'pending')}
                               </span>
-                              {(app.certificate_status === 'pending' || app.certificate_status === 'failed') && (
+                              {(app.certificate_url) && (
+                                <a
+                                  href={app.certificate_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className={`
+                                    p-1.5 rounded transition-colors inline-flex items-center
+                                    ${isDark
+                                      ? 'bg-green-500/10 hover:bg-green-500/20 text-green-400'
+                                      : 'bg-green-100 hover:bg-green-200 text-green-700'
+                                    }
+                                  `}
+                                  title="Download / View Certificate"
+                                >
+                                  <Download className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                              {(!app.certificate_url && (app.certificate_status === 'pending' || app.certificate_status === 'failed' || !app.certificate_status)) && (
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();

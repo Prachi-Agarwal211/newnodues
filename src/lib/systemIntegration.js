@@ -51,9 +51,8 @@ class SystemIntegration {
       monitoring: false
     };
     
-    if (this.config.autoStart) {
-      this.initialize();
-    }
+    // NOTE: Auto-start disabled to prevent SSR crash.
+    // Call systemIntegration.initialize() explicitly where needed (e.g., in a useEffect).
   }
 
   /**

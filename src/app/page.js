@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FileCheck, Search } from 'lucide-react';
 // import PageWrapper from '@/components/landing/PageWrapper'; // Removed to reduce wrapper bloat
 import EnhancedActionCard from '@/components/landing/EnhancedActionCard';
@@ -18,15 +18,10 @@ import Button from '@/components/ui/Button';
 export default function Home() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { scrollYProgress } = useScroll();
 
   // Provide default theme during SSR/initial render
   const currentTheme = theme || 'dark';
   const isDark = currentTheme === 'dark';
-
-  // Parallax effects
-  const yLogo = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-  const opacityHeader = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
     <>
@@ -35,13 +30,12 @@ export default function Home() {
       <EnhancedSupportButton />
 
       <div className={`
-        min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden
+        min-h-screen flex flex-col items-center justify-start px-4 pt-6 sm:pt-10 pb-4 relative overflow-hidden
         ${isDark ? 'text-white' : 'text-ink-black'}
       `} style={{ overflow: 'hidden' }}>
 
-        {/* Centered Header / Branding with Parallax */}
+        {/* Centered Header / Branding */}
         <motion.header
-          style={{ y: yLogo, opacity: opacityHeader }}
           className="flex flex-col items-center mb-6 sm:mb-8 text-center px-4"
         >
           <motion.div
@@ -58,10 +52,10 @@ export default function Home() {
         </motion.header>
 
         {/* Main Content Area with Stagger Animation */}
-        <main className="w-full max-w-7xl px-4 sm:px-6 md:px-12 pb-8 sm:pb-16 mt-4 sm:mt-0">
+        <main className="w-full max-w-7xl px-4 sm:px-6 md:px-8 pb-6 sm:pb-10 mt-2 sm:mt-0">
           <StaggerContainer
             staggerDelay={0.15}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 md:gap-12 lg:gap-16 items-stretch max-w-4xl mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-10 items-stretch max-w-4xl mx-auto"
           >
             <StaggerItem>
               <EnhancedActionCard

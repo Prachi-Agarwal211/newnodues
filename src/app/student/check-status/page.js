@@ -31,7 +31,7 @@ const StudentInfoCard = memo(({ formData, isDark, onReset }) => (
         whileTap={{ scale: 0.95 }}
         className={`px-4 py-2 rounded-lg font-manrope font-medium transition-all duration-700 active:scale-95
           ${isDark
-            ? 'bg-black text-white border border-jecrc-red/40 hover:bg-gray-900'
+            ? 'bg-white/[0.04] text-white border border-white/15 hover:bg-white/[0.08] hover:border-jecrc-red/50'
             : 'bg-white text-jecrc-red border border-jecrc-red/50 hover:bg-jecrc-rose/40'
           }`}
       >
@@ -261,7 +261,7 @@ function CheckStatusContent() {
             onClick={() => router.push('/')}
             className={`interactive mb-8 flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-md active:scale-95 border
               ${isDark
-                ? 'bg-black/40 text-white border-jecrc-red/40 hover:text-jecrc-red-bright hover:bg-black/60'
+                ? 'bg-white/[0.035] text-white border-white/12 hover:text-white hover:bg-white/[0.06] hover:border-jecrc-red/40'
                 : 'bg-white text-jecrc-red border-jecrc-red/40 hover:bg-jecrc-rose/40'
               }`}
           >
@@ -340,7 +340,7 @@ function CheckStatusContent() {
               </div>
 
               {/* Search Form Card - Use GlassCard ✅ */}
-              <GlassCard className={`p-8 rounded-2xl backdrop-blur-md transition-all duration-700 ${isDark ? 'bg-gray-900/90 border border-jecrc-red/30' : 'bg-white border border-jecrc-red/20 shadow-lg'}`}>
+              <GlassCard className={`p-8 rounded-2xl backdrop-blur-md transition-all duration-700 ${isDark ? 'bg-[#141414] border border-white/8' : 'bg-white border border-jecrc-red/20 shadow-lg'}`}>
                 <form onSubmit={handleSearch} className="space-y-6">
                   <Input
                     label="Registration Number"
@@ -405,7 +405,7 @@ function CheckStatusContent() {
                     onClick={handleReset}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-manrope font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-700"
+                    className="px-6 py-3 bg-gray-200 dark:bg-[#1a1a1a] text-gray-900 dark:text-white rounded-xl font-manrope font-semibold hover:bg-gray-300 dark:hover:bg-[#222] transition-all duration-700"
                   >
                     Try Again
                   </motion.button>
@@ -455,7 +455,7 @@ export default function CheckStatusPage() {
   return (
     <ErrorBoundary>
       <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-[#0A0A0A] dark:via-[#111111] dark:to-[#0A0A0A]">
           <div className="w-8 h-8 border-4 border-jecrc-red/30 border-t-jecrc-red rounded-full animate-spin" />
         </div>
       }>

@@ -132,7 +132,7 @@ export default function StudentSupport() {
                   className={`
                     w-full p-4 rounded-xl border outline-none font-medium transition-all
                     ${isDark
-                      ? 'bg-black/40 border-white/10 text-white placeholder-gray-500 focus:border-jecrc-red/50 focus:bg-black/60'
+                      ? 'bg-white/[0.04] border-white/10 text-white placeholder-gray-500 focus:border-jecrc-red/50 focus:bg-white/[0.06]'
                       : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-jecrc-red focus:bg-white'
                     }
                   `}
@@ -153,7 +153,7 @@ export default function StudentSupport() {
                   className={`
                     w-full p-4 rounded-xl border outline-none font-medium resize-none transition-all
                     ${isDark
-                      ? 'bg-black/40 border-white/10 text-white placeholder-gray-500 focus:border-jecrc-red/50 focus:bg-black/60'
+                      ? 'bg-white/[0.04] border-white/10 text-white placeholder-gray-500 focus:border-jecrc-red/50 focus:bg-white/[0.06]'
                       : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-jecrc-red focus:bg-white'
                     }
                   `}

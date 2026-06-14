@@ -56,7 +56,7 @@ export default function MessageBubble({ message, isOwn, isSending, isFailed, onR
                     
                     {/* File Attachment */}
                     {hasFileAttachment && fileUrl && (
-                        <div className={`mb-2 p-2 rounded-lg ${isOwn ? 'bg-white/10' : (isDark ? 'bg-black/10' : 'bg-gray-100')}`}>
+                        <div className={`mb-2 p-2 rounded-lg ${isOwn ? 'bg-white/10' : (isDark ? 'bg-white/[0.06]' : 'bg-gray-100')}`}>
                             <div className="flex items-center gap-2">
                                 <Paperclip className="w-4 h-4" />
                                 <a

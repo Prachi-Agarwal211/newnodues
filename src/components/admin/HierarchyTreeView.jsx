@@ -146,7 +146,7 @@ export default function HierarchyTreeView() {
     }
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-[#141414] rounded-lg shadow-md">
             {/* Header */}
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">

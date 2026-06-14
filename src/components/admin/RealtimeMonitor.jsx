@@ -97,7 +97,7 @@ export default function RealtimeMonitor() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className={`p-4 rounded-lg border ${
           isDark 
-            ? 'bg-gray-800 border-gray-700' 
+            ? 'bg-[#141414] border-white/10' 
             : 'bg-white border-gray-200'
         }`}>
           <div className="flex items-center justify-between">
@@ -111,7 +111,7 @@ export default function RealtimeMonitor() {
 
         <div className={`p-4 rounded-lg border ${
           isDark 
-            ? 'bg-gray-800 border-gray-700' 
+            ? 'bg-[#141414] border-white/10' 
             : 'bg-white border-gray-200'
         }`}>
           <div className="flex items-center justify-between">
@@ -125,7 +125,7 @@ export default function RealtimeMonitor() {
 
         <div className={`p-4 rounded-lg border ${
           isDark 
-            ? 'bg-gray-800 border-gray-700' 
+            ? 'bg-[#141414] border-white/10' 
             : 'bg-white border-gray-200'
         }`}>
           <div className="flex items-center justify-between">
@@ -139,7 +139,7 @@ export default function RealtimeMonitor() {
 
         <div className={`p-4 rounded-lg border ${
           isDark 
-            ? 'bg-gray-800 border-gray-700' 
+            ? 'bg-[#141414] border-white/10' 
             : 'bg-white border-gray-200'
         }`}>
           <div className="flex items-center justify-between">
@@ -155,7 +155,7 @@ export default function RealtimeMonitor() {
       {/* Connection Details */}
       <div className={`rounded-lg border ${
         isDark 
-          ? 'bg-gray-800 border-gray-700' 
+          ? 'bg-[#141414] border-white/10' 
           : 'bg-white border-gray-200'
       }`}>
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -201,7 +201,7 @@ export default function RealtimeMonitor() {
       {/* Event Stream */}
       <div className={`rounded-lg border ${
         isDark 
-          ? 'bg-gray-800 border-gray-700' 
+          ? 'bg-[#141414] border-white/10' 
           : 'bg-white border-gray-200'
       }`}>
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">

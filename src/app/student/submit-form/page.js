@@ -25,7 +25,7 @@ function SubmitFormPageContent() {
           onClick={() => router.push('/')}
           className={`interactive mb-8 flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-700 ease-smooth backdrop-blur-md
             ${isDark
-              ? 'text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
+              ? 'text-gray-400 hover:text-white bg-white/[0.035] hover:bg-white/[0.06] border border-white/10'
               : 'text-gray-600 hover:text-black bg-white hover:bg-gray-50 border border-black/10'
             }`}
         >
@@ -41,7 +41,7 @@ function SubmitFormPageContent() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className={`p-4 sm:p-6 md:p-8 lg:p-12 rounded-xl backdrop-blur-md transition-all duration-700 ease-smooth
               ${isDark
-                ? 'bg-gray-900/90 border border-jecrc-red/30 shadow-[0_8px_24px_rgba(0,0,0,0.5)]'
+                ? 'bg-[#141414] border border-white/8 shadow-[0_8px_24px_rgba(0,0,0,0.5)]'
                 : 'bg-white border border-jecrc-red/20 shadow-[0_15px_40px_rgba(0,0,0,0.08)]'
               }`}
           >

@@ -118,7 +118,7 @@ class ErrorBoundary extends React.Component {
 
       return (
         <div className={`min-h-screen flex items-center justify-center p-4 ${
-          isDark ? 'bg-gray-900' : 'bg-gray-50'
+          isDark ? 'bg-[#141414]' : 'bg-gray-50'
         }`}>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -126,7 +126,7 @@ class ErrorBoundary extends React.Component {
             transition={{ duration: 0.5, type: "spring" }}
             className={`max-w-lg w-full p-8 rounded-2xl shadow-2xl ${
               isDark 
-                ? 'bg-gray-800 border border-red-500/20' 
+                ? 'bg-[#1a1a1a] border border-red-500/20' 
                 : 'bg-white border border-red-200'
             }`}
           >
@@ -166,7 +166,7 @@ class ErrorBoundary extends React.Component {
                   <summary className="cursor-pointer font-mono text-sm underline">
                     Technical Details
                   </summary>
-                  <div className="mt-2 text-xs font-mono bg-black/5 p-2 rounded overflow-auto max-h-32">
+                  <div className="mt-2 text-xs font-mono bg-black/5 dark:bg-white/10 p-2 rounded overflow-auto max-h-32">
                     <div><strong>Error:</strong> {error.toString()}</div>
                     {errorInfo && (
                       <div className="mt-2">
@@ -193,7 +193,7 @@ class ErrorBoundary extends React.Component {
             <div className={`text-center mb-6 text-sm ${
               isDark ? 'text-gray-400' : 'text-gray-500'
             }`}>
-              Error ID: <code className="font-mono bg-black/10 px-2 py-1 rounded">
+              Error ID: <code className="font-mono bg-black/10 dark:bg-white/5 px-2 py-1 rounded">
                 {this.state.errorId}
               </code>
             </div>

@@ -140,8 +140,8 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
         ease: [0.22, 1, 0.36, 1]
       }}
       whileHover={deviceTier !== 'very-low' ? {
-        y: deviceTier === 'low' ? -6 : -8,
-        scale: deviceTier === 'low' ? 1.01 : 1.02,
+        y: deviceTier === 'low' ? -4 : -6,
+        scale: deviceTier === 'low' ? 1.005 : 1.01,
         transition: { duration: hoverDuration, ease: "easeOut" }
       } : {}}
       whileTap={deviceTier !== 'very-low' ? {
@@ -154,8 +154,8 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
         willChange: 'transform',
         boxShadow: isDark ? (
           isHovering
-            ? '0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-            : '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+            ? '0 24px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255,255,255,0.06) inset, 0 1px 0 rgba(255, 255, 255, 0.08) inset'
+            : '0 12px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255,255,255,0.03) inset'
         ) : (
           isHovering
             ? '0 20px 50px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
@@ -164,16 +164,16 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
       }}
       className={`
         interactive group relative
-        w-full min-h-[320px]
+        w-full min-h-[270px]
         overflow-hidden text-left
-        p-7 sm:p-8 md:p-9
+        p-6 sm:p-7 md:p-8
         flex flex-col justify-between
         transition-all duration-300 ease-out
         rounded-2xl
         touch-manipulation
         backdrop-blur-xl
         ${isDark
-          ? 'bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20'
+          ? 'bg-white/[0.035] hover:bg-white/[0.065] border border-white/12 hover:border-white/22 shadow-xl'
           : 'bg-white/40 hover:bg-white/60 border border-white/50 hover:border-white/70'
         }
       `}
@@ -293,13 +293,13 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
         {/* Enhanced Icon with Liquid Glow */}
         <motion.div
           className={`
-            relative w-14 h-14 mb-6
+            relative w-12 h-12 mb-4
             flex items-center justify-center
             rounded-2xl
             transition-all duration-500 ease-spring
             backdrop-blur-sm
             ${isDark
-              ? 'bg-white/10 text-white/80 group-hover:bg-white/20 group-hover:text-white'
+              ? 'bg-white/8 text-white/85 group-hover:bg-white/15 group-hover:text-white border border-white/10'
               : 'bg-white/60 text-gray-600 group-hover:bg-white/80 group-hover:text-gray-900'
             }
           `}
@@ -309,8 +309,8 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
             boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
           } : {}}
           whileHover={deviceTier !== 'very-low' ? {
-            scale: deviceTier === 'low' ? 1.1 : 1.15,
-            rotate: deviceTier === 'low' ? 3 : 5,
+            scale: deviceTier === 'low' ? 1.08 : 1.12,
+            rotate: deviceTier === 'low' ? 2 : 3,
             transition: springConfig
           } : {}}
         >
@@ -328,12 +328,12 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
 
         {/* Enhanced Title with Gradient - FIXED: Only apply transparent when gradient is ready */}
         <h2
-          className={`font-serif text-2xl sm:text-2xl md:text-3xl mb-2 sm:mb-3 font-bold transition-all duration-300 ${isDark ? 'text-white' : 'text-gray-900'
+          className={`font-serif text-xl sm:text-2xl md:text-2xl mb-1.5 sm:mb-2 font-bold transition-all duration-300 ${isDark ? 'text-white' : 'text-gray-900'
             }`}
           style={isDark ? {
             filter: isHovering
-              ? 'drop-shadow(0 1px 4px rgba(255, 255, 255, 0.2))'
-              : 'drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4))'
+              ? 'drop-shadow(0 1px 3px rgba(255, 255, 255, 0.15))'
+              : 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3))'
           } : {
             filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))'
           }}
@@ -343,10 +343,10 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
 
         {/* Enhanced Subtitle - MINIMAL SHADOW */}
         <p
-          className={`font-sans text-sm sm:text-base font-medium leading-relaxed transition-all duration-300 ${isDark ? 'text-gray-200 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-800'
+          className={`font-sans text-xs sm:text-sm font-medium leading-relaxed transition-all duration-300 ${isDark ? 'text-gray-200 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-800'
             }`}
           style={isDark ? {
-            filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5))'
+            filter: 'drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35))'
           } : {
             filter: 'none'
           }}
@@ -357,18 +357,18 @@ function EnhancedActionCard({ title, subtitle, icon: Icon, onClick, index }) {
 
       {/* Enhanced CTA - MINIMAL SHADOW */}
       <motion.div
-        className={`relative z-10 flex items-center gap-3 text-xs font-bold tracking-[0.25em] uppercase transition-all duration-300 ${isDark
+        className={`relative z-10 flex items-center gap-2 text-[10px] sm:text-xs font-bold tracking-[0.25em] uppercase transition-all duration-300 ${isDark
           ? 'text-gray-400 group-hover:text-white'
           : 'text-gray-500 group-hover:text-gray-700'
           }`}
         style={isDark ? {
           filter: isHovering
-            ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.2))'
-            : 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4))'
+            ? 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.12))'
+            : 'drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3))'
         } : {
           filter: 'none'
         }}
-        whileHover={{ x: 4 }}
+        whileHover={{ x: 3 }}
         transition={springConfig}
       >
         <span>Proceed</span>

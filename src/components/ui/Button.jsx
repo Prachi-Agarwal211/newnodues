@@ -28,7 +28,7 @@ export default function Button({
         ),
         secondary: cn(
             isDark
-                ? 'bg-black text-jecrc-red-bright border-2 border-jecrc-red/60 hover:bg-gray-900'
+                ? 'bg-white/[0.035] text-white border border-white/15 hover:bg-white/[0.07] hover:border-jecrc-red/50 hover:text-white shadow-sm'
                 : 'bg-white text-jecrc-red border-2 border-jecrc-red/60 hover:bg-jecrc-rose/40',
             'shadow-sm hover:shadow-md'
         ),
@@ -36,6 +36,11 @@ export default function Button({
             isDark ? 'text-gray-300 hover:bg-white/10' : 'text-gray-700 hover:bg-gray-100'
         ),
         danger: 'bg-red-600 text-white hover:bg-red-700 shadow-md hover:shadow-red-500/20',
+        outline: cn(
+            isDark
+                ? 'bg-transparent text-gray-300 border border-white/20 hover:bg-white/10 hover:text-white'
+                : 'bg-transparent text-gray-700 border border-gray-300 hover:bg-gray-100 hover:text-gray-900',
+        ),
     };
 
     const sizes = {
@@ -52,7 +57,7 @@ export default function Button({
                 variants[variant],
                 sizes[size],
                 isDark
-                    ? 'disabled:opacity-60 disabled:bg-gray-800 disabled:text-gray-500 disabled:border-gray-700'
+                    ? 'disabled:opacity-60 disabled:bg-[#1a1a1a] disabled:text-gray-500 disabled:border-white/10'
                     : 'disabled:opacity-60 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-300',
                 className
             )}

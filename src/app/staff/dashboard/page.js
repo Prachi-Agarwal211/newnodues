@@ -494,7 +494,7 @@ export default function StaffDashboard() {
             <button
               onClick={() => refreshData(true)}
               className={`p-2.5 rounded-xl border transition-all
-                ${isDark ? 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                ${isDark ? 'bg-[#141414] border-white/10 text-white hover:bg-[#1a1a1a]' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
               title="Force Refresh Data"
             >
               <RefreshCcw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -512,15 +512,15 @@ export default function StaffDashboard() {
         {/* Guidelines Modal */}
         {showGuide && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className={`w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
-              <div className={`p-6 border-b flex justify-between items-center ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-gray-50'}`}>
+            <div className={`w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden ${isDark ? 'bg-[#111111] border border-white/10' : 'bg-white border border-gray-200'}`}>
+              <div className={`p-6 border-b flex justify-between items-center ${isDark ? 'border-white/10 bg-[#111111]' : 'border-gray-100 bg-gray-50'}`}>
                 <h2 className={`text-xl font-bold flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   <Info className="w-5 h-5 text-blue-500" />
                   {user?.department_name} Guidelines
                 </h2>
                 <button
                   onClick={() => setShowGuide(false)}
-                  className={`p-1 rounded-full transition-colors ${isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-200 text-gray-500'}`}
+                  className={`p-1 rounded-full transition-colors ${isDark ? 'hover:bg-[#1a1a1a] text-gray-400' : 'hover:bg-gray-200 text-gray-500'}`}
                 >
                   <XCircle className="w-6 h-6" />
                 </button>
@@ -536,7 +536,7 @@ export default function StaffDashboard() {
                   ))}
                 </ul>
               </div>
-              <div className={`p-4 border-t flex justify-end ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-gray-50'}`}>
+              <div className={`p-4 border-t flex justify-end ${isDark ? 'border-white/10 bg-[#111111]' : 'border-gray-100 bg-gray-50'}`}>
                 <button
                   onClick={() => setShowGuide(false)}
                   className={`px-6 py-2 font-medium rounded-lg transition-opacity ${isDark ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}
@@ -557,25 +557,25 @@ export default function StaffDashboard() {
             <div className="flex-1">
               <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>Quick Actions Guide</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm">
-                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors">
                   <div className={`p-1.5 rounded-full ${isDark ? 'bg-green-500/20 text-green-400' : 'bg-green-100 text-green-600'}`}>
                     <CheckCircle className="w-3.5 h-3.5" />
                   </div>
                   <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Approve: No pending dues</span>
                 </div>
-                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors">
                   <div className={`p-1.5 rounded-full ${isDark ? 'bg-red-500/20 text-red-400' : 'bg-red-100 text-red-600'}`}>
                     <XCircle className="w-3.5 h-3.5" />
                   </div>
                   <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Reject: Valid reason required</span>
                 </div>
-                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors">
                   <div className={`p-1.5 rounded-full ${isDark ? 'bg-yellow-500/20 text-yellow-400' : 'bg-yellow-100 text-yellow-600'}`}>
                     <Clock className="w-3.5 h-3.5" />
                   </div>
                   <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>SLA: 24-48 hours target</span>
                 </div>
-                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors">
                   <div className={`p-1.5 rounded-full ${isDark ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-600'}`}>
                     <AlertTriangle className="w-3.5 h-3.5" />
                   </div>
@@ -603,7 +603,7 @@ export default function StaffDashboard() {
               placeholder="Search student by name or registration number..."
               className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-sm font-medium transition-all border border-1
                 ${isDark
-                  ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
+                  ? 'bg-[#141414] border-white/10 text-white placeholder-gray-500 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
                   : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/10'
                 }`}
               onChange={(e) => setSearch(e.target.value)}
@@ -614,13 +614,13 @@ export default function StaffDashboard() {
               <select
                 className={`appearance-none pl-3 pr-9 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer border border-1
                   ${isDark
-                    ? 'bg-gray-800 border-gray-600 text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
+                    ? 'bg-[#141414] border-white/10 text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
                     : 'bg-white border-gray-300 text-gray-900 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/10'
                   }`}
                 value={filters.course}
                 onChange={(e) => setFilters(prev => ({ ...prev, course: e.target.value }))}
               >
-                {uniqueCourses.map(c => <option key={c} value={c} className={isDark ? 'bg-gray-800' : 'bg-white'}>{c === 'All' ? 'All Courses' : c}</option>)}
+                {uniqueCourses.map(c => <option key={c} value={c} className={isDark ? 'bg-[#111111]' : 'bg-white'}>{c === 'All' ? 'All Courses' : c}</option>)}
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
@@ -628,13 +628,13 @@ export default function StaffDashboard() {
               <select
                 className={`appearance-none pl-3 pr-9 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer border border-1
                   ${isDark
-                    ? 'bg-gray-800 border-gray-600 text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
+                    ? 'bg-[#141414] border-white/10 text-white focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/20'
                     : 'bg-white border-gray-300 text-gray-900 focus:border-jecrc-red focus:ring-2 focus:ring-jecrc-red/10'
                   }`}
                 value={filters.branch}
                 onChange={(e) => setFilters(prev => ({ ...prev, branch: e.target.value }))}
               >
-                {uniqueBranches.map(b => <option key={b} value={b} className={isDark ? 'bg-gray-800' : 'bg-white'}>{b === 'All' ? 'All Branches' : b}</option>)}
+                {uniqueBranches.map(b => <option key={b} value={b} className={isDark ? 'bg-[#111111]' : 'bg-white'}>{b === 'All' ? 'All Branches' : b}</option>)}
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
@@ -642,7 +642,7 @@ export default function StaffDashboard() {
         </GlassCard>
 
         {/* Tabs */}
-        <div className={`flex gap-2 mb-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+        <div className={`flex gap-2 mb-4 border-b ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
           {['pending', 'rejected', 'history'].map(tab => (
             <button
               key={tab}
@@ -666,7 +666,7 @@ export default function StaffDashboard() {
           ) : (
             <>
               {/* MOBILE VIEW */}
-              <div className="block md:hidden bg-gray-50 dark:bg-black/20 p-4">
+              <div className="block md:hidden bg-gray-50 dark:bg-[#111111]/70 p-4">
                 {currentData.length === 0 ? (
                   <div className="text-center py-10 text-gray-400">No records found</div>
                 ) : (
@@ -821,7 +821,7 @@ export default function StaffDashboard() {
               </div>
 
               {/* Pagination UI */}
-              <div className={`p-4 flex items-center justify-between border-t ${isDark ? 'border-gray-700 bg-gray-800/50' : 'border-gray-100 bg-gray-50/50'}`}>
+              <div className={`p-4 flex items-center justify-between border-t ${isDark ? 'border-white/10 bg-[#111111]/70' : 'border-gray-100 bg-gray-50/50'}`}>
                 <div className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Showing {currentData.length} records
                 </div>
@@ -839,7 +839,7 @@ export default function StaffDashboard() {
                     }
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border
                       ${isDark 
-                        ? 'bg-gray-800 border-gray-700 text-gray-300 disabled:opacity-30 hover:bg-gray-700' 
+                        ? 'bg-[#141414] border-white/10 text-gray-300 disabled:opacity-30 hover:bg-[#1a1a1a]' 
                         : 'bg-white border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50'}`}
                   >
                     Previous
@@ -864,7 +864,7 @@ export default function StaffDashboard() {
                     }
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border
                       ${isDark 
-                        ? 'bg-gray-800 border-gray-700 text-gray-300 disabled:opacity-30 hover:bg-gray-700' 
+                        ? 'bg-[#141414] border-white/10 text-gray-300 disabled:opacity-30 hover:bg-[#1a1a1a]' 
                         : 'bg-white border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50'}`}
                   >
                     Next
@@ -878,7 +878,7 @@ export default function StaffDashboard() {
         {/* Bulk Action Bar */}
         {selectedItems.size > 0 && activeTab === 'pending' && (
           <div className="fixed bottom-6 left-0 right-0 max-w-2xl mx-auto px-4 z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
-            <div className={`rounded-2xl shadow-2xl p-4 flex items-center justify-between border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+            <div className={`rounded-2xl shadow-2xl p-4 flex items-center justify-between border ${isDark ? 'bg-[#141414] border-white/10' : 'bg-white border-gray-200'}`}>
               <div className="flex items-center gap-3">
                 <div className="bg-jecrc-red text-white text-xs font-bold px-2 py-1 rounded-md">
                   {selectedItems.size}
@@ -888,7 +888,7 @@ export default function StaffDashboard() {
               <div className="flex gap-2">
                 <button
                   onClick={() => setSelectedItems(new Set())}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isDark ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isDark ? 'text-gray-400 hover:text-gray-200 hover:bg-[#1a1a1a]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
                 >
                   Cancel
                 </button>
@@ -910,8 +910,8 @@ export default function StaffDashboard() {
       {/* Rejection Modal */}
       {showRejectModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
-            <div className={`p-6 border-b ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-gray-50'}`}>
+          <div className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden ${isDark ? 'bg-[#111111] border border-white/10' : 'bg-white border border-gray-200'}`}>
+            <div className={`p-6 border-b ${isDark ? 'border-white/10 bg-[#111111]' : 'border-gray-100 bg-gray-50'}`}>
               <h2 className={`text-xl font-bold flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 <XCircle className="w-5 h-5 text-red-500" />
                 Reject Application
@@ -934,14 +934,14 @@ export default function StaffDashboard() {
                 autoFocus
               />
             </div>
-            <div className={`p-4 border-t flex justify-end gap-3 ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-gray-50'}`}>
+            <div className={`p-4 border-t flex justify-end gap-3 ${isDark ? 'border-white/10 bg-[#111111]' : 'border-gray-100 bg-gray-50'}`}>
               <button
                 onClick={() => {
                   setShowRejectModal(false);
                   setRejectionReason('');
                   setRejectFormId(null);
                 }}
-                className={`px-4 py-2 font-medium rounded-lg transition-colors ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-200'}`}
+                className={`px-4 py-2 font-medium rounded-lg transition-colors ${isDark ? 'text-gray-300 hover:bg-[#1a1a1a]' : 'text-gray-600 hover:bg-gray-200'}`}
               >
                 Cancel
               </button>
@@ -986,7 +986,7 @@ function StatusCard({ label, value, sub, icon: Icon, color, onClick, isDark }) {
         : 'bg-red-50/70 border border-red-100'
     },
     gray: {
-      bg: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+      bg: 'bg-gray-100 text-gray-600 dark:bg-[#1a1a1a] dark:text-gray-400',
       icon: 'text-gray-500 dark:text-gray-400',
       card: isDark
         ? 'bg-red-950/30 border border-red-900/30'
@@ -1023,7 +1023,7 @@ function MobileCard({ item, activeTab, selected, onSelect, onAction, onNavigate,
       className={`rounded-xl p-4 mb-3 shadow-sm transition-all border
         ${selected
           ? 'ring-2 ring-jecrc-red bg-jecrc-red/5'
-          : isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          : isDark ? 'bg-[#141414] border-white/10' : 'bg-white border-gray-200'
         }`}
     >
       <div className="flex justify-between items-start mb-3">

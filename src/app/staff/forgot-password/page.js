@@ -122,7 +122,7 @@ export default function ForgotPasswordPage() {
                                     <input
                                         type="email"
                                         required
-                                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-black/20 text-gray-900 dark:text-white focus:ring-2 focus:ring-jecrc-red/40 focus:border-jecrc-red outline-none transition-all"
+                                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#111111] text-gray-900 dark:text-white focus:ring-2 focus:ring-jecrc-red/40 focus:border-jecrc-red outline-none transition-all"
                                         placeholder="staff@college.edu"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}

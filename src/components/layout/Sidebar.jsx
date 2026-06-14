@@ -94,7 +94,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       <aside className={`
         fixed top-0 left-0 h-full w-64 z-50 transform transition-transform duration-300 ease-in-out
         ${isDark
-          ? 'bg-gradient-to-b from-gray-900 to-black border-r border-white/10'
+          ? 'bg-[#111111] border-r border-white/8'
           : 'bg-gradient-to-b from-white to-gray-50 border-r border-gray-200'
         }
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0

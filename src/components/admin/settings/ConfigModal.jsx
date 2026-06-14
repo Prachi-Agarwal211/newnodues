@@ -386,7 +386,7 @@ export default function ConfigModal({
     <AnimatePresence>
       {isOpen && (
         <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-colors ${
-          isDark ? 'bg-black/60' : 'bg-black/40'
+          isDark ? 'bg-[#0a0a0a]/80' : 'bg-black/40'
         }`}>
           {/* Backdrop */}
           <motion.div
@@ -405,7 +405,7 @@ export default function ConfigModal({
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className={`relative w-full max-w-md max-h-[90vh] border rounded-2xl shadow-2xl overflow-hidden flex flex-col ${
               isDark
-                ? 'bg-black/40 backdrop-blur-xl border-white/10'
+                ? 'bg-[#141414] backdrop-blur-xl border-white/10'
                 : 'bg-white border-gray-300'
             }`}
           >

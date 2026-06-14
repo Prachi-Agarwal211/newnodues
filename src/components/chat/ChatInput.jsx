@@ -79,7 +79,7 @@ export default function ChatInput({
     };
 
     return (
-        <form onSubmit={handleSubmit} className={`p-3 border-t ${isDark ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'}`}>
+        <form onSubmit={handleSubmit} className={`p-3 border-t ${isDark ? 'bg-[#111111] border-white/10' : 'bg-white border-gray-200'}`}>
             {selectedFile && (
                 <div className={`mb-2 p-2 border rounded-lg ${isDark ? 'bg-blue-900/20 border-blue-800' : 'bg-blue-50 border-blue-200'}`}>
                     <div className="flex items-center justify-between">
@@ -99,7 +99,7 @@ export default function ChatInput({
                     rows={1}
                     className={`flex-1 px-4 py-2.5 rounded-xl border resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all
                         ${isDark
-                            ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400'
+                            ? 'bg-[#141414] border-white/10 text-white placeholder-gray-400'
                             : 'bg-gray-100 border-gray-200 text-gray-900 placeholder-gray-500'
                         }`}
                     style={{ minHeight: '44px', maxHeight: '120px' }}

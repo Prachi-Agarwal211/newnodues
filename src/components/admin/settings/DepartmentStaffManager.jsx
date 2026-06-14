@@ -209,7 +209,7 @@ export default function DepartmentStaffManager() {
       {/* Filters */}
       <div className={`border rounded-2xl p-4 transition-all duration-700 ${
         isDark
-          ? 'bg-black/20 backdrop-blur-xl border-white/10'
+          ? 'bg-white/[0.035] backdrop-blur-xl border-white/10'
           : 'bg-white border-gray-200 shadow-sm'
       }`}>
         <div className="flex flex-col sm:flex-row gap-4">
@@ -252,7 +252,7 @@ export default function DepartmentStaffManager() {
       {/* Staff Table */}
       <div className={`border rounded-2xl p-6 transition-all duration-700 ${
         isDark
-          ? 'bg-black/20 backdrop-blur-xl border-white/10'
+          ? 'bg-white/[0.035] backdrop-blur-xl border-white/10'
           : 'bg-white border-gray-200 shadow-sm'
       }`}>
         {loading ? (
@@ -451,7 +451,7 @@ export default function DepartmentStaffManager() {
           <li><strong>Example 1:</strong> Library staff → No scope restrictions → Sees all students</li>
           <li><strong>Example 2:</strong> CSE HOD → Engineering school + B.Tech course + CSE branch → Sees only Engineering B.Tech CSE students</li>
           <li><strong>Example 3:</strong> Dean → Engineering school + All courses + All branches → Sees all Engineering students</li>
-          <li>Staff login at <code className="px-1 py-0.5 bg-black/20 rounded">/staff/login</code> using their email and password</li>
+          <li>Staff login at <code className="px-1 py-0.5 bg-black/20 dark:bg-white/10 rounded">/staff/login</code> using their email and password</li>
           <li>Email addresses cannot be changed after account creation</li>
           <li>Deleting a staff account immediately revokes their access</li>
         </ul>

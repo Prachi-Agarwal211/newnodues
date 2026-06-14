@@ -184,7 +184,7 @@ export default function DepartmentsManager() {
       {/* Table */}
       <div className={`border rounded-2xl p-6 transition-all duration-700 ${
         isDark
-          ? 'bg-black/20 backdrop-blur-xl border-white/10'
+          ? 'bg-white/[0.035] backdrop-blur-xl border-white/10'
           : 'bg-white border-gray-200 shadow-sm'
       }`}>
         <ConfigTable
@@ -237,7 +237,7 @@ export default function DepartmentsManager() {
       {/* Current Departments List */}
       <div className={`border rounded-2xl p-6 transition-all duration-700 ${
         isDark
-          ? 'bg-black/20 backdrop-blur-xl border-white/10'
+          ? 'bg-white/[0.035] backdrop-blur-xl border-white/10'
           : 'bg-white border-gray-200 shadow-sm'
       }`}>
         <h3 className={`text-lg font-bold mb-4 transition-colors duration-700 ${

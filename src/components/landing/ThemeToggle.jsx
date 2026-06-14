@@ -50,13 +50,13 @@ export default function ThemeToggle() {
         flex items-center justify-center z-50 group
         overflow-visible
         ${isDark
-          ? 'bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white'
+          ? 'bg-[#141414] text-white border border-white/10'
           : 'bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900'
         }
       `}
       style={{
         boxShadow: isDark
-          ? '0 10px 40px rgba(100, 100, 100, 0.3), 0 0 60px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+          ? '0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.06) inset, 0 1px 0 rgba(255, 255, 255, 0.1) inset'
           : '0 10px 30px rgba(0, 0, 0, 0.15), 0 4px 20px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
         // Increased touch target for mobile (invisible padding)
         padding: '8px'
