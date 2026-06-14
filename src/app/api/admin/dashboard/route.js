@@ -35,10 +35,10 @@ export async function GET(request) {
     const page = parseInt(searchParams.get('page')) || 1;
     const limit = parseInt(searchParams.get('limit')) || 20;
     const status = searchParams.get('status');
-    const departments = searchParams.getAll('departments');
-    const schools = searchParams.getAll('schools');
-    const courses = searchParams.getAll('courses');
-    const branches = searchParams.getAll('branches');
+    const departments = searchParams.getAll('departments').filter(Boolean);
+    const schools = searchParams.getAll('schools').filter(Boolean);
+    const courses = searchParams.getAll('courses').filter(Boolean);
+    const branches = searchParams.getAll('branches').filter(Boolean);
     const admissionYear = searchParams.get('admissionYear');
     const passingYear = searchParams.get('passingYear');
     const priority = searchParams.get('priority');
